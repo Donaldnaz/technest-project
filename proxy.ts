@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { edgeAuth } from "@/lib/auth/edge";
+import { auth } from "@/lib/auth/server";
 
-const neonAuthMiddleware = edgeAuth.middleware({
+const neonAuthProxy = auth.middleware({
   loginUrl: "/auth/sign-in",
 });
 
@@ -26,22 +26,22 @@ function needsSyntheticGetSessionCheck(request: NextRequest): boolean {
 }
 
 /**
- * Neon Auth middleware validates sessions by proxying the incoming request to
+ * Neon Auth proxy validates sessions by proxying the incoming request to
  * get-session, which only accepts GET. Server Actions and Blob upload POSTs send
  * non-session bodies to protected routes, so session checks fail and the client
  * is redirected to sign-in (HTML). That surfaces as "Failed to retrieve the
  * client token" for Vercel Blob uploads.
  */
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   if (!needsSyntheticGetSessionCheck(request)) {
-    return neonAuthMiddleware(request);
+    return neonAuthProxy(request);
   }
 
   const sessionCheckRequest = new NextRequest(request.url, {
     method: "GET",
     headers: request.headers,
   });
-  const authResponse = await neonAuthMiddleware(sessionCheckRequest);
+  const authResponse = await neonAuthProxy(sessionCheckRequest);
 
   const isUploadApi =
     request.method === "POST" && request.nextUrl.pathname === "/api/upload";
