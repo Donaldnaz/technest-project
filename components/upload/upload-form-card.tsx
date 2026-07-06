@@ -1,0 +1,253 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { AlertTriangle, X } from "lucide-react";
+import { toast } from "sonner";
+
+import { ConfettiBurst } from "@/components/landing/confetti-burst";
+import { UploadDropzone } from "@/components/upload/upload-dropzone";
+import { UploadHubHeader } from "@/components/upload/upload-hub-header";
+import { UploadQueue } from "@/components/upload/upload-queue";
+import { UploadSuccessPanel } from "@/components/upload/upload-success-panel";
+import { useUploadQueue } from "@/hooks/use-upload-queue";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+type UploadFormCardProps = {
+  patientId: string;
+  userName?: string | null;
+  patientFirstName: string;
+  patientRelationship: "self" | "other";
+  isFirstUpload?: boolean;
+};
+
+export function UploadFormCard({
+  patientId,
+  userName,
+  patientFirstName,
+  patientRelationship,
+  isFirstUpload = false,
+}: UploadFormCardProps) {
+  const router = useRouter();
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState<{
+    count: number;
+    wasFirstUpload: boolean;
+  } | null>(null);
+  const [storageConfigured, setStorageConfigured] = useState<boolean | null>(
+    null,
+  );
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+
+  const {
+    items,
+    isUploading,
+    canSubmit,
+    stagedCount,
+    addFiles,
+    removeFile,
+    setCategory,
+    uploadAll,
+    clearCompleted,
+    acceptedTypes,
+  } = useUploadQueue({ patientId });
+
+  const displayName =
+    patientRelationship === "self" ? "you" : patientFirstName;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function checkStorage() {
+      try {
+        const response = await fetch("/api/upload");
+        if (cancelled) return;
+
+        if (!response.ok) {
+          setStorageConfigured(false);
+          return;
+        }
+
+        const data = (await response.json()) as {
+          configured?: boolean;
+          valid?: boolean;
+        };
+
+        setStorageConfigured(Boolean(data.configured && data.valid));
+      } catch {
+        if (!cancelled) setStorageConfigured(false);
+      }
+    }
+
+    void checkStorage();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const finishSuccessFlow = useCallback(() => {
+    setUploadSuccess(null);
+    clearCompleted();
+    router.refresh();
+  }, [clearCompleted, router]);
+
+  const handleCelebrationComplete = useCallback(() => {
+    setShowCelebration(false);
+    finishSuccessFlow();
+  }, [finishSuccessFlow]);
+
+  function handleSuccessDismiss() {
+    if (uploadSuccess?.wasFirstUpload && showCelebration) {
+      return;
+    }
+    finishSuccessFlow();
+  }
+
+  function handleUploadMore() {
+    setUploadSuccess(null);
+    clearCompleted();
+    router.refresh();
+  }
+
+  async function handleSubmit() {
+    const { successCount, errorCount } = await uploadAll();
+
+    if (successCount === 0 && errorCount === 0) {
+      toast.error("Add at least one file before submitting.");
+      return;
+    }
+
+    if (successCount > 0 && errorCount === 0) {
+      const wasFirst = isFirstUpload && uploadSuccess === null;
+
+      setUploadSuccess({ count: successCount, wasFirstUpload: wasFirst });
+
+      toast.success(
+        wasFirst
+          ? "Your first record is saved — great start!"
+          : successCount === 1
+            ? "Record uploaded successfully."
+            : `${successCount} records uploaded successfully.`,
+        { duration: 6000 },
+      );
+
+      if (wasFirst) {
+        setShowCelebration(true);
+      }
+
+      return;
+    }
+
+    if (successCount > 0) {
+      setUploadSuccess({ count: successCount, wasFirstUpload: false });
+      toast.warning(
+        `${successCount} saved, ${errorCount} failed. Remove failed files and try again.`,
+        { duration: 6000 },
+      );
+      router.refresh();
+      return;
+    }
+
+    toast.error("Could not save your records. Please try again.");
+  }
+
+  const showConfigBanner =
+    storageConfigured === false && !bannerDismissed;
+
+  return (
+    <div className="w-full max-w-md">
+      <ConfettiBurst
+        active={showCelebration}
+        onComplete={handleCelebrationComplete}
+      />
+
+      <div className="rounded-3xl bg-card/95 p-6 shadow-sm backdrop-blur-sm sm:p-8">
+        <div className="space-y-6">
+          {uploadSuccess && (
+            <UploadSuccessPanel
+              count={uploadSuccess.count}
+              patientFirstName={displayName}
+              isFirstUpload={uploadSuccess.wasFirstUpload}
+              onDismiss={handleSuccessDismiss}
+              onUploadMore={handleUploadMore}
+            />
+          )}
+
+          {showConfigBanner && (
+            <div
+              role="alert"
+              className="flex gap-3 rounded-2xl border border-amber-200/80 bg-amber-50/90 p-4 text-sm text-amber-950 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-100"
+            >
+              <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
+              <div className="min-w-0 flex-1 space-y-1">
+                <p className="font-medium">Upload storage not configured</p>
+                <p className="text-xs leading-relaxed opacity-90">
+                  Add a valid{" "}
+                  <code className="rounded bg-amber-100/80 px-1 py-0.5 dark:bg-amber-900/40">
+                    BLOB_READ_WRITE_TOKEN
+                  </code>{" "}
+                  (from Vercel → Storage → Blob) to .env.local and restart the
+                  dev server.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setBannerDismissed(true)}
+                className="upload-interactive shrink-0 rounded-lg p-1 text-amber-800 hover:bg-amber-100/80 dark:text-amber-200 dark:hover:bg-amber-900/40"
+                aria-label="Dismiss"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+          )}
+
+          <UploadHubHeader
+            userName={userName}
+            patientFirstName={patientFirstName}
+            patientRelationship={patientRelationship}
+          />
+
+          <UploadDropzone
+            onFilesSelected={addFiles}
+            acceptedTypes={acceptedTypes}
+            disabled={isUploading}
+          />
+
+          <UploadQueue
+            items={items}
+            onRemove={removeFile}
+            onCategoryChange={setCategory}
+            disabled={isUploading}
+          />
+
+          <div className="space-y-3">
+            <p className="text-center text-sm text-muted-foreground">
+              {isUploading
+                ? "Uploading your records securely…"
+                : stagedCount > 0
+                  ? `${stagedCount} file${stagedCount === 1 ? "" : "s"} ready to submit`
+                  : uploadSuccess
+                    ? "Add more files anytime below."
+                    : "Label each file, then submit when you are ready."}
+            </p>
+
+            <Button
+              type="button"
+              disabled={!canSubmit}
+              className={cn(
+                "upload-interactive w-full rounded-2xl py-3 px-4 min-h-12 text-base font-medium",
+                "bg-sage-700 text-white hover:bg-sage-800",
+                "focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2",
+                "transition-transform duration-200 active:scale-[0.98]",
+              )}
+              onClick={handleSubmit}
+            >
+              {isUploading ? "Submitting…" : "Securely submit to care team"}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
