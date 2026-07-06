@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { auth } from "@/lib/auth/server";
+import { edgeAuth } from "@/lib/auth/edge";
 
-const neonAuthMiddleware = auth.middleware({
+const neonAuthMiddleware = edgeAuth.middleware({
   loginUrl: "/auth/sign-in",
 });
 
