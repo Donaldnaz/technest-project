@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Lock } from "lucide-react";
 import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { patientAccountCopy } from "@/lib/copy/patient/account";
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -21,19 +19,14 @@ export function ChangePasswordSettings() {
 
   if (sessionPending) {
     return (
-      <div className="space-y-4">
-        <div className="h-16 animate-pulse rounded-2xl bg-muted/60" />
-        <div className="h-11 animate-pulse rounded-xl bg-muted/60" />
-        <div className="h-11 animate-pulse rounded-xl bg-muted/60" />
-        <div className="h-11 animate-pulse rounded-xl bg-muted/60" />
-      </div>
+      <div className="h-40 animate-pulse rounded-2xl bg-muted/60" />
     );
   }
 
   if (!session?.user) {
     return (
       <p className="text-sm text-muted-foreground">
-        {patientAccountCopy.security.signedOut}
+        Sign in to update your password.
       </p>
     );
   }
@@ -42,14 +35,12 @@ export function ChangePasswordSettings() {
     event.preventDefault();
 
     if (newPassword.length < MIN_PASSWORD_LENGTH) {
-      toast.error(
-        patientAccountCopy.security.toast.tooShort(MIN_PASSWORD_LENGTH),
-      );
+      toast.error(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error(patientAccountCopy.security.toast.mismatch);
+      toast.error("New passwords do not match.");
       return;
     }
 
@@ -63,106 +54,78 @@ export function ChangePasswordSettings() {
       });
 
       if (result.error) {
-        toast.error(
-          result.error.message ?? patientAccountCopy.security.toast.error,
-        );
+        toast.error(result.error.message ?? "Could not update your password.");
         return;
       }
 
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      toast.success(patientAccountCopy.security.toast.success);
+      toast.success("Password updated successfully.");
     } catch {
-      toast.error(patientAccountCopy.security.toast.error);
+      toast.error("Could not update your password. Check your current password.");
     } finally {
       setPending(false);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="flex items-start gap-4 border-b border-border/60 pb-6">
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-          <Lock className="size-5" aria-hidden />
-        </span>
-        <div className="min-w-0">
-          <h2 className="font-heading text-xl font-semibold tracking-tight">
-            {patientAccountCopy.security.title}
-          </h2>
-          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            {patientAccountCopy.security.description}
-          </p>
-        </div>
-      </div>
+    <form onSubmit={handleSubmit} className="grid max-w-lg gap-4">
+      <p className="text-sm leading-relaxed text-muted-foreground">
+        Update your sign-in password. Your name and email cannot be changed here.
+      </p>
 
-      <div className="grid max-w-lg gap-5">
-        <div className="grid gap-2">
-          <Label htmlFor="currentPassword">
-            {patientAccountCopy.security.fields.current}
-          </Label>
-          <Input
-            id="currentPassword"
-            type="password"
-            autoComplete="current-password"
-            value={currentPassword}
-            onChange={(event) => setCurrentPassword(event.target.value)}
-            required
-            disabled={pending}
-            className="dashboard-form-control"
-          />
-        </div>
-
-        <div className="grid gap-2">
-          <Label htmlFor="newPassword">
-            {patientAccountCopy.security.fields.new}
-          </Label>
-          <Input
-            id="newPassword"
-            type="password"
-            autoComplete="new-password"
-            value={newPassword}
-            onChange={(event) => setNewPassword(event.target.value)}
-            required
-            minLength={MIN_PASSWORD_LENGTH}
-            disabled={pending}
-            className="dashboard-form-control"
-          />
-          <p className="text-xs text-muted-foreground">
-            {patientAccountCopy.security.minLengthHint(MIN_PASSWORD_LENGTH)}
-          </p>
-        </div>
-
-        <div className="grid gap-2">
-          <Label htmlFor="confirmPassword">
-            {patientAccountCopy.security.fields.confirm}
-          </Label>
-          <Input
-            id="confirmPassword"
-            type="password"
-            autoComplete="new-password"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            required
-            minLength={MIN_PASSWORD_LENGTH}
-            disabled={pending}
-            className="dashboard-form-control"
-          />
-        </div>
-      </div>
-
-      <div className="border-t border-border/60 pt-6">
-        <Button
-          type="submit"
-          size="lg"
+      <div className="grid gap-2">
+        <Label htmlFor="currentPassword">Current password</Label>
+        <Input
+          id="currentPassword"
+          type="password"
+          autoComplete="current-password"
+          value={currentPassword}
+          onChange={(event) => setCurrentPassword(event.target.value)}
+          required
           disabled={pending}
-          className="w-full rounded-2xl sm:w-auto"
-        >
-          {pending
-            ? patientAccountCopy.security.submitting
-            : patientAccountCopy.security.submit}
-        </Button>
+          className="dashboard-form-control"
+        />
       </div>
+
+      <div className="grid gap-2">
+        <Label htmlFor="newPassword">New password</Label>
+        <Input
+          id="newPassword"
+          type="password"
+          autoComplete="new-password"
+          value={newPassword}
+          onChange={(event) => setNewPassword(event.target.value)}
+          required
+          minLength={MIN_PASSWORD_LENGTH}
+          disabled={pending}
+          className="dashboard-form-control"
+        />
+      </div>
+
+      <div className="grid gap-2">
+        <Label htmlFor="confirmPassword">Confirm new password</Label>
+        <Input
+          id="confirmPassword"
+          type="password"
+          autoComplete="new-password"
+          value={confirmPassword}
+          onChange={(event) => setConfirmPassword(event.target.value)}
+          required
+          minLength={MIN_PASSWORD_LENGTH}
+          disabled={pending}
+          className="dashboard-form-control"
+        />
+      </div>
+
+      <Button
+        type="submit"
+        disabled={pending}
+        className="min-h-11 w-full rounded-xl sm:w-auto"
+      >
+        {pending ? "Updating..." : "Update password"}
+      </Button>
     </form>
   );
 }

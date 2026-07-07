@@ -1,3 +1,8 @@
+export type LegalSectionItem = {
+  id: string;
+  title: string;
+};
+
 export const legalCopy = {
   nav: {
     label: "Legal documents",
@@ -5,21 +10,28 @@ export const legalCopy = {
     terms: "Terms",
     accessibility: "Accessibility",
   },
+  toc: {
+    label: "On this page",
+  },
   shell: {
     breadcrumbHome: "Home",
     breadcrumbLegal: "Legal",
     lastUpdated: "Last updated: July 2026",
+    documentEyebrow: "Legal document",
   },
   index: {
+    eyebrow: "Policies & trust",
     title: "Legal",
     description: "Privacy, terms, and accessibility information for iCare.",
     intro:
       "Find policies that explain how iCare handles your data, the rules for using the portal, and our commitment to accessibility.",
+    cardsLabel: "Choose a document",
   },
   flow: {
     previous: "Previous",
     next: "Next",
     allLegal: "All legal documents",
+    backHome: "Back to home",
   },
   pages: {
     privacy: {

@@ -1,12 +1,16 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { authViewPaths } from "@neondatabase/auth-ui/server";
 import { ArrowLeft } from "lucide-react";
 
 import { AuthHeroPanel } from "@/components/auth/auth-hero-panel";
 import { ICareAuthView } from "@/components/auth/icare-auth-view";
+import { SignOutPage } from "@/components/auth/sign-out-page";
 import { patientAuthCopy } from "@/lib/copy/patient/auth";
+import { getPublicNavState } from "@/lib/navigation/public-nav-state";
 
 export const dynamicParams = false;
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return Object.values(authViewPaths).map((path) => ({ path }));
@@ -18,6 +22,25 @@ export default async function AuthPage({
   params: Promise<{ path: string }>;
 }) {
   const { path } = await params;
+
+  if (path === "sign-in" || path === "sign-up") {
+    const navState = await getPublicNavState();
+
+    if (navState.isAuthenticated && navState.dashboardHref) {
+      redirect(navState.dashboardHref);
+    }
+  }
+
+  if (path === "sign-out") {
+    return (
+      <main
+        id="main-content"
+        className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-background"
+      >
+        <SignOutPage />
+      </main>
+    );
+  }
 
   return (
     <main id="main-content" className="icare-auth-page bg-background">

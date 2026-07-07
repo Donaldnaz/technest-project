@@ -8,7 +8,7 @@ import {
 import { listRecentPatients } from "@/lib/db/queries/patients";
 import { DashboardQuickActions } from "@/components/dashboard/dashboard-quick-actions";
 import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
-import { CareTimeline } from "@/components/health/care-timeline";
+import { CareTimeline, RECENT_ACTIVITY_LIMIT } from "@/components/health/care-timeline";
 import { DocumentPillbox } from "@/components/health/document-pillbox";
 import { MetricCards } from "@/components/health/metric-cards";
 import { WelcomeBanner } from "@/components/health/welcome-banner";
@@ -31,7 +31,7 @@ export default async function DashboardPage() {
     countDocuments(userId),
     countDocumentsByStatus(userId, "ready"),
     countDocumentsByStatus(userId, "processing"),
-    listRecentDocuments(userId, 8),
+    listRecentDocuments(userId, RECENT_ACTIVITY_LIMIT),
     listRecentPatients(userId, 5),
     countDocumentsByMimePrefix(userId, "application/pdf"),
     countDocumentsByMimePrefix(userId, "image/jpeg"),
@@ -41,13 +41,14 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-8 md:gap-10">
-      <WelcomeBanner
-        userName={session.user.name}
-        profileId={profileId}
-        documentCount={documentCount}
-      />
-
-      <DashboardQuickActions profileId={profileId} />
+      <section className="health-card overflow-hidden rounded-3xl shadow-sm">
+        <WelcomeBanner
+          userName={session.user.name}
+          documentCount={documentCount}
+          embedded
+        />
+        <DashboardQuickActions profileId={profileId} embedded />
+      </section>
 
       <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
         <div className="order-2 space-y-8 md:space-y-10 lg:order-1 lg:col-span-8">

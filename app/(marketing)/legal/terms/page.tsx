@@ -84,7 +84,7 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="Contact us" id="contact">
+      <LegalSection title="Contact us" id="contact" variant="callout">
         <p>
           Questions about these terms? Email{" "}
           <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.

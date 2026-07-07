@@ -1,10 +1,9 @@
 import "server-only";
 
 import { generateObject } from "ai";
+import { google } from "@ai-sdk/google";
 import { get } from "@vercel/blob";
 import { z } from "zod";
-
-import { getGoogleModel, isGeminiConfigured } from "@/lib/ai/google-model";
 
 import {
   updateDocumentStatus,
@@ -40,7 +39,7 @@ export async function processDocumentExtraction(
   mimeType: string,
   fileName: string,
 ): Promise<void> {
-  if (!isGeminiConfigured()) {
+  if (!process.env.GEMINI_API_KEY) {
     await updateDocumentStatus(documentId, "ready");
     return;
   }
@@ -62,7 +61,7 @@ export async function processDocumentExtraction(
       mimeType === "application/pdf" ? "application/pdf" : "image/jpeg";
 
     const { object } = await generateObject({
-      model: getGoogleModel(),
+      model: google("gemini-2.0-flash"),
       schema: extractionSchema,
       messages: [
         {

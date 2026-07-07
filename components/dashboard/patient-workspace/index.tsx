@@ -3,15 +3,11 @@
 import { Suspense, useMemo } from "react";
 import {
   Activity,
-  FileText,
   FileUp,
   LayoutGrid,
-  Share2,
 } from "lucide-react";
 
 import { AppBreadcrumbs } from "@/components/clinical/app-breadcrumbs";
-import { DocumentsTable } from "@/components/documents/documents-table";
-import { ShareWithProvider } from "@/components/documents/share-with-provider";
 import { CareTimeline } from "@/components/health/care-timeline";
 import { UploadSplitPane } from "@/components/upload/upload-split-pane";
 import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
@@ -71,6 +67,7 @@ function PatientWorkspaceContent({
         tabs={[
           {
             value: "overview",
+            ariaLabel: patientDashboardCopy.patient.tabs.overview,
             label: (
               <>
                 <LayoutGrid className="size-4" aria-hidden />
@@ -85,34 +82,8 @@ function PatientWorkspaceContent({
             ),
           },
           {
-            value: "documents",
-            label: (
-              <>
-                <FileText className="size-4" aria-hidden />
-                {patientDashboardCopy.patient.tabs.documents}
-              </>
-            ),
-            badge: documentCount,
-            content: (
-              <div className="clinical-card p-4 md:p-5">
-                <div className="mb-4">
-                  <h2 className="font-heading text-lg font-semibold">
-                    {patientDashboardCopy.patient.documents.title}
-                  </h2>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {documents.length > 0
-                      ? patientDashboardCopy.patient.documents.withCount(
-                          documents.length,
-                        )
-                      : patientDashboardCopy.patient.documents.withoutCount}
-                  </p>
-                </div>
-                <DocumentsTable documents={documents} patientId={patient.id} />
-              </div>
-            ),
-          },
-          {
             value: "upload",
+            ariaLabel: patientDashboardCopy.patient.tabs.upload,
             label: (
               <>
                 <FileUp className="size-4" aria-hidden />
@@ -120,51 +91,21 @@ function PatientWorkspaceContent({
               </>
             ),
             content: (
-              <UploadSplitPane
-                patientId={patient.id}
-                userName={userName}
-                patientFirstName={patient.firstName}
-                patientRelationship={patient.relationship}
-                isFirstUpload={documentCount === 0}
-              />
-            ),
-          },
-          {
-            value: "share",
-            label: (
-              <>
-                <Share2 className="size-4" aria-hidden />
-                {patientDashboardCopy.patient.tabs.share}
-              </>
-            ),
-            content: (
-              <div className="clinical-card p-4 md:p-5">
-                <div className="mb-4">
-                  <h2 className="font-heading text-lg font-semibold">
-                    {patient.relationship === "self"
-                      ? patientDashboardCopy.patient.share.titleSelf
-                      : patientDashboardCopy.patient.share.titleOther(
-                          patient.firstName,
-                        )}
-                  </h2>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {patient.relationship === "self"
-                      ? patientDashboardCopy.patient.share.descriptionSelf
-                      : patientDashboardCopy.patient.share.descriptionOther(
-                          patient.firstName,
-                        )}
-                  </p>
-                </div>
-                <ShareWithProvider
+              <div className="w-full min-w-0">
+                <UploadSplitPane
                   patientId={patient.id}
-                  patientName={patientName}
+                  userName={userName}
+                  patientFirstName={patient.firstName}
                   patientRelationship={patient.relationship}
+                  isFirstUpload={documentCount === 0}
                 />
               </div>
             ),
           },
           {
             value: "timeline",
+            ariaLabel: patientDashboardCopy.patient.tabs.timeline,
+            badge: documentCount > 0 ? documentCount : undefined,
             label: (
               <>
                 <Activity className="size-4" aria-hidden />
@@ -175,13 +116,17 @@ function PatientWorkspaceContent({
               <div className="clinical-card p-4 md:p-5">
                 <div className="mb-4">
                   <h2 className="font-heading text-lg font-semibold">
-                    {patientDashboardCopy.patient.timeline.title}
+                    {patientDashboardCopy.patient.timeline.fullTitle}
                   </h2>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {patientDashboardCopy.patient.timeline.description}
+                    {patientDashboardCopy.patient.timeline.fullDescription}
                   </p>
                 </div>
-                <CareTimeline documents={documents} variant="clinical" />
+                <CareTimeline
+                  documents={documents}
+                  variant="clinical"
+                  showHeader={false}
+                />
               </div>
             ),
           },

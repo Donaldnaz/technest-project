@@ -1,9 +1,18 @@
 import { LinkButton } from "@/components/ui/link-button";
 import { SiteContainer } from "@/components/layout/site-container";
 import { landingCopy } from "@/lib/copy/landing";
+import type { PublicNavState } from "@/lib/navigation/public-nav-state";
 
-export function LandingCta() {
+type LandingCtaProps = {
+  navState: PublicNavState;
+};
+
+export function LandingCta({ navState }: LandingCtaProps) {
   const { cta } = landingCopy;
+
+  if (navState.isAuthenticated) {
+    return null;
+  }
 
   return (
     <section className="site-section border-t border-border/50">
@@ -26,7 +35,11 @@ export function LandingCta() {
               {cta.description}
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <LinkButton href="/auth/sign-up" size="lg" className="rounded-2xl">
+              <LinkButton
+                href="/auth/sign-up"
+                size="lg"
+                className="rounded-2xl"
+              >
                 {cta.createAccount}
               </LinkButton>
               <LinkButton

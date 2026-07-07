@@ -21,16 +21,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "iCare — Simple Health Records Portal",
+  title: "iCare — Secure Medical Document Upload Portal",
   description:
-    "A simple healthcare management portal for patients. Upload medical documents securely and share them with practitioners for review.",
-  other: {
-    "business:contact_data:street_address": "548 Market Street, Suite 35410",
-    "business:contact_data:locality": "San Francisco",
-    "business:contact_data:region": "CA",
-    "business:contact_data:postal_code": "94104",
-    "business:contact_data:country_name": "United States",
-  },
+    "Upload and manage medical records in a simple, protected healthcare portal. Share lab results and clinical documents with your practitioner when you are ready.",
 };
 
 export default function RootLayout({
@@ -56,7 +49,7 @@ export default function RootLayout({
             signUp={{ fields: ["name"] }}
             credentials={{
               confirmPassword: true,
-              forgotPassword: false,
+              forgotPassword: true,
             }}
             social={{ providers: ["google"] }}
             redirectTo={POST_AUTH_REDIRECT}

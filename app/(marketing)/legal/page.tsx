@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { LegalIndexLinks } from "@/components/legal/legal-footer-links";
 import { LegalPageShell } from "@/components/legal/legal-page-shell";
 import { legalCopy } from "@/lib/copy/legal";
 
@@ -16,10 +15,7 @@ export default function LegalIndexPage() {
     <LegalPageShell
       title={index.title}
       description={index.description}
-      showSubnav={false}
-      showPager={false}
-    >
-      <LegalIndexLinks />
-    </LegalPageShell>
+      variant="hub"
+    />
   );
 }

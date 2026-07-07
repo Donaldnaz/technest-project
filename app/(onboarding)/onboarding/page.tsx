@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 
 import { OnboardingForm } from "@/components/onboarding/onboarding-form";
 import { SiteContainer } from "@/components/layout/site-container";
-import { patientOnboardingCopy } from "@/lib/copy/patient/onboarding";
 import { isOnboardingComplete } from "@/lib/auth/onboarding";
 import { getOptionalSession } from "@/lib/auth/session";
 
@@ -40,10 +39,11 @@ export default async function OnboardingPage() {
     <SiteContainer className="max-w-2xl">
       <header className="mb-8 text-center md:mb-10">
         <h1 className="font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-          {patientOnboardingCopy.page.title}
+          Welcome to iCare
         </h1>
         <p className="mt-3 text-lg leading-relaxed text-muted-foreground">
-          {patientOnboardingCopy.page.description}
+          Before you upload health records, tell us a little about you and who
+          you are caring for.
         </p>
       </header>
 

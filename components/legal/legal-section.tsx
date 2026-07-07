@@ -6,24 +6,47 @@ type LegalSectionProps = {
   title: string;
   children: ReactNode;
   id?: string;
+  variant?: "default" | "callout";
 };
 
-export function LegalSection({ title, children, id }: LegalSectionProps) {
+export function LegalSection({
+  title,
+  children,
+  id,
+  variant = "default",
+}: LegalSectionProps) {
+  const isCallout = variant === "callout";
+
   return (
     <section
       id={id}
       className={cn(
-        "scroll-mt-24 border-t border-border/60 pt-8 first:border-t-0 first:pt-0",
+        isCallout
+          ? "rounded-2xl border border-border/50 bg-muted/25 p-6 md:p-8"
+          : "scroll-mt-24 border-t border-border/40 pt-12 first:border-t-0 first:pt-0",
       )}
       aria-labelledby={id ? `${id}-heading` : undefined}
     >
       <h2
         id={id ? `${id}-heading` : undefined}
-        className="font-heading text-xl font-semibold tracking-tight text-foreground"
+        className={cn(
+          "font-heading font-semibold tracking-tight text-foreground",
+          isCallout
+            ? "text-xl md:text-2xl"
+            : "border-l-2 border-primary/30 pl-4 text-xl md:text-2xl",
+        )}
       >
         {title}
       </h2>
-      <div className="mt-4 space-y-4 text-base leading-7 text-muted-foreground [&_a]:font-medium [&_a]:text-primary [&_a]:underline-offset-4 [&_a]:hover:underline [&_li]:pl-1 [&_strong]:font-medium [&_strong]:text-foreground [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5">
+      <div
+        className={cn(
+          "space-y-4 text-[0.9375rem] leading-7 text-muted-foreground md:text-base md:leading-8",
+          isCallout ? "mt-5" : "mt-5 pl-4",
+          "[&_a]:font-medium [&_a]:text-primary [&_a]:underline-offset-4 [&_a]:hover:underline",
+          "[&_li]:pl-0.5 [&_strong]:font-medium [&_strong]:text-foreground",
+          "[&_ul]:list-disc [&_ul]:space-y-2.5 [&_ul]:pl-5",
+        )}
+      >
         {children}
       </div>
     </section>

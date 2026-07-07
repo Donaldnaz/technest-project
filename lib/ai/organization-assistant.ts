@@ -1,7 +1,7 @@
 import "server-only";
 
-import { isGeminiConfigured } from "@/lib/ai/google-model";
 import { generateTextWithGeminiFallback } from "@/lib/ai/gemini-fallback";
+import { isGeminiConfigured } from "@/lib/ai/google-model";
 import { ORGANIZATION_KNOWLEDGE } from "@/lib/ai/organization-knowledge";
 import { contactEmail } from "@/lib/landing/navigation";
 
@@ -27,14 +27,6 @@ ${ORGANIZATION_KNOWLEDGE}`;
 function getAssistantFailureReply(error: unknown): string {
   const message = error instanceof Error ? error.message : String(error);
   const normalized = message.toLowerCase();
-
-  if (
-    normalized.includes("high demand") ||
-    normalized.includes("unavailable") ||
-    normalized.includes("503")
-  ) {
-    return "The assistant is busy right now. Please wait a moment and try again.";
-  }
 
   if (
     normalized.includes("prepayment credits") ||

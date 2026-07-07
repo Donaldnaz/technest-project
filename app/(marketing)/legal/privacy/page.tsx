@@ -78,7 +78,7 @@ export default function PrivacyPage() {
         </ul>
       </LegalSection>
 
-      <LegalSection title="Contact us" id="contact">
+      <LegalSection title="Contact us" id="contact" variant="callout">
         <p>
           If you have questions about this privacy policy or your information,
           email us at{" "}

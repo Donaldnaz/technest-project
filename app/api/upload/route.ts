@@ -2,7 +2,6 @@ import { handleUpload } from "@vercel/blob/client";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
-import { auth } from "@/lib/auth/server";
 import { requireUserId } from "@/lib/auth/session";
 import {
   getBlobTokenErrorMessage,
@@ -16,9 +15,7 @@ import {
 import { finalizeDocumentUpload } from "@/lib/documents/finalize-upload";
 import { getPatientById } from "@/lib/db/queries/patients";
 import { NotFoundError, UnauthorizedError } from "@/lib/errors";
-import { notifyDashboardDocumentUploaded } from "@/lib/slack/notify-upload";
-import { uploadPdfToSlackChannel } from "@/lib/slack/upload-pdf-file";
-import { maskPatientName } from "@/lib/slack/mask-phi";
+import { notifyDocumentUploadSlack } from "@/lib/slack/post-upload-notifications";
 import {
   uploadClientPayloadSchema,
   uploadTokenPayloadSchema,
@@ -119,7 +116,7 @@ export async function POST(request: Request): Promise<NextResponse> {
           JSON.parse(tokenPayload ?? "{}"),
         );
 
-        const { documentId } = await finalizeDocumentUpload({
+        const { documentId, created } = await finalizeDocumentUpload({
           userId: payload.userId,
           patientId: payload.patientId,
           blobUrl: blob.url,
@@ -129,37 +126,16 @@ export async function POST(request: Request): Promise<NextResponse> {
           category: payload.category,
         });
 
-        try {
-          const [patient, { data: session }] = await Promise.all([
-            getPatientById(payload.userId, payload.patientId),
-            auth.getSession(),
-          ]);
-
-          if (patient && session?.user?.email) {
-            await notifyDashboardDocumentUploaded({
-              documentId,
-              patientFirstName: patient.firstName,
-              patientLastName: patient.lastName,
-              uploaderEmail: session.user.email,
-              category: payload.category,
-              vercelBlobUrl: blob.url,
-            });
-
-            if (payload.mimeType === "application/pdf") {
-              await uploadPdfToSlackChannel({
-                blobUrl: blob.url,
-                documentId,
-                category: payload.category,
-                maskedPatientName: maskPatientName(
-                  patient.firstName,
-                  patient.lastName,
-                ),
-              });
-            }
-          }
-        } catch (error) {
-          console.error("[upload] Slack notification failed:", error);
-        }
+        await notifyDocumentUploadSlack({
+          userId: payload.userId,
+          patientId: payload.patientId,
+          documentId,
+          fileName: payload.fileName,
+          category: payload.category,
+          mimeType: payload.mimeType,
+          blobUrl: blob.url,
+          created,
+        });
       },
     });
 

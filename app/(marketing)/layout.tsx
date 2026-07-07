@@ -21,7 +21,7 @@ export default async function MarketingLayout({
         {children}
       </main>
       <LandingFooter />
-      <OrganizationAssistant variant="public" />
+      <OrganizationAssistant />
     </div>
   );
 }

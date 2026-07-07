@@ -12,7 +12,6 @@ import {
   normalizeMimeType,
 } from "@/lib/constants/upload";
 import { getUploadErrorMessage } from "@/lib/upload/errors";
-import { patientValidationCopy } from "@/lib/copy/patient/validation";
 
 export type QueueItemStatus = "staged" | "uploading" | "complete" | "error";
 
@@ -42,12 +41,12 @@ function validateFile(file: File): { mimeType: string } | { error: string } {
   const mimeType = normalizeMimeType(file.type);
   if (!mimeType) {
     return {
-      error: patientValidationCopy.upload.unsupportedType,
+      error: "Only PDF and JPEG files are supported.",
     };
   }
   if (file.size > MAX_UPLOAD_BYTES) {
     return {
-      error: patientValidationCopy.upload.fileTooLarge,
+      error: "File is too large — maximum size is 10 MB.",
     };
   }
   return { mimeType };
@@ -187,7 +186,7 @@ export function useUploadQueue({ patientId }: UseUploadQueueOptions) {
         });
 
         if (!registered.success) {
-          throw new Error(registered.error ?? patientValidationCopy.upload.metadataFailed);
+          throw new Error(registered.error ?? "Could not save record metadata.");
         }
 
         updateItem(item.id, { status: "complete", progress: 100 });

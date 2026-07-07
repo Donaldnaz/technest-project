@@ -27,6 +27,14 @@ export const patientAuthCopy = {
     hint: "Choose a new password for your account.",
   },
   backToSignIn: "Back to sign in",
+  signOut: {
+    label: "Sign out",
+    confirmTitle: "Sign out?",
+    confirmDescription: "Are you sure you want to sign out?",
+    confirmAction: "Sign out",
+    cancel: "Cancel",
+    signingOut: "Signing out…",
+  },
   oauth: {
     google: "Continue with Google",
   },

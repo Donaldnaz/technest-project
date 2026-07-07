@@ -1,15 +1,14 @@
 import type { ActionResult } from "@/lib/actions/types";
-import { validationCopy } from "@/lib/copy/validation";
 
 export class UnauthorizedError extends Error {
-  constructor(message = validationCopy.general.unauthorized) {
+  constructor(message = "You must be signed in to perform this action.") {
     super(message);
     this.name = "UnauthorizedError";
   }
 }
 
 export class NotFoundError extends Error {
-  constructor(message = validationCopy.general.notFound) {
+  constructor(message = "The requested resource was not found.") {
     super(message);
     this.name = "NotFoundError";
   }
@@ -53,13 +52,13 @@ export function toActionError(error: unknown): ActionResult<never> {
 
     return {
       success: false,
-      error: validationCopy.general.formErrors,
+      error: "Please check the form for errors.",
       fieldErrors,
     };
   }
 
   return {
     success: false,
-    error: validationCopy.general.unexpected,
+    error: "Something went wrong. Please try again.",
   };
 }

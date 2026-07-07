@@ -1,18 +1,20 @@
 export const slackCopy = {
   documentIngested: {
     header: "System Alert: Secure document ingestion completed",
-    fallback: (maskedPatient: string, documentId: string) =>
-      `System Alert: Document ingestion completed for ${maskedPatient}. Document ID: ${documentId}. Status: Awaiting clinician sign-off.`,
+    fallback: (maskedPatient: string, fileName: string, documentId: string) =>
+      `System Alert: Document ingestion completed for ${maskedPatient}. Document: ${fileName}. Document ID: ${documentId}.`,
     fields: {
       patient: "Patient (masked)",
       uploadedBy: "Submitted by",
+      typeOfCare: "Type of care",
+      hospitalName: "Hospital",
+      medicalRecordNumber: "MRN",
       documentType: "Record category",
       documentId: "Document ID",
-      status: "Status",
-      fileLink: "Secure file link",
+      document: "Document",
     },
-    statusValue: "Awaiting clinician sign-off",
-    fileLinkLabel: "Open in secure storage",
+    documentAttachedInChannel: "Attached in channel (no link)",
+    documentUnavailable: "Link unavailable",
   },
   pdfFileUpload: {
     comment: (maskedPatient: string, categoryLabel: string, documentId: string) =>

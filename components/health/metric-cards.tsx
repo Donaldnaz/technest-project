@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 
 import { Sparkline } from "@/components/health/sparkline";
-import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
 
 type MetricCardsProps = {
   documentCount: number;
@@ -37,25 +36,25 @@ export function MetricCards({
 }: MetricCardsProps) {
   const metrics: Metric[] = [
     {
-      label: patientDashboardCopy.overview.metrics.total.label,
+      label: "Medical records uploaded",
       value: documentCount,
-      hint: patientDashboardCopy.overview.metrics.total.hint,
+      hint: "Lab reports, referrals & imaging you've added",
       icon: FileText,
       trend: buildTrend(documentCount || 3),
       iconBg: "bg-teal-100 text-teal-800 dark:bg-teal-950/50 dark:text-teal-200",
     },
     {
-      label: patientDashboardCopy.overview.metrics.ready.label,
+      label: "Summaries ready",
       value: readyCount,
-      hint: patientDashboardCopy.overview.metrics.ready.hint,
+      hint: "Plain-language summaries you can read",
       icon: FileCheck2,
       trend: buildTrend(readyCount || 1),
       iconBg: "bg-sage-100 text-sage-800 dark:bg-sage-950/50 dark:text-sage-200",
     },
     {
-      label: patientDashboardCopy.overview.metrics.processing.label,
+      label: "Being reviewed",
       value: processingCount,
-      hint: patientDashboardCopy.overview.metrics.processing.hint,
+      hint: "We're preparing your summary",
       icon: Activity,
       trend: buildTrend(processingCount || 1),
       iconBg: "bg-amber-100 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200",
@@ -63,14 +62,14 @@ export function MetricCards({
   ];
 
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {metrics.map((metric) => (
         <article
           key={metric.label}
-          className="health-card flex flex-col gap-5 rounded-3xl p-6 shadow-sm transition-shadow hover:shadow-md md:p-7"
+          className="health-card flex flex-col gap-4 rounded-3xl p-5 shadow-sm transition-shadow hover:shadow-md md:p-6"
         >
-          <div className="flex items-start justify-between gap-4">
-            <div className="space-y-2">
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">
                 {metric.label}
               </p>

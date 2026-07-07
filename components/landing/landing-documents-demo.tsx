@@ -1,15 +1,12 @@
 "use client";
 
-import {
-  ClinicalStatusBadge,
-  type ClinicalStatus,
-} from "@/components/clinical/clinical-status-badge";
+import { Badge } from "@/components/ui/badge";
 import { landingCopy } from "@/lib/copy/landing";
 
-const statusMap: Record<"ready" | "processing", ClinicalStatus> = {
-  ready: "validated",
-  processing: "processing",
-};
+const statusLabels = {
+  ready: "Ready to view",
+  processing: "Being organized",
+} as const;
 
 export function LandingDocumentsDemo() {
   const { documents } = landingCopy.experience;
@@ -50,10 +47,16 @@ export function LandingDocumentsDemo() {
                 <td className="px-4 py-3 font-medium">{row.fileName}</td>
                 <td className="px-4 py-3 text-muted-foreground">{row.type}</td>
                 <td className="px-4 py-3">
-                  <ClinicalStatusBadge
-                    status={statusMap[row.status]}
-                    audience="patient"
-                  />
+                  <Badge
+                    variant={row.status === "ready" ? "secondary" : "outline"}
+                    className={
+                      row.status === "ready"
+                        ? "bg-sage-100 text-sage-800 dark:bg-sage-950/50 dark:text-sage-200"
+                        : undefined
+                    }
+                  >
+                    {statusLabels[row.status]}
+                  </Badge>
                 </td>
               </tr>
             ))}

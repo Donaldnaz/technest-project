@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-
 import { LandingHeroPreview } from "@/components/landing/landing-hero-preview";
 import { SiteContainer } from "@/components/layout/site-container";
 import { landingCopy } from "@/lib/copy/landing";

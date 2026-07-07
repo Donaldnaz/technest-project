@@ -1,13 +1,16 @@
 import { AuthHeaderActions } from "@/components/layout/auth-header-actions";
 import { SiteBrandLink } from "@/components/layout/site-brand-link";
 import { SiteHeader } from "@/components/layout/site-header";
+import { getPublicNavState } from "@/lib/navigation/public-nav-state";
 
-export function AuthSiteHeader() {
+export async function AuthSiteHeader() {
+  const navState = await getPublicNavState();
+
   return (
     <SiteHeader
       variant="minimal"
       brand={<SiteBrandLink compact />}
-      actions={<AuthHeaderActions />}
+      actions={<AuthHeaderActions navState={navState} />}
     />
   );
 }

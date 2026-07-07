@@ -25,3 +25,19 @@ export function toIsoDateTime(value: string | Date | null | undefined): string {
   const date = toDate(value);
   return date?.toISOString() ?? "";
 }
+
+const DISPLAY_LOCALE = undefined;
+
+export function formatCareTimelineDateTime(
+  value: string | Date | null | undefined,
+): string {
+  const date = toDate(value);
+  if (!date) return "—";
+
+  return date.toLocaleString(DISPLAY_LOCALE, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}

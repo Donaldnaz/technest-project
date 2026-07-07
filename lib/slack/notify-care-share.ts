@@ -1,7 +1,6 @@
 import "server-only";
 
 import { maskFreeTextNote, maskPatientName } from "@/lib/slack/mask-phi";
-import { slackCopy } from "@/lib/copy/slack";
 
 export type CareShareSlackPayload = {
   shareId: string;
@@ -41,7 +40,7 @@ export async function notifyCareShareRequest(
       type: "header",
       text: {
         type: "plain_text",
-        text: slackCopy.careShare.header,
+        text: "New care share request",
         emoji: true,
       },
     },
@@ -50,23 +49,19 @@ export async function notifyCareShareRequest(
       fields: [
         {
           type: "mrkdwn",
-          text: `*${slackCopy.careShare.fields.providerEmail}:*\n${payload.providerEmail}`,
+          text: `*Provider email:*\n${payload.providerEmail}`,
         },
         {
           type: "mrkdwn",
-          text: `*${slackCopy.careShare.fields.patient}:*\n${maskedName}`,
+          text: `*Patient (masked):*\n${maskedName}`,
         },
         {
           type: "mrkdwn",
-          text: `*${slackCopy.careShare.fields.recordCount}:*\n${payload.documentCount}`,
+          text: `*Records on file:*\n${payload.documentCount}`,
         },
         {
           type: "mrkdwn",
-          text: `*${slackCopy.careShare.fields.shareId}:*\n\`${payload.shareId}\``,
-        },
-        {
-          type: "mrkdwn",
-          text: `*${slackCopy.careShare.fields.status}:*\n${slackCopy.careShare.statusValue}`,
+          text: `*Share ID:*\n\`${payload.shareId}\``,
         },
       ],
     },
@@ -86,7 +81,7 @@ export async function notifyCareShareRequest(
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `*${slackCopy.careShare.fields.note}:*\n${maskedNote}`,
+        text: `*Patient note:*\n${maskedNote}`,
       },
     });
   }
@@ -96,7 +91,7 @@ export async function notifyCareShareRequest(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        text: slackCopy.careShare.fallback(payload.shareId),
+        text: `New care share request — Share ID: ${payload.shareId}`,
         blocks,
       }),
     });

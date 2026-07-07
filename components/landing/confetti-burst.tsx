@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 type ConfettiBurstProps = {
@@ -16,25 +16,11 @@ const COLORS = [
   "bg-amber-200",
 ];
 
-function createParticles() {
-  return Array.from({ length: 24 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    delay: Math.random() * 0.3,
-    color: COLORS[i % COLORS.length] ?? "bg-primary",
-    size: 4 + Math.random() * 6,
-  }));
-}
-
 export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
   const [particles, setParticles] = useState<
     { id: number; x: number; delay: number; color: string; size: number }[]
   >([]);
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
+  const [mounted, setMounted] = useState(false);
   const onCompleteRef = useRef(onComplete);
 
   useEffect(() => {
@@ -42,24 +28,31 @@ export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
   }, [onComplete]);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (!active) {
-      const resetTimer = window.setTimeout(() => setParticles([]), 0);
-      return () => window.clearTimeout(resetTimer);
+      setParticles([]);
+      return;
     }
 
-    const spawnTimer = window.setTimeout(() => {
-      setParticles(createParticles());
-    }, 0);
+    setParticles(
+      Array.from({ length: 24 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        delay: Math.random() * 0.3,
+        color: COLORS[i % COLORS.length] ?? "bg-primary",
+        size: 4 + Math.random() * 6,
+      })),
+    );
 
-    const completeTimer = window.setTimeout(() => {
+    const timer = setTimeout(() => {
       setParticles([]);
       onCompleteRef.current?.();
     }, 2200);
 
-    return () => {
-      window.clearTimeout(spawnTimer);
-      window.clearTimeout(completeTimer);
-    };
+    return () => clearTimeout(timer);
   }, [active]);
 
   if (!mounted || particles.length === 0) return null;

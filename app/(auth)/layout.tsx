@@ -5,6 +5,8 @@ import { SkipLink } from "@/components/layout/skip-link";
 import { SiteContainer } from "@/components/layout/site-container";
 import { legalNavLinks } from "@/lib/landing/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default function AuthLayout({
   children,
 }: {

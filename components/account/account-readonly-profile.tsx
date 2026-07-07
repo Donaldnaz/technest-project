@@ -16,21 +16,31 @@ function ProfileField({
   icon: Icon,
   label,
   value,
+  breakWords = false,
 }: {
   icon: typeof UserRound;
   label: string;
   value: string;
+  breakWords?: boolean;
 }) {
   return (
-    <div className="flex gap-4 rounded-2xl border border-border/60 bg-oat-50/40 p-4 dark:bg-charcoal-950/20">
+    <div className="flex items-start gap-4 rounded-2xl border border-border/60 bg-oat-50/40 p-4 dark:bg-charcoal-950/20">
       <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
         <Icon className="size-4" aria-hidden />
       </span>
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {label}
         </dt>
-        <dd className="mt-1 truncate text-base font-medium">{value}</dd>
+        <dd
+          className={
+            breakWords
+              ? "mt-1 break-all text-base font-medium leading-snug"
+              : "mt-1 truncate text-base font-medium"
+          }
+        >
+          {value}
+        </dd>
       </div>
     </div>
   );
@@ -85,7 +95,7 @@ export function AccountReadonlyProfile() {
         </div>
       </div>
 
-      <dl className="grid gap-3 sm:grid-cols-2">
+      <dl className="grid gap-3">
         <ProfileField
           icon={UserRound}
           label={patientAccountCopy.profile.fields.name}
@@ -95,6 +105,7 @@ export function AccountReadonlyProfile() {
           icon={Mail}
           label={patientAccountCopy.profile.fields.email}
           value={user.email ?? "—"}
+          breakWords
         />
       </dl>
 

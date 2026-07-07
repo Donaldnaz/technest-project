@@ -5,7 +5,6 @@ import {
   DEFAULT_COUNTRY,
   DEFAULT_STATE,
 } from "@/lib/constants/california-locations";
-import { patientValidationCopy } from "@/lib/copy/patient/validation";
 import {
   HEALTHCARE_SPECIALTIES,
   OTHER_SPECIALTY,
@@ -17,20 +16,20 @@ const locationSchema = z.object({
   healthcareLocation: z
     .string()
     .trim()
-    .min(1, patientValidationCopy.onboarding.healthcareLocation)
+    .min(1, "Healthcare location is required")
     .max(200),
-  city: z.string().trim().min(1, patientValidationCopy.onboarding.city).max(100),
+  city: z.string().trim().min(1, "City is required").max(100),
   state: z.literal(DEFAULT_STATE),
   country: z.literal(DEFAULT_COUNTRY),
   healthQuarter: z.enum(CALIFORNIA_HEALTH_QUARTERS, {
-    message: patientValidationCopy.onboarding.healthQuarter,
+    message: "Select a California health region",
   }),
 });
 
 const specialtySchema = z
   .object({
     healthcareSpecialty: z.enum(HEALTHCARE_SPECIALTIES, {
-      message: patientValidationCopy.onboarding.specialty,
+      message: "Select a healthcare specialty",
     }),
     customSpecialty: z
       .string()
@@ -46,7 +45,7 @@ const specialtySchema = z
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: patientValidationCopy.onboarding.customSpecialty,
+        message: "Please describe your specialty",
         path: ["customSpecialty"],
       });
     }
@@ -58,19 +57,19 @@ export const patientFieldsSchema = z
     patientFirstName: z
       .string()
       .trim()
-      .min(1, patientValidationCopy.onboarding.firstName)
+      .min(1, "First name is required")
       .max(100),
     patientLastName: z
       .string()
       .trim()
-      .min(1, patientValidationCopy.onboarding.lastName)
+      .min(1, "Last name is required")
       .max(100),
     dateOfBirth: z
       .string()
       .trim()
       .optional()
       .transform((value) => (value === "" ? undefined : value))
-      .pipe(z.string().date(patientValidationCopy.onboarding.dateOfBirth).optional()),
+      .pipe(z.string().date("Enter a valid date (YYYY-MM-DD)").optional()),
     medicalRecordNumber: z
       .string()
       .trim()
@@ -92,12 +91,12 @@ export const onboardingSchema = z
     accountFirstName: z
       .string()
       .trim()
-      .min(1, patientValidationCopy.onboarding.firstName)
+      .min(1, "First name is required")
       .max(100),
     accountLastName: z
       .string()
       .trim()
-      .min(1, patientValidationCopy.onboarding.lastName)
+      .min(1, "Last name is required")
       .max(100),
   })
   .merge(patientFieldsSchema);

@@ -87,6 +87,11 @@ export const patientDashboardCopy = {
     timeline: {
       title: "Recent activity",
       description: "Documents you have uploaded recently",
+      uploadedLabel: "Uploaded",
+      viewAll: "View all activity",
+      fullTitle: "Activity",
+      fullDescription:
+        "A complete history of documents uploaded to this profile",
     },
     loading: "Loading your records…",
   },
