@@ -5,7 +5,8 @@ import {
   FileText,
 } from "lucide-react";
 
-import { Sparkline } from "@/components/health/sparkline";
+import { VitalSignWaveform } from "@/components/health/vital-sign-waveform";
+import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
 
 type MetricCardsProps = {
   documentCount: number;
@@ -13,57 +14,59 @@ type MetricCardsProps = {
   processingCount: number;
 };
 
+type WaveformVariant = "teal" | "sage" | "amber";
+type WaveformPace = "steady" | "brisk";
+
 type Metric = {
   label: string;
   value: number;
   hint: string;
   icon: LucideIcon;
-  trend: number[];
+  waveformVariant: WaveformVariant;
+  waveformPace: WaveformPace;
   iconBg: string;
 };
-
-function buildTrend(seed: number): number[] {
-  return Array.from({ length: 7 }, (_, index) => {
-    const wave = Math.sin((index + seed) * 0.9) * 3;
-    return Math.max(1, seed + index * 0.6 + wave);
-  });
-}
 
 export function MetricCards({
   documentCount,
   readyCount,
   processingCount,
 }: MetricCardsProps) {
-  const metrics: Metric[] = [
+  const { metrics } = patientDashboardCopy.overview;
+
+  const metricValues: Metric[] = [
     {
-      label: "Medical records uploaded",
+      label: metrics.total.label,
       value: documentCount,
-      hint: "Lab reports, referrals & imaging you've added",
+      hint: metrics.total.hint,
       icon: FileText,
-      trend: buildTrend(documentCount || 3),
+      waveformVariant: "teal",
+      waveformPace: "steady",
       iconBg: "bg-teal-100 text-teal-800 dark:bg-teal-950/50 dark:text-teal-200",
     },
     {
-      label: "Summaries ready",
+      label: metrics.ready.label,
       value: readyCount,
-      hint: "Plain-language summaries you can read",
+      hint: metrics.ready.hint,
       icon: FileCheck2,
-      trend: buildTrend(readyCount || 1),
+      waveformVariant: "sage",
+      waveformPace: "steady",
       iconBg: "bg-sage-100 text-sage-800 dark:bg-sage-950/50 dark:text-sage-200",
     },
     {
-      label: "Being reviewed",
+      label: metrics.processing.label,
       value: processingCount,
-      hint: "We're preparing your summary",
+      hint: metrics.processing.hint,
       icon: Activity,
-      trend: buildTrend(processingCount || 1),
+      waveformVariant: "amber",
+      waveformPace: "steady",
       iconBg: "bg-amber-100 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200",
     },
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {metrics.map((metric) => (
+    <div className="stat-grid">
+      {metricValues.map((metric) => (
         <article
           key={metric.label}
           className="health-card flex flex-col gap-4 rounded-3xl p-5 shadow-sm transition-shadow hover:shadow-md md:p-6"
@@ -83,7 +86,11 @@ export function MetricCards({
               <metric.icon className="size-5" aria-hidden />
             </div>
           </div>
-          <Sparkline values={metric.trend} />
+          <VitalSignWaveform
+            active={metric.value > 0}
+            variant={metric.waveformVariant}
+            pace={metric.waveformPace}
+          />
           <p className="text-xs text-muted-foreground">{metric.hint}</p>
         </article>
       ))}

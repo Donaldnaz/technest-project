@@ -1,18 +1,27 @@
 export const patientAuthCopy = {
+  nav: {
+    signIn: "Sign in",
+    signUp: "Sign up",
+    signInDescription: "Welcome back",
+    signUpDescription:
+      "Create your account to upload and organize health records securely.",
+  },
   hero: {
     title: "Your secure health folder",
     description:
-      "Sign in to upload medical records, keep them private, and share with your doctor when you are ready.",
+      "Sign in to upload health records, read plain English summaries reviewed by practitioners, and share with your care team when you are ready.",
     highlights: [
-      "Your own private profile — only you and your care team can access your files",
+      "Your private profile — only you and practitioners you authorize can access your files",
       "Every upload is encrypted from the moment you add a document",
     ],
     footer:
-      "Your health information is protected under standard privacy and security rules.",
+      "Your health information is protected under standard privacy and security safeguards. iCare does not provide medical advice.",
   },
   signUp: {
     consent:
       "By creating an account, you agree to our Privacy Policy and Terms of Service.",
+    passwordMismatch:
+      "Your passwords do not match. Please check both fields and try again.",
   },
   signIn: {
     hint: "Sign in with Google or the email and password you used when you signed up.",

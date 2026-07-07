@@ -1,5 +1,7 @@
 "use client";
 
+import { useContext } from "react";
+import { AuthUIContext, GoogleIcon } from "@neondatabase/auth-ui";
 import { Mail, UserRound } from "lucide-react";
 
 import { authClient } from "@/lib/auth/client";
@@ -46,6 +48,25 @@ function ProfileField({
   );
 }
 
+function GoogleSignInIndicator() {
+  const { hooks } = useContext(AuthUIContext);
+  const { data: accounts, isPending: accountsPending } = hooks.useListAccounts();
+  const usesGoogle = accounts?.some((account) => account.providerId === "google");
+
+  if (accountsPending || !usesGoogle) {
+    return null;
+  }
+
+  return (
+    <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background px-3 py-1.5 text-sm shadow-sm">
+      <GoogleIcon className="size-4 shrink-0" aria-hidden />
+      <span className="font-medium text-foreground">
+        {patientAccountCopy.profile.googleSignIn}
+      </span>
+    </div>
+  );
+}
+
 export function AccountReadonlyProfile() {
   const { data: session, isPending } = authClient.useSession();
 
@@ -85,13 +106,14 @@ export function AccountReadonlyProfile() {
         >
           {getInitials(user.name)}
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 space-y-2">
           <h2 className="font-heading text-xl font-semibold tracking-tight">
             {patientAccountCopy.profile.title}
           </h2>
-          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+          <p className="text-sm leading-relaxed text-muted-foreground">
             {patientAccountCopy.profile.description}
           </p>
+          <GoogleSignInIndicator />
         </div>
       </div>
 

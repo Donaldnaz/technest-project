@@ -7,10 +7,10 @@ import {
 } from "lucide-react";
 
 const points = [
-  "Your medical history stays private and accessible only to you",
-  "Lab results and imaging stored safely with each patient profile",
-  "Clear record of who is in your care and what needs follow-up",
-  "Designed for clinicians and families — simple, calm, trustworthy",
+  "Your health records stay private until you choose to share them",
+  "Lab results and imaging stored securely in your personal health folder",
+  "Plain English summaries reviewed by practitioners before you read them",
+  "Designed for patients, caregivers, and care teams — simple, calm, and trustworthy",
 ];
 
 export function LandingSecurity() {
@@ -26,7 +26,7 @@ export function LandingSecurity() {
               { icon: Shield, label: "Privacy", value: "Protected" },
               { icon: Heart, label: "Records", value: "Organized" },
               { icon: UserCheck, label: "Care team", value: "Connected" },
-              { icon: Eye, label: "Results", value: "Clear" },
+              { icon: Eye, label: "Summaries", value: "Plain English" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -42,14 +42,14 @@ export function LandingSecurity() {
 
         <div>
           <p className="text-sm font-medium uppercase tracking-wider text-primary">
-            Trust & privacy
+            Trust and privacy
           </p>
           <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-            Your health deserves dignity and discretion
+            Your health information deserves respect and protection
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-            iCare is built around the belief that medical information should feel
-            safe — never exposed, never overwhelming, always in your control.
+            iCare is built around the belief that health records should feel
+            safe — encrypted, private, and always under your control.
           </p>
 
           <ul className="mt-8 space-y-4">

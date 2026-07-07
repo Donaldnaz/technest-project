@@ -1,8 +1,8 @@
 export const patientOnboardingCopy = {
   page: {
-    title: "Let's set up your health folder",
+    title: "Set up your health folder",
     description:
-      "A few details help us keep your records organized and ready to share with your doctor.",
+      "A few details help us keep your health records organized and ready to share with your care team.",
   },
   sections: {
     account: {
@@ -11,11 +11,11 @@ export const patientOnboardingCopy = {
     },
     profile: {
       title: "Health profile",
-      description: "Basic information about the patient these records belong to",
+      description: "Basic information about the patient these health records belong to",
     },
     relationship: {
       title: "Who are these records for?",
-      description: "Choose who you are uploading documents for",
+      description: "Choose who you are uploading health records for",
       self: "Myself",
       other: "Someone I care for",
       aria: "Who are these records for?",

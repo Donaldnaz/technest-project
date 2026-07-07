@@ -13,7 +13,7 @@ const contactTelHref = `tel:${contactPhone.replace(/[^\d+]/g, "")}`;
 
 type ContactFieldProps = {
   icon: typeof Phone;
-  label: string;
+  label?: string;
   children: React.ReactNode;
 };
 
@@ -24,10 +24,17 @@ function ContactField({ icon: Icon, label, children }: ContactFieldProps) {
         <Icon className="size-5" aria-hidden />
       </div>
       <div className="min-w-0 pt-0.5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          {label}
-        </p>
-        <div className="mt-1 text-sm leading-relaxed text-foreground">
+        {label ? (
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            {label}
+          </p>
+        ) : null}
+        <div
+          className={cn(
+            "text-sm leading-relaxed text-foreground",
+            label && "mt-1",
+          )}
+        >
           {children}
         </div>
       </div>
@@ -52,7 +59,6 @@ export function LandingContactDetails({
   description,
   phoneLabel,
   emailLabel,
-  addressLabel,
   hoursLabel = "Hours",
   hours,
   responseNote,
@@ -110,7 +116,7 @@ export function LandingContactDetails({
             </a>
           </ContactField>
 
-          <ContactField icon={MapPin} label={addressLabel}>
+          <ContactField icon={MapPin}>
             <address className="not-italic">
               <span className="block font-medium">{headquartersAddress.name}</span>
               {headquartersAddressLines.map((line) => (

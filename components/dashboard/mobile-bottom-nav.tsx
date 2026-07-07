@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users } from "lucide-react";
 
-import { profilePath } from "@/lib/routes/profile";
+import { getDashboardNavLinks } from "@/lib/navigation/dashboard-nav";
 import { cn } from "@/lib/utils";
 
 type MobileBottomNavProps = {
@@ -13,31 +12,24 @@ type MobileBottomNavProps = {
 
 export function MobileBottomNav({ profileId }: MobileBottomNavProps) {
   const pathname = usePathname();
-  const recordsHref = profileId ? profilePath(profileId) : "/dashboard";
-
-  const links = [
-    { href: "/dashboard", label: "Home", icon: LayoutDashboard },
-    { href: recordsHref, label: "Records", icon: Users, isProfile: true },
-  ];
+  const links = getDashboardNavLinks(profileId);
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 px-4 py-2 shadow-lg backdrop-blur-md md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 px-4 py-2 pb-safe shadow-lg backdrop-blur-md lg:hidden"
       aria-label="Main navigation"
     >
-      <ul className="mx-auto flex max-w-md items-center justify-around gap-2">
+      <ul className="mx-auto flex max-w-md items-center justify-around gap-1">
         {links.map((link) => {
-          const isActive =
-            pathname === link.href ||
-            (link.isProfile && pathname.startsWith("/dashboard/patients/")) ||
-            (link.href === "/dashboard" && pathname === "/dashboard");
+          const isActive = link.isActive(pathname, profileId);
 
           return (
             <li key={link.label}>
               <Link
                 href={link.href}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-1 rounded-2xl px-4 py-2 text-xs font-medium transition-colors",
+                  "flex flex-col items-center gap-1 rounded-2xl px-3 py-2 text-xs font-medium transition-colors",
                   isActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground",

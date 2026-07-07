@@ -46,17 +46,18 @@ export default async function DashboardGroupLayout({
         <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-md">
           <div className="mx-auto flex h-16 w-full max-w-full items-center justify-between gap-4 px-4 md:px-6">
             <div className="flex min-w-0 flex-col justify-self-start lg:hidden">
-              <div className="flex items-center gap-2">
+              <Link
+                href="/"
+                aria-label="Back to iCare home"
+                className="flex items-center gap-2"
+              >
                 <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
                   <HeartPulse className="size-4" aria-hidden />
                 </div>
-                <Link
-                  href="/dashboard"
-                  className="truncate font-heading font-semibold"
-                >
+                <span className="truncate font-heading font-semibold">
                   i<span className="text-primary">Care</span>
-                </Link>
-              </div>
+                </span>
+              </Link>
               <HeaderContext />
             </div>
 
@@ -73,7 +74,7 @@ export default async function DashboardGroupLayout({
 
         <main
           id="main-content"
-          className="flex-1 px-4 py-6 pb-24 md:px-8 md:py-8 md:pb-10"
+          className="flex-1 px-4 py-6 pb-24 md:px-8 md:py-8 lg:pb-10"
         >
           {children}
         </main>

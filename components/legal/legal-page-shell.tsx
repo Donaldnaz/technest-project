@@ -7,7 +7,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { AppBreadcrumbs } from "@/components/clinical/app-breadcrumbs";
 import { LegalHubCards } from "@/components/legal/legal-hub-cards";
-import { LegalDocPager, LegalSubnav } from "@/components/legal/legal-page-nav";
+import { LegalSubnav } from "@/components/legal/legal-page-nav";
 import { SectionHeader } from "@/components/layout/section-header";
 import { SiteContainer } from "@/components/layout/site-container";
 import { legalCopy, type LegalPageKey } from "@/lib/copy/legal";
@@ -29,7 +29,6 @@ type LegalPageShellProps = {
   children?: React.ReactNode;
   variant?: "hub" | "document";
   showSubnav?: boolean;
-  showPager?: boolean;
 };
 
 function LastUpdatedBadge({ className }: { className?: string }) {
@@ -51,16 +50,11 @@ export function LegalPageShell({
   children,
   variant = "document",
   showSubnav = true,
-  showPager = true,
 }: LegalPageShellProps) {
   const pathname = usePathname();
   const pageKey = pageKeys[pathname];
   const isHub = variant === "hub";
-  const intro = isHub
-    ? legalCopy.index.intro
-    : pageKey
-      ? legalCopy.pages[pageKey].intro
-      : description;
+  const intro = isHub ? legalCopy.index.intro : description;
 
   useEffect(() => {
     if (!pathname.startsWith("/legal")) return;
@@ -124,35 +118,19 @@ export function LegalPageShell({
             className="mb-6 md:mb-8"
           />
 
-          <Link
-            href="/legal"
-            className={cn(
-              "mb-8 inline-flex items-center gap-1.5 rounded-lg px-1 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground",
-              focusRingClassName,
-            )}
-          >
-            <ArrowLeft className="size-3.5 shrink-0" aria-hidden />
-            {legalCopy.flow.allLegal}
-          </Link>
+          {showSubnav ? <LegalSubnav className="mb-8 md:mb-10" /> : null}
 
-          <header className="border-l-2 border-primary/35 pl-5 md:pl-6">
-            <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium tracking-wide text-primary">
-              {legalCopy.shell.documentEyebrow}
-            </span>
-            <h1 className="mt-3 font-heading text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+          <header>
+            <h1 className="font-heading text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
               {title}
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg md:leading-8">
+            <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
               {intro}
             </p>
-            <LastUpdatedBadge className="mt-5" />
+            <LastUpdatedBadge className="mt-4" />
           </header>
 
-          {showSubnav ? <LegalSubnav className="mt-8 md:mt-10" /> : null}
-
-          <article className="mt-10 md:mt-12">{children}</article>
-
-          {showPager ? <LegalDocPager /> : null}
+          <article className="mt-8 md:mt-10">{children}</article>
         </div>
       </SiteContainer>
     </section>

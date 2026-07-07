@@ -3,6 +3,7 @@
 import { Suspense, useMemo } from "react";
 import {
   Activity,
+  Download,
   FileUp,
   LayoutGrid,
 } from "lucide-react";
@@ -13,16 +14,19 @@ import { UploadSplitPane } from "@/components/upload/upload-split-pane";
 import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
 import { patientRecordsHref } from "@/lib/navigation/patient-nav";
 import type { DocumentWithExtraction } from "@/lib/db/queries/documents";
+import type { PractitionerSummaryReport } from "@/lib/db/queries/summary-reports";
 import type { Patient } from "@/lib/db/schema";
 
 import { PatientHero } from "./patient-hero";
 import { PatientOverviewPanel } from "./patient-overview-panel";
 import { PatientWorkspaceTabs } from "./patient-workspace-tabs";
+import { SummaryReportsPanel } from "./summary-reports-panel";
 
 type PatientWorkspaceProps = {
   patient: Patient;
   documents: DocumentWithExtraction[];
   documentCount: number;
+  summaryReports: PractitionerSummaryReport[];
   userName?: string | null;
 };
 
@@ -37,6 +41,7 @@ function PatientWorkspaceContent({
   patient,
   documents,
   documentCount,
+  summaryReports,
   userName,
 }: PatientWorkspaceProps) {
   const patientName = `${patient.firstName} ${patient.lastName}`;
@@ -128,6 +133,26 @@ function PatientWorkspaceContent({
                   showHeader={false}
                 />
               </div>
+            ),
+          },
+          {
+            value: "download",
+            ariaLabel:
+              summaryReports.length > 0
+                ? patientDashboardCopy.patient.tabs.downloadWithCount(
+                    summaryReports.length,
+                  )
+                : patientDashboardCopy.patient.tabs.download,
+            badge:
+              summaryReports.length > 0 ? summaryReports.length : undefined,
+            label: (
+              <>
+                <Download className="size-4" aria-hidden />
+                {patientDashboardCopy.patient.tabs.download}
+              </>
+            ),
+            content: (
+              <SummaryReportsPanel reports={summaryReports} />
             ),
           },
         ]}

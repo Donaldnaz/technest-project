@@ -1,10 +1,10 @@
 import type { DocumentCategory } from "@/lib/constants/document-categories";
 
 export const PATIENT_CATEGORY_LABELS: Record<DocumentCategory, string> = {
-  lab_results: "Lab Report",
-  imaging: "Imaging Report",
+  lab_results: "Lab report",
+  imaging: "Imaging report",
   prescriptions: "Prescription",
-  visit_notes: "Doctor's Note",
+  visit_notes: "Visit note",
   insurance: "Insurance",
   other: "Other document",
 };
@@ -13,10 +13,10 @@ export const PATIENT_CATEGORY_PILLS: Record<
   DocumentCategory,
   { label: string; emoji: string }
 > = {
-  lab_results: { label: "Lab Report", emoji: "📋" },
+  lab_results: { label: "Lab report", emoji: "📋" },
   imaging: { label: "Imaging", emoji: "🩻" },
   prescriptions: { label: "Prescription", emoji: "💊" },
-  visit_notes: { label: "Doctor's Note", emoji: "📝" },
+  visit_notes: { label: "Visit note", emoji: "📝" },
   insurance: { label: "Insurance", emoji: "🏥" },
   other: { label: "Other", emoji: "📄" },
 };
@@ -31,8 +31,8 @@ export const patientLibraryCopy = {
     empty: {
       title: "Your folder is empty",
       description:
-        "Your medical folder is ready. Upload your recent lab results, imaging reports, or vaccine records to share them directly with your provider.",
-      cta: "Upload document",
+        "Your health folder is ready. Upload recent lab results, imaging reports, or visit notes — your care team will prepare plain English summaries for practitioner review.",
+      cta: "Upload health records",
     },
     previewHint: "Select a document to preview it.",
     uploadMore: "Upload another document",
@@ -40,10 +40,12 @@ export const patientLibraryCopy = {
   },
   preview: {
     defaultTitle: "Document",
-    description: "Preview of your uploaded document",
+    description: "Preview of your uploaded health record",
     loading: "Opening your document…",
-    unavailable: "We could not open this preview. Your file is still saved securely.",
-    unsupported: "Preview is not available for this file type. Your file is still saved securely.",
+    unavailable:
+      "We could not open this preview. Your file is still saved securely.",
+    unsupported:
+      "Preview is not available for this file type. Your file is still saved securely.",
   },
   types: {
     pdf: "PDF",

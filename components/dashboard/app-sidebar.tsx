@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Suspense, useState } from "react";
-import { HeartPulse, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { ChevronLeft, HeartPulse } from "lucide-react";
 
 import { SidebarNav } from "@/components/dashboard/sidebar-nav";
 import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
@@ -24,6 +24,37 @@ function readCollapsedPreference(): boolean {
   return localStorage.getItem(STORAGE_KEY) === "true";
 }
 
+type SidebarToggleProps = {
+  collapsed: boolean;
+  onToggle: () => void;
+};
+
+function SidebarToggle({ collapsed, onToggle }: SidebarToggleProps) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-expanded={!collapsed}
+      aria-controls="app-sidebar"
+      aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+      className={cn(
+        "absolute -right-3 top-7 z-10 flex size-7 items-center justify-center rounded-full border border-border/60 bg-card text-muted-foreground shadow-sm transition-all duration-200",
+        "hover:border-primary/30 hover:bg-primary/5 hover:text-primary hover:shadow-md",
+        "active:scale-95",
+        focusRingClassName,
+      )}
+    >
+      <ChevronLeft
+        className={cn(
+          "size-3.5 transition-transform duration-200",
+          collapsed && "rotate-180",
+        )}
+        aria-hidden
+      />
+    </button>
+  );
+}
+
 export function AppSidebar({ profileId }: AppSidebarProps) {
   const [collapsed, setCollapsed] = useState(readCollapsedPreference);
 
@@ -39,72 +70,45 @@ export function AppSidebar({ profileId }: AppSidebarProps) {
 
   return (
     <aside
+      id="app-sidebar"
       className={cn(
-        "hidden flex-col border-r border-sidebar-border bg-sidebar p-4 transition-[width] duration-200 lg:flex",
+        "relative hidden flex-col border-r border-sidebar-border bg-sidebar p-4 transition-[width] duration-200 lg:flex",
         widthClass,
       )}
       suppressHydrationWarning
     >
+      <SidebarToggle collapsed={collapsed} onToggle={toggleCollapsed} />
+
       <div
         className={cn(
           "mb-8 flex items-center",
-          collapsed ? "justify-center" : "justify-between gap-3",
+          collapsed ? "justify-center" : "gap-3",
         )}
       >
-        <div
+        <Link
+          href="/"
+          aria-label="Back to iCare home"
           className={cn(
             "flex items-center gap-3",
             collapsed && "justify-center",
+            focusRingClassName,
           )}
         >
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary shadow-sm ring-1 ring-primary/10">
             <HeartPulse className="size-5" aria-hidden />
           </div>
           {!collapsed && (
             <div className="min-w-0">
-              <Link
-                href="/dashboard"
-                className={cn(
-                  "font-heading text-lg font-semibold",
-                  focusRingClassName,
-                )}
-              >
+              <span className="font-heading text-lg font-semibold">
                 i<span className="text-primary">Care</span>
-              </Link>
+              </span>
               <p className="truncate text-xs text-muted-foreground">
                 {patientDashboardCopy.shell.workspaceLabel}
               </p>
             </div>
           )}
-        </div>
-        {!collapsed && (
-          <button
-            type="button"
-            onClick={toggleCollapsed}
-            className={cn(
-              "inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground",
-              focusRingClassName,
-            )}
-            aria-label="Collapse sidebar"
-          >
-            <PanelLeftClose className="size-4" aria-hidden />
-          </button>
-        )}
+        </Link>
       </div>
-
-      {collapsed && (
-        <button
-          type="button"
-          onClick={toggleCollapsed}
-          className={cn(
-            "mb-4 inline-flex size-10 items-center justify-center self-center rounded-lg text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground",
-            focusRingClassName,
-          )}
-          aria-label="Expand sidebar"
-        >
-          <PanelLeftOpen className="size-4" aria-hidden />
-        </button>
-      )}
 
       <Suspense fallback={<SidebarNavFallback />}>
         <SidebarNav profileId={profileId} collapsed={collapsed} />

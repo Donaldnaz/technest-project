@@ -4,6 +4,7 @@ export const PATIENT_TABS = [
   "overview",
   "upload",
   "timeline",
+  "download",
 ] as const;
 
 export type PatientTab = (typeof PATIENT_TABS)[number];

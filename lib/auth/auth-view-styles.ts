@@ -25,7 +25,8 @@ export const authViewClassNames: AuthViewClassNames = {
     providerButton: `${buttonClassName} w-full border-border/80 bg-background hover:bg-muted/50`,
     button: `${buttonClassName} w-full`,
     error: "text-sm text-destructive",
-    forgotPasswordLink: "text-sm font-medium text-primary hover:underline",
+    forgotPasswordLink:
+      "text-sm font-medium text-primary hover:text-primary/80 hover:underline",
     icon: "size-5 shrink-0",
   },
 };

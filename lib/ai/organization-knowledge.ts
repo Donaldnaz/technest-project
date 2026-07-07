@@ -1,4 +1,10 @@
-import { contactEmail } from "@/lib/landing/navigation";
+import { landingCopy } from "@/lib/copy/landing";
+import {
+  contactEmail,
+  contactPhone,
+  headquartersAddress,
+  headquartersAddressLines,
+} from "@/lib/landing/navigation";
 
 /**
  * Curated iCare website knowledge for the organization assistant.
@@ -8,51 +14,56 @@ export const ORGANIZATION_KNOWLEDGE = `
 # iCare — Organization reference (from the public website)
 
 ## Tagline
-Your records, ready for your doctor.
+A secure health records portal for encrypted upload, private storage, and practitioner-reviewed plain English summaries.
 
 ## Mission
-iCare helps patients and families upload health documents and records in a calm, private space — not like hospital software. The platform is for uploading health documents and records; patients stay in control of what they share.
+iCare helps patients and caregivers upload health records in a calm, private space — not like hospital software. You stay in control of what you share with your care team.
 
 ## What we do
-- Secure record uploads: Add lab reports, referrals, and imaging (PDF and JPEG). Files are uploaded to your account.
-- Plain-language summaries: Each upload is reviewed and summarized so you know what you uploaded.
-- Share with provider: Submit your provider's email and our care team coordinates sharing — you do not manage invite links yourself.
-- For patients and caregivers: Manage your own records or upload for someone you care for in one workspace.
+- Secure health record upload: Add lab reports, referrals, imaging, and visit notes (PDF and JPEG). Files are encrypted and stored in your private folder.
+- Plain English summaries: Your care team prepares summaries in everyday language — reviewed by a practitioner before they are finalized.
+- Share with your care team: Submit your practitioner's email and our care team coordinates secure delivery — you do not manage invite links yourself.
+- For patients and caregivers: Manage your own health records or upload for someone you care for in one workspace.
 
 ## About us
-- Health records that feel human — uploading should feel calm, not clinical.
+- Health records handled with care — uploading should feel calm, not clinical.
 - Patients and caregivers can upload for themselves or someone they care for.
-- Consent-first sharing: providers only see what you choose to share; you can withdraw requests.
-- Private by default: uploads are tied to your signed-in account.
+- Consent-first sharing: practitioners only see what you choose to share.
+- Private by default: uploads are tied to your signed-in account until you share them.
 
 ## Platform features (patient portal)
-- Upload hub for lab reports and scans
-- Medical records list showing upload proof (file name, type, status, upload date)
-- Care overview metrics: records uploaded, summaries ready, being reviewed
+- Upload hub for lab reports, imaging, and visit notes
+- Health records list showing file name, type, status, and upload date
+- Overview metrics: health records saved, plain English ready, under review
 - Recent uploads timeline
+- Summary reports for download after practitioner review
 - Account settings: name and email are set at sign-up and read-only; password can be updated under Password settings
-- Onboarding creates your health profile when you first join
+- Setup creates your health profile when you first join
 
 ## Getting started
 - Sign up free at /auth/sign-up (Google or email)
-- Complete onboarding to set up your health profile
-- Upload records from your patient profile page
-- Share with a provider when ready by submitting their email on your profile page
+- Complete setup to create your health profile
+- Upload health records from your patient profile page
+- Share with a practitioner when ready by submitting their email on your profile page
 
 ## Contact
 - Email: ${contactEmail}
-- We typically respond within 1–2 business days.
+- Phone: ${contactPhone}
+- ${headquartersAddress.name}: ${headquartersAddressLines.join(", ")}
+- Hours: ${landingCopy.contact.hours}
+- ${landingCopy.contact.responseNote}
 
 ## Important boundaries
 - iCare is not a substitute for emergency medical care.
+- Plain English summaries are for your information — not medical advice.
 - The assistant explains iCare the organization and platform — not personal medical advice or diagnosis.
 - Do not invent features, pricing, or policies not listed here.
 `.trim();
 
 export const ASSISTANT_SUGGESTED_QUESTIONS = [
   "What is iCare?",
-  "How do I upload my health records?",
-  "How does sharing with a provider work?",
+  "How do I upload health records?",
+  "How do plain English summaries work?",
+  "How does sharing with my practitioner work?",
   "What file types can I upload?",
-  "How do I change my password?",
 ] as const;

@@ -23,12 +23,13 @@ export default function PrivacyPage() {
             address when you sign up or sign in.
           </li>
           <li>
-            <strong>Health documents</strong> — files you upload, including lab
-            reports, imaging, referrals, and other medical records.
+            <strong>Health records</strong> — files you upload, including lab
+            reports, imaging, referrals, visit notes, and other clinical
+            documents.
           </li>
           <li>
             <strong>Profile details</strong> — information you provide during
-            onboarding, such as patient name, location, and care preferences.
+            setup, such as patient name, location, and care preferences.
           </li>
           <li>
             <strong>Usage data</strong> — basic technical information about how
@@ -42,8 +43,8 @@ export default function PrivacyPage() {
         <p>We use your information to:</p>
         <ul>
           <li>Provide and maintain your health records portal</li>
-          <li>Process and organize documents you upload</li>
-          <li>Enable you to share records with practitioners you choose</li>
+          <li>Process, organize, and prepare plain English summaries of documents you upload</li>
+          <li>Enable you to share health records with practitioners you choose</li>
           <li>Send service-related communications, such as account notices</li>
           <li>Improve security, performance, and the overall user experience</li>
         </ul>
@@ -51,7 +52,7 @@ export default function PrivacyPage() {
 
       <LegalSection title="How sharing works" id="sharing">
         <p>
-          Your medical documents stay private until you choose to share them.
+          Your health records stay private until you choose to share them.
           When you send records to a practitioner, only the information you
           select is shared with that recipient. You can revoke access when the
           product supports it, or contact us for help.

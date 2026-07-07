@@ -4,11 +4,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth/client";
+import { PASSWORD_MIN_LENGTH, validatePassword } from "@/lib/auth/password-policy";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-const MIN_PASSWORD_LENGTH = 8;
 
 export function ChangePasswordSettings() {
   const { data: session, isPending: sessionPending } = authClient.useSession();
@@ -34,8 +33,9 @@ export function ChangePasswordSettings() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (newPassword.length < MIN_PASSWORD_LENGTH) {
-      toast.error(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
+    const passwordCheck = validatePassword(newPassword);
+    if (!passwordCheck.valid) {
+      toast.error(passwordCheck.message);
       return;
     }
 
@@ -98,7 +98,7 @@ export function ChangePasswordSettings() {
           value={newPassword}
           onChange={(event) => setNewPassword(event.target.value)}
           required
-          minLength={MIN_PASSWORD_LENGTH}
+          minLength={PASSWORD_MIN_LENGTH}
           disabled={pending}
           className="dashboard-form-control"
         />
@@ -113,7 +113,7 @@ export function ChangePasswordSettings() {
           value={confirmPassword}
           onChange={(event) => setConfirmPassword(event.target.value)}
           required
-          minLength={MIN_PASSWORD_LENGTH}
+          minLength={PASSWORD_MIN_LENGTH}
           disabled={pending}
           className="dashboard-form-control"
         />

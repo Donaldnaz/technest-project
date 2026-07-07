@@ -29,7 +29,7 @@ export function DataTableShell({
   return (
     <div
       className={cn(
-        "clinical-card overflow-hidden",
+        "clinical-card min-w-0 overflow-hidden",
         className,
       )}
     >

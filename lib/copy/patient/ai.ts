@@ -1,16 +1,16 @@
 export const patientAiCopy = {
   processing:
-    "Our secure processing system is organizing your file for your doctor's review.",
+    "Your care team is organizing this file and preparing a plain English summary for practitioner review.",
   summaryReady:
-    "We created a plain-language summary of this document. Your doctor will review it before it is finalized.",
+    "A plain English summary of this document is ready for you to read. A practitioner on your care team has reviewed it before it was finalized.",
   needsReview:
     "This document needs a quick review. Your care team has been notified.",
   assistant: {
     welcome:
-      "Hi! I can answer questions about how iCare works — uploading documents, sharing with your doctor, and keeping your records secure.",
-    title: "Help & support",
+      "Hi! I can answer questions about how iCare works — uploading health records, plain English summaries, sharing with your care team, and keeping your information private.",
+    title: "Help and support",
     subtitle: "Questions about your account and uploads",
-    placeholder: "Ask how uploads, sharing, or privacy work…",
+    placeholder: "Ask how uploads, summaries, sharing, or privacy work…",
     thinking: "One moment…",
     disclaimer:
       "General help only — not medical advice. Do not share personal health details in this chat.",
@@ -21,8 +21,8 @@ export const patientAiCopy = {
   suggestedQuestions: [
     "What file types can I upload?",
     "How is my information kept private?",
-    "How do I share records with my doctor?",
-    "What does 'Being organized' mean?",
+    "How do I share health records with my practitioner?",
+    "What does 'Under review' mean?",
   ],
 } as const;
 

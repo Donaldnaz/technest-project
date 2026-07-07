@@ -23,7 +23,7 @@ export function SiteHeader({
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl",
+        "sticky top-0 z-50 border-b border-border/50 bg-background/90 backdrop-blur-md",
         className,
       )}
     >

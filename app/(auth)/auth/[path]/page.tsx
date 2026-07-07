@@ -56,8 +56,13 @@ export default async function AuthPage({
           <div className="relative mx-auto w-full max-w-md">
             <div className="health-card rounded-3xl p-6 sm:p-8 md:p-10">
               <ICareAuthView path={path} />
-              {path === "sign-up" && (
+              {path === "sign-in" && (
                 <p className="mt-6 text-center text-xs leading-relaxed text-muted-foreground">
+                  {patientAuthCopy.signIn.hint}
+                </p>
+              )}
+              {path === "sign-up" && (
+                <p className="mt-3 text-center text-xs leading-relaxed text-muted-foreground">
                   {patientAuthCopy.signUp.consent}
                 </p>
               )}

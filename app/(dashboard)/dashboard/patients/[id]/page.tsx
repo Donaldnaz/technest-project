@@ -7,6 +7,7 @@ import {
   countDocumentsForPatient,
   listDocumentsForPatient,
 } from "@/lib/db/queries/documents";
+import { listPractitionerSummaryReportsForPatient } from "@/lib/db/queries/summary-reports";
 import { getPatientById } from "@/lib/db/queries/patients";
 
 export const dynamic = "force-dynamic";
@@ -44,9 +45,10 @@ export default async function PatientDetailPage({
     notFound();
   }
 
-  const [documents, documentCount] = await Promise.all([
+  const [documents, documentCount, summaryReports] = await Promise.all([
     listDocumentsForPatient(userId, id),
     countDocumentsForPatient(userId, id),
+    listPractitionerSummaryReportsForPatient(userId, id),
   ]);
 
   return (
@@ -54,6 +56,7 @@ export default async function PatientDetailPage({
       patient={patient}
       documents={documents}
       documentCount={documentCount}
+      summaryReports={summaryReports}
       userName={session.user.name}
     />
   );

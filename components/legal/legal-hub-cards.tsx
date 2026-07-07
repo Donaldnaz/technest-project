@@ -71,10 +71,7 @@ export function LegalHubCards({ className }: LegalHubCardsProps) {
                     <Icon className="size-4" aria-hidden />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      {page.label}
-                    </span>
-                    <h2 className="mt-0.5 font-heading text-lg font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
+                    <h2 className="font-heading text-lg font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
                       {page.title}
                     </h2>
                   </div>

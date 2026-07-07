@@ -24,7 +24,7 @@ export function LandingNav({ navState }: LandingNavProps) {
       mobileActions={
         <div className="flex items-center gap-2 lg:hidden">
           <ThemeIconToggle />
-          <LandingMobileMenu navState={navState} />
+          <LandingMobileMenu dashboardHref={navState.dashboardHref} />
         </div>
       }
     />

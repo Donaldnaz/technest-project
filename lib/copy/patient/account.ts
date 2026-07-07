@@ -16,6 +16,7 @@ export const patientAccountCopy = {
       name: "Full name",
       email: "Email address",
     },
+    googleSignIn: "Signed in with Google",
     supportHint: "Need help with your account details? Contact support.",
     loading: "Loading your account…",
     signedOut: "Sign in to view your account details.",

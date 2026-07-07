@@ -1,26 +1,26 @@
-import { ArrowRight, Calendar, Pill, Stethoscope } from "lucide-react";
+import { ArrowRight, FileCheck2, Share2, Upload } from "lucide-react";
 
 const steps = [
   {
     step: "01",
-    icon: Stethoscope,
-    title: "Set up your health profile",
+    icon: Upload,
+    title: "Upload your health records",
     description:
-      "Add the people you care for — names, dates of birth, and medical record numbers in a simple, gentle form.",
+      "Add lab reports, imaging, referrals, and visit notes to your private, encrypted health folder.",
   },
   {
     step: "02",
-    icon: Calendar,
-    title: "Track visits and results",
+    icon: FileCheck2,
+    title: "Read plain English summaries",
     description:
-      "Keep lab reports, referrals, and imaging with each patient so every appointment builds on what came before.",
+      "Your care team prepares summaries in everyday language — reviewed by a practitioner before they are finalized.",
   },
   {
     step: "03",
-    icon: Pill,
-    title: "Stay on top of daily care",
+    icon: Share2,
+    title: "Share with your care team",
     description:
-      "Use the care timeline and pillbox to see what is next — doses, follow-ups, and results ready to review.",
+      "Send selected records to your practitioner when you choose, so appointments start with the right context.",
   },
 ];
 
@@ -34,11 +34,11 @@ export function LandingWorkflow() {
               How it works
             </p>
             <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-              Three gentle steps to better care
+              Three simple steps to organized care
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              iCare helps you stay present for the people who matter — with less
-              hunting for files and more time for healing.
+              iCare helps you upload health records, understand them in plain
+              English, and share with practitioners on your terms.
             </p>
 
             <div className="mt-10 space-y-8">
@@ -72,47 +72,38 @@ export function LandingWorkflow() {
             <div className="space-y-6">
               <div className="rounded-2xl bg-gradient-to-br from-teal-100/80 via-oat-50 to-sage-100/70 p-6 dark:from-teal-950/40 dark:via-charcoal-900 dark:to-sage-950/30">
                 <p className="text-sm font-medium text-muted-foreground">
-                  Today&apos;s pillbox
+                  Your health folder
                 </p>
-                <div className="mt-4 flex gap-6">
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="flex size-16 items-center justify-center rounded-full bg-rose-200 text-rose-900 shadow-md dark:bg-rose-900/40 dark:text-rose-100">
-                      AM
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      Morning dose
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="flex h-14 w-20 items-center justify-center rounded-full bg-sky-200 text-sky-900 shadow-md dark:bg-sky-950/50 dark:text-sky-100">
-                      PM
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      Evening dose
-                    </span>
-                  </div>
+                <div className="mt-4 space-y-3">
+                  {[
+                    "CBC lab results.pdf — Plain English ready",
+                    "Chest X-ray report.pdf — Under review",
+                    "Referral cardiology.jpg — Uploaded",
+                  ].map((item) => (
+                    <p
+                      key={item}
+                      className="rounded-xl bg-background/70 px-3 py-2 text-sm text-foreground/90 dark:bg-card/60"
+                    >
+                      {item}
+                    </p>
+                  ))}
                 </div>
               </div>
 
               <div className="flex items-center justify-between rounded-2xl border border-border/60 bg-card p-4">
                 <div>
-                  <p className="text-sm font-medium">Rest Mode</p>
+                  <p className="text-sm font-medium">Practitioner review</p>
                   <p className="text-xs text-muted-foreground">
-                    Easier on the eyes for late-night care
+                    Summaries checked before you read them
                   </p>
                 </div>
-                <div className="flex gap-1 rounded-xl bg-muted p-1">
-                  <span className="rounded-lg bg-background px-2 py-1 text-xs">
-                    Light
-                  </span>
-                  <span className="rounded-lg px-2 py-1 text-xs text-muted-foreground">
-                    Dark
-                  </span>
+                <div className="flex size-9 items-center justify-center rounded-xl bg-sage-100 text-sage-800 dark:bg-sage-950/50 dark:text-sage-200">
+                  <FileCheck2 className="size-4" aria-hidden />
                 </div>
               </div>
 
               <div className="flex items-center gap-2 text-sm font-medium text-primary">
-                Open your care dashboard
+                Open your health records workspace
                 <ArrowRight className="size-4" aria-hidden />
               </div>
             </div>

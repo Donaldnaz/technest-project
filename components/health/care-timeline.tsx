@@ -24,10 +24,11 @@ type CareTimelineProps = {
   showHeader?: boolean;
 };
 
-export const RECENT_ACTIVITY_PREVIEW_LIMIT = 5;
+/** Max items shown in My Records → Overview recent activity preview. */
+export const RECENT_ACTIVITY_PREVIEW_LIMIT = 3;
 
-/** @deprecated Use RECENT_ACTIVITY_PREVIEW_LIMIT */
-export const RECENT_ACTIVITY_LIMIT = RECENT_ACTIVITY_PREVIEW_LIMIT;
+/** Max items fetched for the dashboard home recent activity panel. */
+export const RECENT_ACTIVITY_LIMIT = 5;
 
 function buildTimelineItems(
   documents: DocumentWithExtraction[],

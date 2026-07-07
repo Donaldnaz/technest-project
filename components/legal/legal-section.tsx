@@ -23,17 +23,15 @@ export function LegalSection({
       className={cn(
         isCallout
           ? "rounded-2xl border border-border/50 bg-muted/25 p-6 md:p-8"
-          : "scroll-mt-24 border-t border-border/40 pt-12 first:border-t-0 first:pt-0",
+          : "scroll-mt-24 border-t border-border/40 pt-10 first:border-t-0 first:pt-0",
       )}
       aria-labelledby={id ? `${id}-heading` : undefined}
     >
       <h2
         id={id ? `${id}-heading` : undefined}
         className={cn(
-          "font-heading font-semibold tracking-tight text-foreground",
-          isCallout
-            ? "text-xl md:text-2xl"
-            : "border-l-2 border-primary/30 pl-4 text-xl md:text-2xl",
+          "font-heading text-lg font-semibold tracking-tight text-foreground md:text-xl",
+          isCallout && "md:text-2xl",
         )}
       >
         {title}
@@ -41,7 +39,7 @@ export function LegalSection({
       <div
         className={cn(
           "space-y-4 text-[0.9375rem] leading-7 text-muted-foreground md:text-base md:leading-8",
-          isCallout ? "mt-5" : "mt-5 pl-4",
+          "mt-4",
           "[&_a]:font-medium [&_a]:text-primary [&_a]:underline-offset-4 [&_a]:hover:underline",
           "[&_li]:pl-0.5 [&_strong]:font-medium [&_strong]:text-foreground",
           "[&_ul]:list-disc [&_ul]:space-y-2.5 [&_ul]:pl-5",

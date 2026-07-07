@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { askOrganizationAssistant } from "@/app/actions/assistant";
 import { ASSISTANT_SUGGESTED_QUESTIONS } from "@/lib/ai/organization-knowledge";
+import { landingCopy } from "@/lib/copy/landing";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -22,8 +23,7 @@ export function OrganizationAssistant() {
     {
       id: "welcome",
       role: "assistant",
-      content:
-        "Hi! I can answer questions about iCare and how this upload portal works. What would you like to know?",
+      content: landingCopy.assistant.welcome,
     },
   ]);
   const [pending, startTransition] = useTransition();
@@ -69,11 +69,11 @@ export function OrganizationAssistant() {
         type="button"
         onClick={() => setOpen((value) => !value)}
         className={cn(
-          "fixed bottom-20 right-4 z-50 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-2 ring-background transition-transform hover:scale-105 hover:bg-primary/90 md:bottom-8",
+          "fixed bottom-24 right-4 z-50 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-2 ring-background transition-transform hover:scale-105 hover:bg-primary/90 lg:bottom-6",
           open && "scale-95",
         )}
         aria-expanded={open}
-        aria-label={open ? "Close iCare assistant" : "Open iCare assistant"}
+        aria-label={open ? "Close iCare assistant" : landingCopy.assistant.openAria}
       >
         {open ? (
           <X className="size-6 stroke-[2.5]" aria-hidden />
@@ -84,17 +84,19 @@ export function OrganizationAssistant() {
 
       {open && (
         <div
-          className="fixed bottom-36 right-4 z-50 flex w-[min(100vw-2rem,24rem)] flex-col overflow-hidden rounded-3xl border border-border/60 bg-card shadow-2xl md:bottom-24"
+          className="fixed bottom-40 right-4 z-50 flex w-[min(100vw-2rem,24rem)] flex-col overflow-hidden rounded-3xl border border-border/60 bg-card shadow-2xl lg:bottom-24"
           role="dialog"
-          aria-label="iCare assistant"
+          aria-label={landingCopy.assistant.title}
         >
           <header className="border-b border-border/60 bg-gradient-to-br from-sage-50 to-oat-50 px-4 py-3 dark:from-sage-950/40 dark:to-charcoal-950/40">
             <div className="flex items-center gap-2">
               <Sparkles className="size-4 text-sage-700 dark:text-sage-300" aria-hidden />
               <div>
-                <p className="font-heading text-sm font-semibold">iCare assistant</p>
+                <p className="font-heading text-sm font-semibold">
+                  {landingCopy.assistant.title}
+                </p>
                 <p className="text-xs text-muted-foreground">
-                  Answers about iCare & this portal
+                  {landingCopy.assistant.subtitle}
                 </p>
               </div>
             </div>
@@ -116,7 +118,9 @@ export function OrganizationAssistant() {
             ))}
 
             {pending && (
-              <p className="text-xs text-muted-foreground">Thinking…</p>
+              <p className="text-xs text-muted-foreground">
+                {landingCopy.assistant.thinking}
+              </p>
             )}
 
             {messages.length <= 1 && (
@@ -147,25 +151,24 @@ export function OrganizationAssistant() {
               type="text"
               value={input}
               onChange={(event) => setInput(event.target.value)}
-              placeholder="Ask about iCare…"
+              placeholder={landingCopy.assistant.placeholder}
               disabled={pending}
               className="dashboard-form-control min-h-10 flex-1 rounded-xl px-3 text-sm"
-              aria-label="Message to iCare assistant"
+              aria-label={landingCopy.assistant.inputAria}
             />
             <Button
               type="submit"
               size="icon"
               disabled={pending || !input.trim()}
               className="size-10 shrink-0 rounded-xl bg-sage-700 hover:bg-sage-800"
-              aria-label="Send message"
+              aria-label={landingCopy.assistant.sendAria}
             >
               <Send className="size-4" aria-hidden />
             </Button>
           </form>
 
           <p className="border-t border-border/40 px-3 py-2 text-[10px] leading-relaxed text-muted-foreground">
-            General platform help only — not medical advice. Answers use iCare
-            website information.
+            {landingCopy.assistant.disclaimer}
           </p>
         </div>
       )}

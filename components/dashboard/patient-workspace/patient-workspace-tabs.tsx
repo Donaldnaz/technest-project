@@ -4,14 +4,17 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useId,
   useMemo,
+  useState,
   type ReactNode,
 } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
+import { cn } from "@/lib/utils";
 import {
   getInitialPatientTab,
   type PatientTab,
@@ -56,33 +59,53 @@ export function PatientWorkspaceTabs({
   tabs,
   children,
 }: PatientWorkspaceTabsProps) {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const tabsId = useId();
   const defaultTab = getInitialPatientTab(documentCount);
 
-  const activeTab = useMemo(
+  const tabFromUrl = useMemo(
     () => resolvePatientTab(searchParams.get("tab"), documentCount),
     [documentCount, searchParams],
   );
+
+  const serializedSearch = searchParams.toString();
+  const [activeTab, setActiveTab] = useState(tabFromUrl);
+  const [lastSerializedSearch, setLastSerializedSearch] =
+    useState(serializedSearch);
+
+  if (serializedSearch !== lastSerializedSearch) {
+    setLastSerializedSearch(serializedSearch);
+    setActiveTab(tabFromUrl);
+  }
+
+  useEffect(() => {
+    const onPopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      setActiveTab(resolvePatientTab(params.get("tab"), documentCount));
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [documentCount]);
 
   const setTab = useCallback(
     (tab: PatientTab) => {
       if (pathname !== patientPath) return;
 
-      const params = new URLSearchParams(searchParams.toString());
+      setActiveTab(tab);
+
+      const params = new URLSearchParams(window.location.search);
       if (tab === defaultTab) {
         params.delete("tab");
       } else {
         params.set("tab", tab);
       }
       const query = params.toString();
-      router.replace(query ? `${patientPath}?${query}` : patientPath, {
-        scroll: false,
-      });
+      const nextUrl = query ? `${patientPath}?${query}` : patientPath;
+      window.history.replaceState(window.history.state, "", nextUrl);
     },
-    [defaultTab, patientPath, pathname, router, searchParams],
+    [defaultTab, patientPath, pathname],
   );
 
   const contextValue = useMemo(
@@ -139,23 +162,34 @@ export function PatientWorkspaceTabs({
             </TabsList>
           </div>
         </div>
-        {tabs.map((tab) => {
-          const triggerId = `${tabsId}-trigger-${tab.value}`;
-          const panelId = `${tabsId}-panel-${tab.value}`;
+        <div className="relative mt-5 min-h-0">
+          {tabs.map((tab) => {
+            const triggerId = `${tabsId}-trigger-${tab.value}`;
+            const panelId = `${tabsId}-panel-${tab.value}`;
 
-          return (
-            <TabsContent
-              key={tab.value}
-              id={panelId}
-              value={tab.value}
-              aria-labelledby={triggerId}
-              tabIndex={0}
-              className="mt-5 focus-visible:outline-none data-hidden:hidden"
-            >
-              {tab.content}
-            </TabsContent>
-          );
-        })}
+            return (
+              <TabsContent
+                key={tab.value}
+                id={panelId}
+                value={tab.value}
+                aria-labelledby={triggerId}
+                tabIndex={0}
+                className={cn(
+                  "relative z-10 focus-visible:outline-none",
+                  "motion-safe:transition-[opacity,transform] motion-safe:duration-200 motion-safe:ease-out",
+                  "motion-reduce:transition-none motion-reduce:transform-none",
+                  "data-starting-style:opacity-0 data-ending-style:opacity-0",
+                  "data-starting-style:translate-y-1",
+                  "data-[activation-direction=right]:data-starting-style:translate-x-2 data-[activation-direction=right]:data-starting-style:translate-y-0",
+                  "data-[activation-direction=left]:data-starting-style:-translate-x-2 data-[activation-direction=left]:data-starting-style:translate-y-0",
+                  "data-ending-style:pointer-events-none data-ending-style:absolute data-ending-style:inset-x-0 data-ending-style:top-0 data-ending-style:z-0",
+                )}
+              >
+                {tab.content}
+              </TabsContent>
+            );
+          })}
+        </div>
       </Tabs>
     </PatientWorkspaceTabsContext.Provider>
   );

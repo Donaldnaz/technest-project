@@ -88,7 +88,7 @@ export function LandingFooter() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-8 lg:gap-10">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-8 lg:gap-10">
             <FooterNavColumn title="Product" links={footerProductLinks} />
             <FooterNavColumn title="Company" links={footerCompanyLinks} />
             <FooterContactColumn />

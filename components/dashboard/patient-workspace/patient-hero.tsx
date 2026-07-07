@@ -36,7 +36,7 @@ function StatChip({ label, value, icon: Icon, tone }: StatChipProps) {
   return (
     <div
       className={cn(
-        "flex min-w-[7.5rem] flex-1 items-center gap-3 rounded-xl border px-3 py-2.5",
+        "flex min-w-0 flex-1 items-center gap-3 rounded-xl border px-3 py-2.5 sm:min-w-[7.5rem]",
         tone === "ready" &&
           "border-sage-200/80 bg-sage-50/80 dark:border-sage-800 dark:bg-sage-950/30",
         tone === "processing" &&
