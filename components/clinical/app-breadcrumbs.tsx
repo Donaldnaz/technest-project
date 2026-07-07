@@ -33,11 +33,11 @@ export function AppBreadcrumbs({
   const firstWithHref = [...parentItems].reverse().find((item) => item.href);
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("flex min-h-9 items-center gap-2.5", className)}>
       {showBackIcon && firstWithHref?.href && (
         <Link
           href={firstWithHref.href}
-          className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           aria-label={`Back to ${firstWithHref.label}`}
         >
           <ChevronLeft className="size-4" aria-hidden />

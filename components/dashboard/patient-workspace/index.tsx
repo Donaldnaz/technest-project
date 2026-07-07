@@ -63,7 +63,7 @@ function PatientWorkspaceContent({
   ];
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 pb-6">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 pb-6">
       <AppBreadcrumbs items={breadcrumbItems} showBackIcon />
 
       <PatientWorkspaceTabs

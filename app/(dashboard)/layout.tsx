@@ -43,29 +43,33 @@ export default async function DashboardGroupLayout({
       <AppSidebar profileId={profileId} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-md">
-          <div className="mx-auto flex h-16 w-full max-w-full items-center justify-between gap-4 px-4 md:px-6">
-            <div className="flex min-w-0 flex-col justify-self-start lg:hidden">
+        <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 pt-safe backdrop-blur-md">
+          <div className="mx-auto grid min-h-16 w-full max-w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-4 px-4 py-3 md:gap-x-6 md:px-6 lg:px-8">
+            <div className="flex min-w-0 items-center gap-2.5 sm:gap-3 lg:invisible lg:w-0 lg:overflow-hidden">
               <Link
                 href="/"
                 aria-label="Back to iCare home"
-                className="flex items-center gap-2"
+                className="flex shrink-0 items-center gap-2"
               >
                 <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
                   <HeartPulse className="size-4" aria-hidden />
                 </div>
-                <span className="truncate font-heading font-semibold">
+                <span className="truncate font-heading text-[0.9375rem] font-semibold leading-none sm:text-base">
                   i<span className="text-primary">Care</span>
                 </span>
               </Link>
+              <span
+                className="hidden h-4 w-px shrink-0 bg-border/60 sm:block"
+                aria-hidden
+              />
               <HeaderContext />
             </div>
 
-            <p className="hidden text-sm text-muted-foreground lg:block">
+            <p className="hidden truncate text-sm font-medium text-muted-foreground lg:block">
               {patientDashboardCopy.shell.workspaceLabel}
             </p>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-end gap-2 sm:gap-3">
               <ThemeToggle />
               <UserMenu />
             </div>

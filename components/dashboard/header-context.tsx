@@ -16,7 +16,7 @@ export function HeaderContext() {
   }
 
   return (
-    <p className="truncate text-xs font-medium text-muted-foreground lg:hidden">
+    <p className="truncate text-sm font-medium leading-none text-muted-foreground lg:hidden">
       {label}
     </p>
   );

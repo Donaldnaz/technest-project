@@ -8,7 +8,7 @@ export default function OnboardingLayout({
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-oat-50/50 via-background to-background dark:from-charcoal-950 dark:via-background">
-      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 pt-safe backdrop-blur-xl">
         <SiteContainer className="flex h-16 items-center">
           <SiteBrandLink />
         </SiteContainer>

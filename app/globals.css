@@ -9,6 +9,10 @@
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
 }
 
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

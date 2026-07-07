@@ -6,9 +6,7 @@ import {
   listRecentDocuments,
 } from "@/lib/db/queries/documents";
 import { listRecentPatients } from "@/lib/db/queries/patients";
-import { DashboardQuickActions } from "@/components/dashboard/dashboard-quick-actions";
-import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
-import { CareTimeline, RECENT_ACTIVITY_LIMIT } from "@/components/health/care-timeline";
+import { CareTimeline } from "@/components/health/care-timeline";
 import { DocumentPillbox } from "@/components/health/document-pillbox";
 import { MetricCards } from "@/components/health/metric-cards";
 import { WelcomeBanner } from "@/components/health/welcome-banner";
@@ -31,7 +29,7 @@ export default async function DashboardPage() {
     countDocuments(userId),
     countDocumentsByStatus(userId, "ready"),
     countDocumentsByStatus(userId, "processing"),
-    listRecentDocuments(userId, RECENT_ACTIVITY_LIMIT),
+    listRecentDocuments(userId, 8),
     listRecentPatients(userId, 5),
     countDocumentsByMimePrefix(userId, "application/pdf"),
     countDocumentsByMimePrefix(userId, "image/jpeg"),
@@ -40,30 +38,25 @@ export default async function DashboardPage() {
   const profileId = recentPatients[0]?.id;
 
   return (
-    <div className="flex flex-col gap-8 md:gap-10">
-      <section className="health-card overflow-hidden rounded-3xl shadow-sm">
-        <WelcomeBanner
-          userName={session.user.name}
-          documentCount={documentCount}
-          embedded
-        />
-        <DashboardQuickActions profileId={profileId} embedded />
-      </section>
+    <div className="health-page">
+      <WelcomeBanner
+        userName={session.user.name}
+        profileId={profileId}
+        documentCount={documentCount}
+      />
 
-      <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-        <div className="order-2 space-y-8 md:space-y-10 lg:order-1 lg:col-span-8">
-          <section aria-labelledby="care-overview-heading" className="space-y-6">
-            <div className="space-y-2">
-              <h2
-                id="care-overview-heading"
-                className="font-heading text-xl font-semibold md:text-2xl"
-              >
-                {patientDashboardCopy.overview.recordsTitle}
-              </h2>
-              <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
-                {patientDashboardCopy.overview.recordsDescription}
-              </p>
-            </div>
+      <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+        <div className="order-2 space-y-6 lg:order-1 lg:col-span-8">
+          <section aria-labelledby="care-overview-heading">
+            <h2
+              id="care-overview-heading"
+              className="font-heading text-xl font-semibold"
+            >
+              Your records
+            </h2>
+            <p className="mt-1 mb-5 text-sm text-muted-foreground">
+              Medical records you&apos;ve uploaded and their review status
+            </p>
             <MetricCards
               documentCount={documentCount}
               readyCount={readyCount}
@@ -81,7 +74,7 @@ export default async function DashboardPage() {
         </div>
 
         <aside className="order-1 lg:order-2 lg:col-span-4">
-          <CareTimeline documents={recentDocuments} />
+          <CareTimeline documents={recentDocuments} limit={3} />
         </aside>
       </div>
     </div>

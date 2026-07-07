@@ -16,9 +16,11 @@ export const patientDashboardCopy = {
     emptyBody:
       "Your health folder is ready. Upload recent lab results, imaging reports, or visit notes — your care team will prepare plain English summaries you can review before sharing.",
     withDocuments: (count: number) =>
-      `${count} health record${count === 1 ? "" : "s"} in your folder`,
-    savedLabel: (count: number) =>
-      count === 1 ? "health record saved" : "health records saved",
+      `${count} health record${count === 1 ? "" : "s"} saved · review status below`,
+    primaryAction: {
+      label: "Upload records",
+      hint: "Add lab reports or scans",
+    },
     cta: "Upload health records",
   },
   overview: {

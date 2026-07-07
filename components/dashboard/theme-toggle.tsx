@@ -13,7 +13,7 @@ export function ThemeToggle() {
       type="button"
       variant="ghost"
       size="icon"
-      className="rounded-full"
+      className="size-9 shrink-0 rounded-full"
       aria-label="Toggle rest mode"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
