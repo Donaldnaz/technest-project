@@ -9,6 +9,7 @@ import {
   HEALTHCARE_SPECIALTIES,
   OTHER_SPECIALTY,
 } from "@/lib/constants/specialties";
+import { patientOnboardingCopy } from "@/lib/copy/patient/onboarding";
 import { cn } from "@/lib/utils";
 
 type SpecialtySelectProps = {
@@ -50,7 +51,7 @@ export function SpecialtySelect({
   return (
     <div className="grid gap-4">
       <div className="grid gap-2">
-        <Label htmlFor={specialtyId}>Healthcare specialty</Label>
+        <Label htmlFor={specialtyId}>{patientOnboardingCopy.fields.specialty.label}</Label>
         <select
           id={specialtyId}
           name="healthcareSpecialty"
@@ -63,7 +64,7 @@ export function SpecialtySelect({
           aria-invalid={Boolean(specialtyError)}
         >
           <option value="" disabled>
-            Select a specialty
+            {patientOnboardingCopy.fields.specialty.placeholder}
           </option>
           {HEALTHCARE_SPECIALTIES.map((specialty) => (
             <option key={specialty} value={specialty}>
@@ -80,7 +81,7 @@ export function SpecialtySelect({
 
       {(showCustom || selected === OTHER_SPECIALTY) && (
         <div className="grid gap-2">
-          <Label htmlFor={customId}>Describe your specialty</Label>
+          <Label htmlFor={customId}>{patientOnboardingCopy.fields.specialty.other}</Label>
           <Input
             id={customId}
             name="customSpecialty"

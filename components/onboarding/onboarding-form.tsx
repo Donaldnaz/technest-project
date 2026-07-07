@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { initialActionState } from "@/lib/actions/types";
+import { patientOnboardingCopy } from "@/lib/copy/patient/onboarding";
 import { cn } from "@/lib/utils";
 
 type OnboardingFormProps = {
@@ -46,14 +47,16 @@ export function OnboardingForm({
   return (
     <form action={formAction} className="grid gap-10">
       <section className="health-card rounded-3xl p-6 md:p-8">
-        <h2 className="font-heading text-xl font-semibold">Your account</h2>
+        <h2 className="font-heading text-xl font-semibold">
+          {patientOnboardingCopy.sections.account.title}
+        </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Tell us who is signed in to iCare.
+          {patientOnboardingCopy.sections.account.description}
         </p>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <div className="grid gap-2">
-            <Label htmlFor="accountFirstName">First name</Label>
+            <Label htmlFor="accountFirstName">{patientOnboardingCopy.fields.firstName}</Label>
             <Input
               id="accountFirstName"
               name="accountFirstName"
@@ -71,7 +74,7 @@ export function OnboardingForm({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="accountLastName">Last name</Label>
+            <Label htmlFor="accountLastName">{patientOnboardingCopy.fields.lastName}</Label>
             <Input
               id="accountLastName"
               name="accountLastName"
@@ -92,25 +95,29 @@ export function OnboardingForm({
 
       <section className="health-card rounded-3xl p-6 md:p-8">
         <h2 className="font-heading text-xl font-semibold">
-          First health profile
+          {patientOnboardingCopy.sections.profile.title}
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Set up the first person you will track — yourself or someone you care
-          for.
+          {patientOnboardingCopy.sections.profile.description}
         </p>
 
         <div className="mt-6 grid gap-6">
           <div className="grid gap-2">
-            <span className="text-sm font-medium">Who is this for?</span>
+            <span className="text-sm font-medium">
+              {patientOnboardingCopy.sections.relationship.title}
+            </span>
+            <p className="text-xs text-muted-foreground">
+              {patientOnboardingCopy.sections.relationship.description}
+            </p>
             <div
               className="inline-flex rounded-2xl border border-border/60 bg-muted/40 p-1"
               role="group"
-              aria-label="Relationship"
+              aria-label={patientOnboardingCopy.sections.relationship.aria}
             >
               {(
                 [
-                  { value: "self", label: "Myself" },
-                  { value: "other", label: "Someone I care for" },
+                  { value: "self", label: patientOnboardingCopy.sections.relationship.self },
+                  { value: "other", label: patientOnboardingCopy.sections.relationship.other },
                 ] as const
               ).map((option) => (
                 <label
@@ -138,7 +145,7 @@ export function OnboardingForm({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
-              <Label htmlFor="patientFirstName">First name</Label>
+              <Label htmlFor="patientFirstName">{patientOnboardingCopy.fields.firstName}</Label>
               <Input
                 id="patientFirstName"
                 name="patientFirstName"
@@ -158,7 +165,7 @@ export function OnboardingForm({
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="patientLastName">Last name</Label>
+              <Label htmlFor="patientLastName">{patientOnboardingCopy.fields.lastName}</Label>
               <Input
                 id="patientLastName"
                 name="patientLastName"
@@ -180,7 +187,7 @@ export function OnboardingForm({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
-              <Label htmlFor="dateOfBirth">Date of birth</Label>
+              <Label htmlFor="dateOfBirth">{patientOnboardingCopy.fields.dateOfBirth}</Label>
               <Input
                 id="dateOfBirth"
                 name="dateOfBirth"
@@ -196,7 +203,9 @@ export function OnboardingForm({
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="medicalRecordNumber">Medical record number</Label>
+              <Label htmlFor="medicalRecordNumber">
+                {patientOnboardingCopy.fields.mrn}
+              </Label>
               <Input
                 id="medicalRecordNumber"
                 name="medicalRecordNumber"
@@ -206,6 +215,9 @@ export function OnboardingForm({
                   serverErrors?.medicalRecordNumber?.[0],
                 )}
               />
+              <p className="text-xs text-muted-foreground">
+                {patientOnboardingCopy.fields.mrnHint}
+              </p>
               {serverErrors?.medicalRecordNumber?.[0] && (
                 <p className="text-sm text-destructive" role="alert">
                   {serverErrors.medicalRecordNumber[0]}
@@ -230,13 +242,13 @@ export function OnboardingForm({
           />
 
           <div className="grid gap-2">
-            <Label htmlFor="additionalNotes">Additional notes</Label>
+            <Label htmlFor="additionalNotes">{patientOnboardingCopy.fields.notes}</Label>
             <textarea
               id="additionalNotes"
               name="additionalNotes"
               rows={4}
               className="w-full rounded-xl border border-input bg-transparent px-3 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
-              placeholder="Anything else your care team should know about this specialty or location"
+              placeholder={patientOnboardingCopy.fields.notesPlaceholder}
             />
             {serverErrors?.additionalNotes?.[0] && (
               <p className="text-sm text-destructive" role="alert">
@@ -259,7 +271,7 @@ export function OnboardingForm({
         size="lg"
         className="rounded-2xl px-8"
       >
-        {pending ? "Saving..." : "Complete setup"}
+        {pending ? patientOnboardingCopy.submitting : patientOnboardingCopy.submit}
       </Button>
     </form>
   );

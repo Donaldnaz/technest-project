@@ -1,8 +1,8 @@
 import "server-only";
 
 import { generateText } from "ai";
-import { google } from "@ai-sdk/google";
 
+import { getGoogleModel, isGeminiConfigured } from "@/lib/ai/google-model";
 import { ORGANIZATION_KNOWLEDGE } from "@/lib/ai/organization-knowledge";
 import { contactEmail } from "@/lib/landing/navigation";
 
@@ -28,12 +28,12 @@ ${ORGANIZATION_KNOWLEDGE}`;
 export async function generateOrganizationAssistantReply(
   messages: AssistantMessage[],
 ): Promise<string> {
-  if (!process.env.GEMINI_API_KEY) {
+  if (!isGeminiConfigured()) {
     return `The iCare assistant is not available right now. Please try again later or contact ${contactEmail} for help.`;
   }
 
   const { text } = await generateText({
-    model: google("gemini-2.0-flash"),
+    model: getGoogleModel(),
     system: SYSTEM_PROMPT,
     messages: messages.map((message) => ({
       role: message.role,

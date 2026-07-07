@@ -21,7 +21,7 @@ export function LandingSignedInBanner({
             Continue to your upload workspace or browse the site.
           </span>
         </p>
-        <LinkButton href={dashboardHref} size="sm" className="shrink-0 rounded-xl">
+        <LinkButton href={dashboardHref} size="default" className="shrink-0 rounded-xl">
           Go to dashboard
         </LinkButton>
       </SiteContainer>

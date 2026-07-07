@@ -3,6 +3,8 @@
 import { CheckCircle2, Sparkles, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { PatientAiNotice } from "@/components/patient/patient-ai-notice";
+import { patientUploadCopy } from "@/lib/copy/patient/upload";
 
 type UploadSuccessPanelProps = {
   count: number;
@@ -19,8 +21,6 @@ export function UploadSuccessPanel({
   onDismiss,
   onUploadMore,
 }: UploadSuccessPanelProps) {
-  const recordLabel = count === 1 ? "record" : "records";
-
   return (
     <div
       role="status"
@@ -37,20 +37,20 @@ export function UploadSuccessPanel({
             <div>
               <p className="font-heading text-lg font-semibold text-foreground">
                 {isFirstUpload
-                  ? "Wonderful — your first record is in!"
-                  : `${count} ${recordLabel} uploaded successfully`}
+                  ? patientUploadCopy.success.firstTitle
+                  : patientUploadCopy.success.pluralTitle(count)}
               </p>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 {isFirstUpload
-                  ? `You've taken the first step for ${patientFirstName}. We are reviewing your upload and will add a summary shortly.`
-                  : `Your files for ${patientFirstName} are private and ready for your care team when you choose to share.`}
+                  ? patientUploadCopy.success.firstBody(patientFirstName)
+                  : patientUploadCopy.success.pluralBody}
               </p>
             </div>
             <button
               type="button"
               onClick={onDismiss}
               className="upload-interactive shrink-0 rounded-lg p-1 text-muted-foreground hover:bg-sage-100/80 dark:hover:bg-sage-900/40"
-              aria-label="Dismiss success message"
+              aria-label={patientUploadCopy.success.dismissAria}
             >
               <X className="size-4" />
             </button>
@@ -59,27 +59,29 @@ export function UploadSuccessPanel({
           {isFirstUpload && (
             <p className="inline-flex items-center gap-1.5 text-xs font-medium text-sage-800 dark:text-sage-200">
               <Sparkles className="size-3.5" aria-hidden />
-              Welcome to iCare — you're off to a great start
+              {patientUploadCopy.success.firstMilestone}
             </p>
           )}
+
+          <PatientAiNotice variant="processing" showLockIcon />
 
           <div className="flex flex-wrap gap-2 pt-1">
             <Button
               type="button"
-              size="sm"
+              size="default"
               className="rounded-xl bg-sage-700 text-white hover:bg-sage-800"
               onClick={onUploadMore}
             >
-              Upload more files
+              {patientUploadCopy.success.uploadMore}
             </Button>
             <Button
               type="button"
-              size="sm"
+              size="default"
               variant="outline"
               className="rounded-xl"
               onClick={onDismiss}
             >
-              Done for now
+              {patientUploadCopy.success.done}
             </Button>
           </div>
         </div>

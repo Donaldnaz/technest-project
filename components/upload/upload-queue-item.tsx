@@ -4,6 +4,7 @@ import { CheckCircle2, FileText, ImageIcon, X } from "lucide-react";
 
 import { CategoryPills } from "@/components/upload/category-pills";
 import type { QueueItem } from "@/hooks/use-upload-queue";
+import { patientUploadCopy } from "@/lib/copy/patient/upload";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -74,7 +75,7 @@ export function UploadQueueItem({
                   size="icon-sm"
                   className="upload-interactive shrink-0 rounded-xl text-muted-foreground hover:text-destructive"
                   disabled={disabled}
-                  aria-label={`Remove ${item.file.name}`}
+                  aria-label={patientUploadCopy.queue.removeAria(item.file.name)}
                   onClick={() => onRemove(item.id)}
                 >
                   <X className="size-4" />
@@ -84,7 +85,7 @@ export function UploadQueueItem({
               {item.status === "complete" && (
                 <CheckCircle2
                   className="size-5 shrink-0 text-sage-700 dark:text-sage-300"
-                  aria-label="Upload complete"
+                  aria-label={patientUploadCopy.queue.completeAria}
                 />
               )}
             </div>
@@ -92,7 +93,7 @@ export function UploadQueueItem({
         </div>
 
         {showProgress && (
-          <div className="space-y-1.5">
+          <div className="space-y-1.5" aria-live="polite" aria-atomic="true">
             <div className="h-2 overflow-hidden rounded-full bg-muted">
               <div
                 className={cn(
@@ -105,9 +106,11 @@ export function UploadQueueItem({
               />
             </div>
             <p className="text-xs text-muted-foreground">
-              {item.status === "uploading" && `Uploading… ${item.progress}%`}
-              {item.status === "complete" && "Uploaded — thank you!"}
-              {item.status === "error" && (item.errorMessage ?? "Upload failed")}
+              {item.status === "uploading" &&
+                patientUploadCopy.queue.securing(item.progress)}
+              {item.status === "complete" && patientUploadCopy.queue.saved}
+              {item.status === "error" &&
+                (item.errorMessage ?? patientUploadCopy.queue.failed)}
             </p>
           </div>
         )}

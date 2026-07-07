@@ -1,11 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { LinkButton } from "@/components/ui/link-button";
+
 import { LandingHeroPreview } from "@/components/landing/landing-hero-preview";
 import { SiteContainer } from "@/components/layout/site-container";
+import { landingCopy } from "@/lib/copy/landing";
 
 export function LandingHero() {
+  const { hero } = landingCopy;
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-oat-50/80 via-background to-background dark:from-charcoal-950/60 dark:via-background">
       <div
@@ -25,36 +28,19 @@ export function LandingHero() {
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div className="space-y-7">
             <p className="inline-flex items-center rounded-full border border-sage-200/80 bg-sage-100/60 px-4 py-1.5 text-sm font-medium text-sage-800 dark:border-sage-800 dark:bg-sage-950/40 dark:text-sage-200">
-              Compassionate care, beautifully organized
+              {hero.eyebrow}
             </p>
 
             <h1 className="font-heading text-4xl font-semibold leading-[1.12] tracking-tight md:text-5xl lg:text-[3.25rem]">
-              Your health,{" "}
-              <span className="text-primary">beautifully organized.</span>
+              {hero.headline}{" "}
+              <span className="text-primary">{hero.headlineAccent}</span>
             </h1>
 
             <p className="max-w-lg text-lg leading-relaxed text-muted-foreground">
-              A warm home for daily vitals, care timelines, medications, and
-              medical records — designed to feel comforting, not clinical.
+              {hero.body}
             </p>
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <LinkButton href="/auth/sign-up" size="lg" className="rounded-2xl">
-                Get started free
-              </LinkButton>
-              <LinkButton
-                href="#experience"
-                variant="outline"
-                size="lg"
-                className="rounded-2xl"
-              >
-                Try the live demo
-              </LinkButton>
-            </div>
-
-            <p className="text-sm text-muted-foreground">
-              Daily vitals · Care timeline · Medical records
-            </p>
+            <p className="text-sm text-muted-foreground">{hero.tags}</p>
           </div>
 
           <div className="relative">

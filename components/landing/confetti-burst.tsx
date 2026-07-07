@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 type ConfettiBurstProps = {
@@ -16,11 +16,25 @@ const COLORS = [
   "bg-amber-200",
 ];
 
+function createParticles() {
+  return Array.from({ length: 24 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    delay: Math.random() * 0.3,
+    color: COLORS[i % COLORS.length] ?? "bg-primary",
+    size: 4 + Math.random() * 6,
+  }));
+}
+
 export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
   const [particles, setParticles] = useState<
     { id: number; x: number; delay: number; color: string; size: number }[]
   >([]);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const onCompleteRef = useRef(onComplete);
 
   useEffect(() => {
@@ -28,31 +42,24 @@ export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
   }, [onComplete]);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
     if (!active) {
-      setParticles([]);
-      return;
+      const resetTimer = window.setTimeout(() => setParticles([]), 0);
+      return () => window.clearTimeout(resetTimer);
     }
 
-    setParticles(
-      Array.from({ length: 24 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        delay: Math.random() * 0.3,
-        color: COLORS[i % COLORS.length] ?? "bg-primary",
-        size: 4 + Math.random() * 6,
-      })),
-    );
+    const spawnTimer = window.setTimeout(() => {
+      setParticles(createParticles());
+    }, 0);
 
-    const timer = setTimeout(() => {
+    const completeTimer = window.setTimeout(() => {
       setParticles([]);
       onCompleteRef.current?.();
     }, 2200);
 
-    return () => clearTimeout(timer);
+    return () => {
+      window.clearTimeout(spawnTimer);
+      window.clearTimeout(completeTimer);
+    };
   }, [active]);
 
   if (!mounted || particles.length === 0) return null;

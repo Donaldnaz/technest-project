@@ -12,9 +12,9 @@ export function ThemeToggle() {
     <Button
       type="button"
       variant="ghost"
-      size="icon"
-      className="rounded-full"
-      aria-label="Toggle rest mode"
+      size="icon-lg"
+      className="rounded-xl"
+      aria-label="Toggle appearance"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       <Sun className="size-4 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />

@@ -1,7 +1,10 @@
 import { LinkButton } from "@/components/ui/link-button";
 import { SiteContainer } from "@/components/layout/site-container";
+import { landingCopy } from "@/lib/copy/landing";
 
 export function LandingCta() {
+  const { cta } = landingCopy;
+
   return (
     <section className="site-section border-t border-border/50">
       <SiteContainer className="py-16 md:py-20">
@@ -17,15 +20,14 @@ export function LandingCta() {
 
           <div className="relative">
             <h2 className="font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-              Start your care journey
+              {cta.title}
             </h2>
             <p className="mx-auto mt-3 max-w-md text-lg leading-relaxed text-muted-foreground">
-              Free to begin. Explore the live demo above, then create an account
-              when you&apos;re ready.
+              {cta.description}
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <LinkButton href="/auth/sign-up" size="lg" className="rounded-2xl">
-                Create account
+                {cta.createAccount}
               </LinkButton>
               <LinkButton
                 href="/auth/sign-in"
@@ -33,7 +35,7 @@ export function LandingCta() {
                 size="lg"
                 className="rounded-2xl"
               >
-                Sign in
+                {cta.signIn}
               </LinkButton>
             </div>
           </div>

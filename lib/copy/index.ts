@@ -1,0 +1,9 @@
+export { aiCopy } from "@/lib/copy/ai";
+export { authCopy } from "@/lib/copy/auth";
+export { dashboardCopy } from "@/lib/copy/dashboard";
+export { ingestionCopy } from "@/lib/copy/ingestion";
+export { onboardingCopy } from "@/lib/copy/onboarding";
+export { patientCopy } from "@/lib/copy/patient";
+export { slackCopy } from "@/lib/copy/slack";
+export { statusCopy } from "@/lib/copy/status";
+export { validationCopy } from "@/lib/copy/validation";

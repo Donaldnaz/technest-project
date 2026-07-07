@@ -4,10 +4,13 @@ import {
   FileUp,
 } from "lucide-react";
 
+import { patientTabHref } from "@/lib/navigation/patient-nav";
+import type { DocumentCategory } from "@/lib/constants/document-categories";
+import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
 import {
-  DOCUMENT_CATEGORY_LABELS,
-  type DocumentCategory,
-} from "@/lib/constants/document-categories";
+  getPatientCategoryLabel,
+} from "@/lib/copy/patient/library";
+import { patientStatusCopy } from "@/lib/copy/patient/status";
 import type { DocumentWithExtraction } from "@/lib/db/queries/documents";
 import { toDate, toIsoDateTime } from "@/lib/dates";
 
@@ -21,14 +24,10 @@ type TimelineItem = {
 
 type CareTimelineProps = {
   documents: DocumentWithExtraction[];
+  variant?: "health" | "clinical";
 };
 
-const recordStatusLabels = {
-  uploaded: "Received",
-  processing: "Being reviewed",
-  ready: "Ready",
-  failed: "Needs attention",
-} as const;
+const recordStatusLabels = patientStatusCopy.dbMapping;
 
 function buildTimelineItems(
   documents: DocumentWithExtraction[],
@@ -38,38 +37,52 @@ function buildTimelineItems(
       id: `document-${document.id}`,
       title: document.fileName,
       subtitle: document.extraction?.summary
-        ? `${DOCUMENT_CATEGORY_LABELS[document.category as DocumentCategory]} · ${document.extraction.summary.slice(0, 80)}${document.extraction.summary.length > 80 ? "…" : ""}`
-        : `${DOCUMENT_CATEGORY_LABELS[document.category as DocumentCategory]} · ${recordStatusLabels[document.status]}`,
+        ? `${getPatientCategoryLabel(document.category as DocumentCategory)} · ${document.extraction.summary.slice(0, 80)}${document.extraction.summary.length > 80 ? "…" : ""}`
+        : `${getPatientCategoryLabel(document.category as DocumentCategory)} · ${recordStatusLabels[document.status]}`,
       time: toDate(document.createdAt) ?? new Date(0),
-      href: `/dashboard/patients/${document.patientId}`,
+      href: patientTabHref(document.patientId, "documents"),
     }))
     .sort((a, b) => b.time.getTime() - a.time.getTime())
     .slice(0, 8);
 }
 
-export function CareTimeline({ documents }: CareTimelineProps) {
+export function CareTimeline({
+  documents,
+  variant = "health",
+}: CareTimelineProps) {
   const items = buildTimelineItems(documents);
+  const isClinical = variant === "clinical";
 
   return (
-    <section className="health-card rounded-3xl p-5 shadow-sm md:p-6">
-      <div className="mb-5 flex items-center justify-between">
-        <div>
-          <h2 className="font-heading text-lg font-semibold">Recent uploads</h2>
-          <p className="text-sm text-muted-foreground">
-            Your latest medical records
-          </p>
+    <section
+      className={
+        isClinical
+          ? "space-y-4"
+          : "health-card rounded-3xl p-6 shadow-sm md:p-8"
+      }
+    >
+      {!isClinical && (
+        <div className="mb-6 flex items-start justify-between gap-4">
+          <div className="space-y-2">
+            <h2 className="font-heading text-lg font-semibold md:text-xl">
+              {patientDashboardCopy.patient.timeline.title}
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
+              {patientDashboardCopy.patient.timeline.description}
+            </p>
+          </div>
+          <CalendarPlus className="mt-1 size-5 shrink-0 text-muted-foreground" aria-hidden />
         </div>
-        <CalendarPlus className="size-5 text-muted-foreground" aria-hidden />
-      </div>
+      )}
 
       {items.length === 0 ? (
-        <p className="rounded-2xl bg-muted/50 p-4 text-sm text-muted-foreground">
-          No uploads yet. Add a lab report or scan to get started.
+        <p className="rounded-2xl bg-muted/50 p-5 text-sm leading-relaxed text-muted-foreground">
+          {patientDashboardCopy.empty.timeline}
         </p>
       ) : (
         <ol className="relative space-y-0">
           {items.map((item, index) => (
-            <li key={item.id} className="relative flex gap-4 pb-6 last:pb-0">
+            <li key={item.id} className="relative flex gap-4 pb-7 last:pb-0">
               {index < items.length - 1 && (
                 <span
                   className="absolute left-5 top-10 h-[calc(100%-1rem)] w-px bg-border"
