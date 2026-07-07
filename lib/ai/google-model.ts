@@ -10,15 +10,20 @@ export function getGeminiApiKey(): string | undefined {
   );
 }
 
-export function getGoogleModel(modelId = "gemini-2.0-flash") {
+export function getGoogleModel(modelId?: string) {
   const apiKey = getGeminiApiKey();
 
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY is not configured");
   }
 
+  const resolvedModel =
+    modelId?.trim() ||
+    process.env.GEMINI_MODEL?.trim() ||
+    "gemini-2.5-flash-lite";
+
   const google = createGoogleGenerativeAI({ apiKey });
-  return google(modelId);
+  return google(resolvedModel);
 }
 
 export function isGeminiConfigured(): boolean {

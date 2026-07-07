@@ -25,6 +25,30 @@ Rules:
 ## Website reference
 ${ORGANIZATION_KNOWLEDGE}`;
 
+function getAssistantFailureReply(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error);
+  const normalized = message.toLowerCase();
+
+  if (
+    normalized.includes("prepayment credits") ||
+    normalized.includes("quota") ||
+    normalized.includes("resource_exhausted") ||
+    normalized.includes("rate limit")
+  ) {
+    return `The iCare assistant is temporarily unavailable because our AI service limit was reached. Please try again later or contact ${contactEmail} for help.`;
+  }
+
+  if (
+    normalized.includes("api key") ||
+    normalized.includes("api_key") ||
+    normalized.includes("permission denied")
+  ) {
+    return `The iCare assistant is not available right now. Please try again later or contact ${contactEmail} for help.`;
+  }
+
+  return `Something went wrong while generating a reply. Please try again or contact ${contactEmail} for help.`;
+}
+
 export async function generateOrganizationAssistantReply(
   messages: AssistantMessage[],
 ): Promise<string> {
@@ -32,14 +56,18 @@ export async function generateOrganizationAssistantReply(
     return `The iCare assistant is not available right now. Please try again later or contact ${contactEmail} for help.`;
   }
 
-  const { text } = await generateText({
-    model: getGoogleModel(),
-    system: SYSTEM_PROMPT,
-    messages: messages.map((message) => ({
-      role: message.role,
-      content: message.content,
-    })),
-  });
+  try {
+    const { text } = await generateText({
+      model: getGoogleModel(),
+      system: SYSTEM_PROMPT,
+      messages: messages.map((message) => ({
+        role: message.role,
+        content: message.content,
+      })),
+    });
 
-  return text.trim() || "I could not generate a response. Please try again.";
+    return text.trim() || "I could not generate a response. Please try again.";
+  } catch (error) {
+    return getAssistantFailureReply(error);
+  }
 }
