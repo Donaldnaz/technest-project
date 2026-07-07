@@ -6,13 +6,31 @@ const neonAuthProxy = auth.middleware({
   loginUrl: "/auth/sign-in",
 });
 
+/** OAuth callback lands on `/` with this query param — must stay behind auth proxy. */
+const NEON_AUTH_SESSION_VERIFIER_PARAM = "neon_auth_session_verifier";
+
+function isPublicRoute(request: NextRequest): boolean {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === "/legal" || pathname.startsWith("/legal/")) {
+    return true;
+  }
+
+  if (pathname !== "/") {
+    return false;
+  }
+
+  return !request.nextUrl.searchParams.has(NEON_AUTH_SESSION_VERIFIER_PARAM);
+}
+
 function isServerActionRequest(request: NextRequest): boolean {
   return request.method === "POST" && request.headers.has("next-action");
 }
 
 /**
  * POST routes that must not run Neon session validation on the original POST
- * body (e.g. Blob upload events). Session is checked via a synthetic GET instead.
+ * body (e.g. Blob upload events, multipart form uploads). Session is checked
+ * via a synthetic GET instead.
  */
 function isPostWithSyntheticSessionCheck(request: NextRequest): boolean {
   if (request.method !== "POST") return false;
@@ -25,6 +43,10 @@ function needsSyntheticGetSessionCheck(request: NextRequest): boolean {
   return isServerActionRequest(request) || isPostWithSyntheticSessionCheck(request);
 }
 
+function isMultipartUploadApi(request: NextRequest): boolean {
+  return request.method === "POST" && request.nextUrl.pathname === "/api/upload";
+}
+
 /**
  * Neon Auth proxy validates sessions by proxying the incoming request to
  * get-session, which only accepts GET. Server Actions and Blob upload POSTs send
@@ -33,6 +55,10 @@ function needsSyntheticGetSessionCheck(request: NextRequest): boolean {
  * client token" for Vercel Blob uploads.
  */
 export default async function proxy(request: NextRequest) {
+  if (isPublicRoute(request)) {
+    return NextResponse.next();
+  }
+
   if (!needsSyntheticGetSessionCheck(request)) {
     return neonAuthProxy(request);
   }
@@ -43,11 +69,8 @@ export default async function proxy(request: NextRequest) {
   });
   const authResponse = await neonAuthProxy(sessionCheckRequest);
 
-  const isUploadApi =
-    request.method === "POST" && request.nextUrl.pathname === "/api/upload";
-
   if (authResponse.headers.get("location")) {
-    if (isUploadApi) {
+    if (isMultipartUploadApi(request)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     return authResponse;

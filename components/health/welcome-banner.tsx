@@ -3,7 +3,8 @@ import {
   getGreetingGradient,
   getTimeOfDayGreeting,
 } from "@/lib/health/greeting";
-import { profilePath } from "@/lib/routes/profile";
+import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
+import { patientTabHref } from "@/lib/navigation/patient-nav";
 import { LinkButton } from "@/components/ui/link-button";
 
 type WelcomeBannerProps = {
@@ -23,36 +24,29 @@ export function WelcomeBanner({
 
   return (
     <section
-      className={`health-card relative overflow-hidden rounded-3xl bg-gradient-to-br ${gradient} p-6 shadow-sm md:p-8`}
+      className={`health-card relative overflow-hidden rounded-3xl bg-gradient-to-br ${gradient} p-7 shadow-sm md:p-10`}
     >
-      <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="space-y-2">
+      <div className="relative z-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-8">
+        <div className="space-y-3">
           <p className="text-sm font-medium text-muted-foreground">
-            Your health records
+            {patientDashboardCopy.welcome.eyebrow}
           </p>
           <h1 className="font-heading text-3xl font-semibold tracking-tight md:text-4xl">
             {greeting}, {firstName}
           </h1>
-          <p className="max-w-lg text-base leading-relaxed text-muted-foreground">
-            Upload your lab reports and scans in one secure place. We&apos;ll
-            help you understand them and share with your care team when you are
-            ready.
+          <p className="max-w-xl text-base leading-relaxed text-muted-foreground md:text-[1.05rem] md:leading-7">
+            {documentCount === 0
+              ? patientDashboardCopy.welcome.emptyBody
+              : patientDashboardCopy.welcome.withDocuments(documentCount)}
           </p>
-          {documentCount > 0 && (
-            <div className="flex flex-wrap gap-2 pt-1">
-              <span className="inline-flex items-center rounded-full border border-sage-200/80 bg-sage-100/60 px-3 py-1 text-xs font-medium text-sage-800 dark:border-sage-800 dark:bg-sage-950/40 dark:text-sage-200">
-                {documentCount} record{documentCount === 1 ? "" : "s"} uploaded
-              </span>
-            </div>
-          )}
         </div>
         {profileId && (
           <LinkButton
-            href={profilePath(profileId)}
+            href={patientTabHref(profileId, "upload")}
             size="lg"
             className="shrink-0 rounded-2xl px-6"
           >
-            Upload records
+            {patientDashboardCopy.welcome.cta}
           </LinkButton>
         )}
       </div>

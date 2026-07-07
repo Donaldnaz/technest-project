@@ -1,7 +1,7 @@
 import type { AuthViewClassNames } from "@neondatabase/auth-ui";
 
 const inputClassName =
-  "h-11 w-full rounded-xl border-input bg-background px-3.5 text-base shadow-none md:text-sm";
+  "h-11 w-full rounded-xl border-input bg-background px-3.5 text-base shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:text-sm";
 
 const buttonClassName = "h-11 rounded-xl text-base font-medium";
 

@@ -1,16 +1,23 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { HeartPulse } from "lucide-react";
 
 import { OrganizationAssistant } from "@/components/assistant/organization-assistant";
+import { AppSidebar } from "@/components/dashboard/app-sidebar";
+import { HeaderContext } from "@/components/dashboard/header-context";
 import { MobileBottomNav } from "@/components/dashboard/mobile-bottom-nav";
-import { SidebarNav } from "@/components/dashboard/sidebar-nav";
 import { ThemeToggle } from "@/components/dashboard/theme-toggle";
 import { UserMenu } from "@/components/dashboard/user-menu";
 import { SkipLink } from "@/components/layout/skip-link";
+import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
 import { isOnboardingComplete } from "@/lib/auth/onboarding";
 import { getOptionalSession } from "@/lib/auth/session";
 import { listRecentPatients } from "@/lib/db/queries/patients";
+
+function NavFallback() {
+  return <div className="h-32" aria-hidden />;
+}
 
 export default async function DashboardGroupLayout({
   children,
@@ -33,51 +40,48 @@ export default async function DashboardGroupLayout({
   return (
     <div className="flex min-h-screen bg-background">
       <SkipLink />
-      <aside className="hidden w-72 flex-col border-r border-sidebar-border bg-sidebar p-6 lg:flex">
-        <div className="mb-10 flex items-center gap-3">
-          <div className="flex size-11 items-center justify-center rounded-2xl bg-primary/15 text-primary">
-            <HeartPulse className="size-5" aria-hidden />
-          </div>
-          <div>
-            <Link href="/dashboard" className="font-heading text-lg font-semibold">
-              i<span className="text-primary">Care</span>
-            </Link>
-            <p className="text-xs text-muted-foreground">
-              Upload health documents & records
-            </p>
-          </div>
-        </div>
-        <SidebarNav profileId={profileId} />
-        <p className="mt-auto text-xs leading-relaxed text-muted-foreground">
-            Your health document upload portal.
-        </p>
-      </aside>
+      <AppSidebar profileId={profileId} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border/60 bg-background/80 px-4 backdrop-blur-md md:px-8">
-          <div className="flex items-center gap-2 lg:hidden">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-primary/15 text-primary">
-              <HeartPulse className="size-4" aria-hidden />
+        <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-md">
+          <div className="mx-auto flex h-16 w-full max-w-full items-center justify-between gap-4 px-4 md:px-6">
+            <div className="flex min-w-0 flex-col justify-self-start lg:hidden">
+              <div className="flex items-center gap-2">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+                  <HeartPulse className="size-4" aria-hidden />
+                </div>
+                <Link
+                  href="/dashboard"
+                  className="truncate font-heading font-semibold"
+                >
+                  i<span className="text-primary">Care</span>
+                </Link>
+              </div>
+              <HeaderContext />
             </div>
-            <Link href="/dashboard" className="font-heading font-semibold">
-              i<span className="text-primary">Care</span>
-            </Link>
-          </div>
-          <div className="hidden text-sm text-muted-foreground lg:block">
-            Your upload workspace
-          </div>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <UserMenu />
+
+            <p className="hidden text-sm text-muted-foreground lg:block">
+              {patientDashboardCopy.shell.workspaceLabel}
+            </p>
+
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <UserMenu />
+            </div>
           </div>
         </header>
 
-        <main id="main-content" className="flex-1 px-4 py-6 md:px-8 md:py-8">
+        <main
+          id="main-content"
+          className="flex-1 px-4 py-6 pb-24 md:px-8 md:py-8 md:pb-10"
+        >
           {children}
         </main>
       </div>
 
-      <MobileBottomNav profileId={profileId} />
+      <Suspense fallback={<NavFallback />}>
+        <MobileBottomNav profileId={profileId} />
+      </Suspense>
       <OrganizationAssistant />
     </div>
   );

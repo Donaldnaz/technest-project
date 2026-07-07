@@ -1,7 +1,19 @@
+export const LANDING_HOME = "/";
+
 export type NavLink = {
   href: string;
   label: string;
 };
+
+export function getHashId(href: string): string | null {
+  if (href.startsWith("/#")) return href.slice(2);
+  if (href.startsWith("#")) return href.slice(1);
+  return null;
+}
+
+export function toLandingSectionHref(hashId: string): string {
+  return `/${hashId.startsWith("#") ? hashId : `#${hashId}`}`;
+}
 
 export type FooterNavGroup = {
   title: string;
@@ -9,34 +21,52 @@ export type FooterNavGroup = {
 };
 
 export const primaryNavLinks: NavLink[] = [
-  { href: "#what-we-do", label: "What we do" },
-  { href: "#experience", label: "Platform" },
-  { href: "#about", label: "About us" },
-  { href: "#contact", label: "Contact us" },
+  { href: toLandingSectionHref("what-we-do"), label: "What we do" },
+  { href: toLandingSectionHref("experience"), label: "Portal" },
+  { href: toLandingSectionHref("about"), label: "About us" },
+  { href: toLandingSectionHref("contact"), label: "Contact us" },
+];
+
+export const landingSectionIds = primaryNavLinks
+  .map((link) => getHashId(link.href))
+  .filter((id): id is string => id !== null);
+
+export const footerProductLinks = primaryNavLinks.filter((link) => {
+  const id = getHashId(link.href);
+  return id === "what-we-do" || id === "experience";
+});
+
+export const footerCompanyLinks = primaryNavLinks.filter((link) => {
+  const id = getHashId(link.href);
+  return id === "about" || id === "contact";
+});
+
+export const legalNavLinks: NavLink[] = [
+  { href: "/legal/privacy", label: "Privacy" },
+  { href: "/legal/terms", label: "Terms" },
+  { href: "/legal/accessibility", label: "Accessibility" },
 ];
 
 export const footerNavGroups: FooterNavGroup[] = [
-  {
-    title: "Product",
-    links: [
-      { href: "#experience", label: "Platform" },
-      { href: "#what-we-do", label: "What we do" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { href: "#about", label: "About us" },
-      { href: "#contact", label: "Contact us" },
-    ],
-  },
-  {
-    title: "Account",
-    links: [
-      { href: "/auth/sign-in", label: "Sign in" },
-      { href: "/auth/sign-up", label: "Get started" },
-    ],
-  },
+  { title: "Product", links: footerProductLinks },
+  { title: "Company", links: footerCompanyLinks },
+  { title: "Legal", links: legalNavLinks },
 ];
 
 export const contactEmail = "hello@icare.app";
+export const contactPhone = "+1 (415) 555-0100";
+
+export const headquartersAddress = {
+  name: "Headquarters",
+  street: "548 Market Street, Suite 35410",
+  city: "San Francisco",
+  state: "CA",
+  postalCode: "94104",
+  country: "United States",
+} as const;
+
+export const headquartersAddressLines = [
+  headquartersAddress.street,
+  `${headquartersAddress.city}, ${headquartersAddress.state} ${headquartersAddress.postalCode}`,
+  headquartersAddress.country,
+] as const;

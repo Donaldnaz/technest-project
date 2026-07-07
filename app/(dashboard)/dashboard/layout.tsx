@@ -3,5 +3,7 @@ export default function DashboardNestedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <div className="mx-auto w-full max-w-7xl">{children}</div>
+  );
 }

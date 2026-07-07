@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import { Camera, CloudUpload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { patientUploadCopy } from "@/lib/copy/patient/upload";
 import { cn } from "@/lib/utils";
 
 type UploadDropzoneProps = {
@@ -34,7 +35,7 @@ export function UploadDropzone({
       <div
         role="button"
         tabIndex={disabled ? -1 : 0}
-        aria-label="Upload medical files by drag and drop or browse"
+        aria-label={patientUploadCopy.dropzone.ariaLabel}
         onKeyDown={(event) => {
           if (disabled) return;
           if (event.key === "Enter" || event.key === " ") {
@@ -76,10 +77,14 @@ export function UploadDropzone({
         </div>
 
         <p className="mt-4 font-heading text-base font-semibold text-foreground">
-          Drag your medical files here
+          {patientUploadCopy.dropzone.title}
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
-          PDF and JPEG up to 10 MB each
+          {patientUploadCopy.dropzone.formats}
+        </p>
+        <p className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+          <span aria-hidden>🔒</span>
+          {patientUploadCopy.dropzone.encryption}
         </p>
       </div>
 
@@ -116,7 +121,7 @@ export function UploadDropzone({
         className="upload-interactive hidden w-full rounded-2xl py-3 px-4 md:inline-flex"
         onClick={() => inputRef.current?.click()}
       >
-        Browse files
+        {patientUploadCopy.dropzone.browse}
       </Button>
 
       <Button
@@ -126,7 +131,7 @@ export function UploadDropzone({
         onClick={() => cameraInputRef.current?.click()}
       >
         <Camera className="size-5" aria-hidden />
-        Take photo of document
+        {patientUploadCopy.dropzone.camera}
       </Button>
     </div>
   );

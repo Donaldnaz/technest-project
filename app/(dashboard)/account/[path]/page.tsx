@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 
 import { ICareAccountView } from "@/components/account/icare-account-view";
-import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-header";
+import { AppBreadcrumbs } from "@/components/clinical/app-breadcrumbs";
+import { patientAccountCopy } from "@/lib/copy/patient/account";
+import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
 
 export const dynamicParams = false;
 
@@ -12,20 +12,6 @@ const allowedPaths = ["settings", "security"] as const;
 export function generateStaticParams() {
   return allowedPaths.map((path) => ({ path }));
 }
-
-const pageMeta: Record<
-  (typeof allowedPaths)[number],
-  { title: string; description: string }
-> = {
-  settings: {
-    title: "Account settings",
-    description: "View your name and email. These details are set at sign-up and cannot be changed here.",
-  },
-  security: {
-    title: "Password",
-    description: "Change your sign-in password.",
-  },
-};
 
 export default async function AccountPage({
   params,
@@ -38,28 +24,28 @@ export default async function AccountPage({
     notFound();
   }
 
-  const meta = pageMeta[path as (typeof allowedPaths)[number]];
-
   return (
-    <div className="health-page">
-      <DashboardPageHeader
-        title={meta.title}
-        description={meta.description}
-      />
+    <div className="flex flex-col gap-8 md:gap-10">
+      <div className="space-y-4">
+        <AppBreadcrumbs
+          items={[
+            { label: patientDashboardCopy.nav.home, href: "/dashboard" },
+            { label: patientDashboardCopy.nav.settings },
+          ]}
+          showBackIcon
+        />
 
-      <div className="health-card mx-auto w-full max-w-3xl rounded-3xl p-6 md:p-8">
-        <ICareAccountView path={path} />
+        <header className="space-y-2">
+          <h1 className="font-heading text-2xl font-semibold tracking-tight md:text-3xl">
+            {patientAccountCopy.page.title}
+          </h1>
+          <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
+            {patientAccountCopy.page.description}
+          </p>
+        </header>
       </div>
 
-      <div className="flex justify-center">
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="size-4" aria-hidden />
-          Back to dashboard
-        </Link>
-      </div>
+      <ICareAccountView path={path} />
     </div>
   );
 }

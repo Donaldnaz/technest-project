@@ -10,8 +10,9 @@ import { UploadDropzone } from "@/components/upload/upload-dropzone";
 import { UploadHubHeader } from "@/components/upload/upload-hub-header";
 import { UploadQueue } from "@/components/upload/upload-queue";
 import { UploadSuccessPanel } from "@/components/upload/upload-success-panel";
-import { useUploadQueue } from "@/hooks/use-upload-queue";
+import { useUploadQueue, type QueueItem } from "@/hooks/use-upload-queue";
 import { Button } from "@/components/ui/button";
+import { patientUploadCopy } from "@/lib/copy/patient/upload";
 import { cn } from "@/lib/utils";
 
 type UploadFormCardProps = {
@@ -20,6 +21,8 @@ type UploadFormCardProps = {
   patientFirstName: string;
   patientRelationship: "self" | "other";
   isFirstUpload?: boolean;
+  clinical?: boolean;
+  onItemsChange?: (items: QueueItem[]) => void;
 };
 
 export function UploadFormCard({
@@ -28,6 +31,8 @@ export function UploadFormCard({
   patientFirstName,
   patientRelationship,
   isFirstUpload = false,
+  clinical = false,
+  onItemsChange,
 }: UploadFormCardProps) {
   const router = useRouter();
   const [showCelebration, setShowCelebration] = useState(false);
@@ -52,6 +57,10 @@ export function UploadFormCard({
     clearCompleted,
     acceptedTypes,
   } = useUploadQueue({ patientId });
+
+  useEffect(() => {
+    onItemsChange?.(items);
+  }, [items, onItemsChange]);
 
   const displayName =
     patientRelationship === "self" ? "you" : patientFirstName;
@@ -114,7 +123,7 @@ export function UploadFormCard({
     const { successCount, errorCount } = await uploadAll();
 
     if (successCount === 0 && errorCount === 0) {
-      toast.error("Add at least one file before submitting.");
+      toast.error(patientUploadCopy.toasts.noFiles);
       return;
     }
 
@@ -125,10 +134,10 @@ export function UploadFormCard({
 
       toast.success(
         wasFirst
-          ? "Your first record is saved — great start!"
+          ? patientUploadCopy.toasts.successFirst
           : successCount === 1
-            ? "Record uploaded successfully."
-            : `${successCount} records uploaded successfully.`,
+            ? patientUploadCopy.toasts.successSingle
+            : patientUploadCopy.toasts.successPlural(successCount),
         { duration: 6000 },
       );
 
@@ -142,27 +151,33 @@ export function UploadFormCard({
     if (successCount > 0) {
       setUploadSuccess({ count: successCount, wasFirstUpload: false });
       toast.warning(
-        `${successCount} saved, ${errorCount} failed. Remove failed files and try again.`,
+        patientUploadCopy.toasts.partialWarning(successCount, errorCount),
         { duration: 6000 },
       );
       router.refresh();
       return;
     }
 
-    toast.error("Could not save your records. Please try again.");
+    toast.error(patientUploadCopy.toasts.failure);
   }
 
   const showConfigBanner =
     storageConfigured === false && !bannerDismissed;
 
   return (
-    <div className="w-full max-w-md">
+    <div className={cn("w-full", clinical ? "max-w-none" : "max-w-md")}>
       <ConfettiBurst
         active={showCelebration}
         onComplete={handleCelebrationComplete}
       />
 
-      <div className="rounded-3xl bg-card/95 p-6 shadow-sm backdrop-blur-sm sm:p-8">
+      <div
+        className={cn(
+          clinical
+            ? "space-y-4"
+            : "rounded-3xl bg-card/95 p-6 shadow-sm backdrop-blur-sm sm:p-8",
+        )}
+      >
         <div className="space-y-6">
           {uploadSuccess && (
             <UploadSuccessPanel
@@ -181,32 +196,40 @@ export function UploadFormCard({
             >
               <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
               <div className="min-w-0 flex-1 space-y-1">
-                <p className="font-medium">Upload storage not configured</p>
+                <p className="font-medium">{patientUploadCopy.form.storageAlert.title}</p>
                 <p className="text-xs leading-relaxed opacity-90">
-                  Add a valid{" "}
-                  <code className="rounded bg-amber-100/80 px-1 py-0.5 dark:bg-amber-900/40">
-                    BLOB_READ_WRITE_TOKEN
-                  </code>{" "}
-                  (from Vercel → Storage → Blob) to .env.local and restart the
-                  dev server.
+                  {patientUploadCopy.form.storageAlert.body}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setBannerDismissed(true)}
                 className="upload-interactive shrink-0 rounded-lg p-1 text-amber-800 hover:bg-amber-100/80 dark:text-amber-200 dark:hover:bg-amber-900/40"
-                aria-label="Dismiss"
+                aria-label={patientUploadCopy.form.storageAlert.dismissAria}
               >
                 <X className="size-4" />
               </button>
             </div>
           )}
 
-          <UploadHubHeader
-            userName={userName}
-            patientFirstName={patientFirstName}
-            patientRelationship={patientRelationship}
-          />
+          {!clinical && (
+            <UploadHubHeader
+              userName={userName}
+              patientFirstName={patientFirstName}
+              patientRelationship={patientRelationship}
+            />
+          )}
+
+          {clinical && (
+            <div>
+              <h3 className="font-heading text-base font-semibold">
+                {patientUploadCopy.form.title}
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {patientUploadCopy.form.description}
+              </p>
+            </div>
+          )}
 
           <UploadDropzone
             onFilesSelected={addFiles}
@@ -224,26 +247,27 @@ export function UploadFormCard({
           <div className="space-y-3">
             <p className="text-center text-sm text-muted-foreground">
               {isUploading
-                ? "Uploading your records securely…"
+                ? patientUploadCopy.form.status.uploading
                 : stagedCount > 0
-                  ? `${stagedCount} file${stagedCount === 1 ? "" : "s"} ready to submit`
+                  ? patientUploadCopy.form.status.ready(stagedCount)
                   : uploadSuccess
-                    ? "Add more files anytime below."
-                    : "Label each file, then submit when you are ready."}
+                    ? patientUploadCopy.form.status.postSuccess
+                    : patientUploadCopy.form.status.idle}
             </p>
 
             <Button
               type="button"
+              size="lg"
               disabled={!canSubmit}
               className={cn(
-                "upload-interactive w-full rounded-2xl py-3 px-4 min-h-12 text-base font-medium",
-                "bg-sage-700 text-white hover:bg-sage-800",
-                "focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2",
-                "transition-transform duration-200 active:scale-[0.98]",
+                "upload-interactive w-full font-medium",
+                clinical
+                  ? "rounded-lg"
+                  : "rounded-2xl bg-sage-700 text-white hover:bg-sage-800 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 transition-transform duration-200 active:scale-[0.98]",
               )}
               onClick={handleSubmit}
             >
-              {isUploading ? "Submitting…" : "Securely submit to care team"}
+              {isUploading ? patientUploadCopy.form.submitting : patientUploadCopy.form.submit}
             </Button>
           </div>
         </div>

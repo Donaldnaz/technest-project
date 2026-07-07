@@ -1,15 +1,17 @@
 "use client";
 
-import { CalendarDays } from "lucide-react";
+import { FolderOpen } from "lucide-react";
 
 import {
   getGreetingGradient,
   getTimeOfDayGreeting,
 } from "@/lib/health/greeting";
+import { landingCopy } from "@/lib/copy/landing";
 
 export function LandingWelcomeStrip() {
   const greeting = getTimeOfDayGreeting();
   const gradient = getGreetingGradient();
+  const { welcomeStrip } = landingCopy.experience;
 
   return (
     <section
@@ -31,13 +33,12 @@ export function LandingWelcomeStrip() {
             {greeting}, Sarah
           </h3>
           <p className="mt-1 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
-            Four items on your care timeline today — vitals look steady, and
-            one evening dose is still ahead.
+            {welcomeStrip.body(3, 2)}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2 rounded-2xl bg-card/60 px-4 py-3 backdrop-blur-sm dark:bg-card/40">
-          <CalendarDays className="size-5 text-primary" aria-hidden />
-          <span className="text-sm font-medium">Today&apos;s overview</span>
+          <FolderOpen className="size-5 text-primary" aria-hidden />
+          <span className="text-sm font-medium">{welcomeStrip.badge}</span>
         </div>
       </div>
     </section>

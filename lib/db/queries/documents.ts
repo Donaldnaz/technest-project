@@ -28,6 +28,19 @@ export async function getDocumentByBlobPathname(
   return row ?? null;
 }
 
+export async function getDocumentById(
+  userId: string,
+  documentId: string,
+): Promise<Document | null> {
+  const [row] = await db
+    .select()
+    .from(documents)
+    .where(and(eq(documents.id, documentId), eq(documents.userId, userId)))
+    .limit(1);
+
+  return row ?? null;
+}
+
 export async function listDocumentsForPatient(
   userId: string,
   patientId: string,

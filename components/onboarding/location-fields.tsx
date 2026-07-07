@@ -7,6 +7,7 @@ import {
   DEFAULT_COUNTRY,
   DEFAULT_STATE,
 } from "@/lib/constants/california-locations";
+import { patientOnboardingCopy } from "@/lib/copy/patient/onboarding";
 import { cn } from "@/lib/utils";
 
 type LocationFieldsProps = {
@@ -42,20 +43,20 @@ export function LocationFields({
   return (
     <fieldset className="grid gap-4">
       <legend className="font-heading text-xl font-semibold">
-        Where care is received
+        {patientOnboardingCopy.fields.location.sectionTitle}
       </legend>
       <p className="text-sm text-muted-foreground">
-        California, USA — clinic, hospital, or care site details.
+        {patientOnboardingCopy.fields.location.sectionDescription}
       </p>
 
       <div className="mt-2 grid gap-4">
       <div className="grid gap-2">
-        <Label htmlFor={locationId}>Healthcare location</Label>
+        <Label htmlFor={locationId}>{patientOnboardingCopy.fields.location.site}</Label>
         <Input
           id={locationId}
           name="healthcareLocation"
           className={cn("rounded-xl", inputClassName)}
-          placeholder="Clinic, hospital, or care site name"
+          placeholder={patientOnboardingCopy.fields.location.sitePlaceholder}
           defaultValue={defaults?.healthcareLocation}
           aria-invalid={Boolean(errors?.healthcareLocation)}
         />
@@ -67,13 +68,13 @@ export function LocationFields({
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor={cityId}>City</Label>
+        <Label htmlFor={cityId}>{patientOnboardingCopy.fields.location.city}</Label>
         <Input
           id={cityId}
           name="city"
           className={cn("rounded-xl", inputClassName)}
           list={`${idPrefix}-city-suggestions`}
-          placeholder="City in California"
+          placeholder={patientOnboardingCopy.fields.location.cityPlaceholder}
           defaultValue={defaults?.city}
           aria-invalid={Boolean(errors?.city)}
         />
@@ -91,7 +92,7 @@ export function LocationFields({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-2">
-          <Label htmlFor={`${idPrefix}State`}>State</Label>
+          <Label htmlFor={`${idPrefix}State`}>{patientOnboardingCopy.fields.location.state}</Label>
           <Input
             id={`${idPrefix}State`}
             name="state"
@@ -101,7 +102,7 @@ export function LocationFields({
           />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor={`${idPrefix}Country`}>Country</Label>
+          <Label htmlFor={`${idPrefix}Country`}>{patientOnboardingCopy.fields.location.country}</Label>
           <Input
             id={`${idPrefix}Country`}
             name="country"
@@ -113,7 +114,7 @@ export function LocationFields({
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor={quarterId}>Health quarter</Label>
+        <Label htmlFor={quarterId}>{patientOnboardingCopy.fields.location.region}</Label>
         <select
           id={quarterId}
           name="healthQuarter"
@@ -125,7 +126,7 @@ export function LocationFields({
           aria-invalid={Boolean(errors?.healthQuarter)}
         >
           <option value="" disabled>
-            Select a California region
+            {patientOnboardingCopy.fields.location.regionPlaceholder}
           </option>
           {CALIFORNIA_HEALTH_QUARTERS.map((quarter) => (
             <option key={quarter} value={quarter}>

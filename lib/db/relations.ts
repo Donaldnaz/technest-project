@@ -2,9 +2,11 @@ import { relations } from "drizzle-orm";
 
 import {
   careShares,
+  clients,
   documentAccessLogs,
   documentExtractions,
   documents,
+  ingestDocuments,
   patients,
 } from "@/lib/db/schema";
 
@@ -39,5 +41,16 @@ export const careSharesRelations = relations(careShares, ({ one }) => ({
   patient: one(patients, {
     fields: [careShares.patientId],
     references: [patients.id],
+  }),
+}));
+
+export const clientsRelations = relations(clients, ({ many }) => ({
+  documents: many(ingestDocuments),
+}));
+
+export const ingestDocumentsRelations = relations(ingestDocuments, ({ one }) => ({
+  client: one(clients, {
+    fields: [ingestDocuments.clientId],
+    references: [clients.id],
   }),
 }));
