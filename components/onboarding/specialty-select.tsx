@@ -5,12 +5,23 @@ import { useState } from "react";
 import { selectClassName } from "@/components/ui/native-select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { patientOnboardingCopy } from "@/lib/copy/patient/onboarding";
 import {
   HEALTHCARE_SPECIALTIES,
   OTHER_SPECIALTY,
 } from "@/lib/constants/specialties";
-import { patientOnboardingCopy } from "@/lib/copy/patient/onboarding";
 import { cn } from "@/lib/utils";
+
+function RequiredIndicator() {
+  return (
+    <>
+      <span className="text-destructive" aria-hidden="true">
+        *
+      </span>
+      <span className="sr-only"> (required)</span>
+    </>
+  );
+}
 
 type SpecialtySelectProps = {
   specialtyError?: string;
@@ -31,6 +42,7 @@ export function SpecialtySelect({
   inputClassName,
   selectClassName: selectClassNameOverride,
 }: SpecialtySelectProps) {
+  const copy = patientOnboardingCopy.fields.specialty;
   const specialtyId = `${idPrefix}Specialty`;
   const customId = `${idPrefix}CustomSpecialty`;
   const [selected, setSelected] = useState(
@@ -51,7 +63,10 @@ export function SpecialtySelect({
   return (
     <div className="grid gap-4">
       <div className="grid gap-2">
-        <Label htmlFor={specialtyId}>{patientOnboardingCopy.fields.specialty.label}</Label>
+        <Label htmlFor={specialtyId}>
+          {copy.label}
+          <RequiredIndicator />
+        </Label>
         <select
           id={specialtyId}
           name="healthcareSpecialty"
@@ -61,27 +76,29 @@ export function SpecialtySelect({
           )}
           value={selected}
           onChange={(event) => setSelected(event.target.value)}
+          required
           aria-invalid={Boolean(specialtyError)}
         >
-          <option value="" disabled>
-            {patientOnboardingCopy.fields.specialty.placeholder}
-          </option>
+          <option value="">{copy.placeholder}</option>
           {HEALTHCARE_SPECIALTIES.map((specialty) => (
             <option key={specialty} value={specialty}>
               {specialty}
             </option>
           ))}
         </select>
-        {specialtyError && (
-          <p className="text-sm text-destructive" role="alert">
+        {specialtyError ? (
+          <p id={`${specialtyId}-error`} className="text-sm text-destructive" role="alert">
             {specialtyError}
           </p>
-        )}
+        ) : null}
       </div>
 
       {(showCustom || selected === OTHER_SPECIALTY) && (
         <div className="grid gap-2">
-          <Label htmlFor={customId}>{patientOnboardingCopy.fields.specialty.other}</Label>
+          <Label htmlFor={customId}>
+            {copy.other}
+            <RequiredIndicator />
+          </Label>
           <Input
             id={customId}
             name="customSpecialty"
@@ -95,6 +112,7 @@ export function SpecialtySelect({
                 ? defaultSpecialty
                 : undefined)
             }
+            required
             aria-invalid={Boolean(customSpecialtyError)}
           />
           {customSpecialtyError && (

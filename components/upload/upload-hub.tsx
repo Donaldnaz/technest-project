@@ -20,7 +20,7 @@ export function UploadHub({
 }: UploadHubProps) {
   return (
     <section className="overflow-hidden rounded-3xl border border-border/40 bg-oat-50/50 shadow-sm dark:bg-charcoal-950/20">
-      <div className="grid min-h-[32rem] grid-cols-1 lg:grid-cols-2 lg:min-h-[calc(100vh-12rem)]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[calc(100vh-12rem)]">
         <UploadWellnessPanel />
 
         <div className="flex items-center justify-center px-4 py-8 sm:px-8 lg:px-10 lg:py-12">

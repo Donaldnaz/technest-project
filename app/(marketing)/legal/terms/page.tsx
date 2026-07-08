@@ -18,8 +18,9 @@ export default function TermsPage() {
       <LegalSection title="The service" id="service">
         <p>
           iCare provides tools for patients and caregivers to upload, organize,
-          and share health records. iCare is not a medical provider and does not
-          offer medical advice, diagnosis, or treatment.
+          and share health records. Practitioners may review plain English
+          summaries prepared from uploaded documents. iCare is not a medical
+          provider and does not offer medical advice, diagnosis, or treatment.
         </p>
       </LegalSection>
 
@@ -42,10 +43,10 @@ export default function TermsPage() {
 
       <LegalSection title="Sharing with practitioners" id="sharing">
         <p>
-          You control when records are shared with doctors or other care
-          providers. Shared information is provided for review in connection with
-          your care. Practitioners are responsible for how they use information
-          they receive outside of iCare.
+          You control when health records are shared with practitioners or other
+          members of your care team. Shared information is provided for review in
+          connection with your care. Practitioners are responsible for how they
+          use information they receive outside of iCare.
         </p>
       </LegalSection>
 
@@ -79,12 +80,13 @@ export default function TermsPage() {
         <p>
           iCare is provided on an &ldquo;as is&rdquo; basis. While we work to keep
           the service reliable and secure, we do not guarantee uninterrupted
-          access or that every document will be processed without error. Always
-          follow your care team&apos;s guidance for urgent medical decisions.
+          access or that every document will be processed without error. Plain
+          English summaries are for your information and are not medical advice.
+          Always follow your care team&apos;s guidance for urgent medical decisions.
         </p>
       </LegalSection>
 
-      <LegalSection title="Contact us" id="contact">
+      <LegalSection title="Contact us" id="contact" variant="callout">
         <p>
           Questions about these terms? Email{" "}
           <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.

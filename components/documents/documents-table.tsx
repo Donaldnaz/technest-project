@@ -69,7 +69,7 @@ export function DocumentsTable({ documents, patientId }: DocumentsTableProps) {
   }
 
   return (
-    <>
+    <div className="min-w-0">
       <DataTableShell columns={[...patientLibraryCopy.table.columns]}>
         {documents.map((document) => (
           <TableRow
@@ -131,6 +131,6 @@ export function DocumentsTable({ documents, patientId }: DocumentsTableProps) {
           if (!open) setPreviewId(null);
         }}
       />
-    </>
+    </div>
   );
 }

@@ -1,53 +1,53 @@
 import {
-  Calendar,
+  FileCheck2,
   FileHeart,
   HeartHandshake,
-  LineChart,
   Lock,
-  Pill,
+  Share2,
+  Upload,
 } from "lucide-react";
 
 const features = [
   {
-    icon: HeartHandshake,
-    title: "A calmer care experience",
+    icon: Upload,
+    title: "Secure health record upload",
     description:
-      "Soft colors and clear layouts help you focus on people — not paperwork — during long days of patient care.",
+      "Add PDFs and photos of lab reports, imaging, and visit notes. Every file is encrypted in transit and stored in your private folder.",
+    accent: "bg-teal-100 text-teal-800 dark:bg-teal-950/50 dark:text-teal-200",
+  },
+  {
+    icon: FileCheck2,
+    title: "Plain English summaries",
+    description:
+      "Read organized summaries in everyday language — reviewed by a practitioner on your care team before they are finalized.",
     accent: "bg-sage-100 text-sage-800 dark:bg-sage-950/50 dark:text-sage-200",
   },
   {
     icon: FileHeart,
-    title: "Medical records in one place",
+    title: "Health records in one place",
     description:
-      "Lab reports, referrals, and imaging stay organized with each patient so nothing gets lost between visits.",
-    accent: "bg-teal-100 text-teal-800 dark:bg-teal-950/50 dark:text-teal-200",
-  },
-  {
-    icon: LineChart,
-    title: "Daily health at a glance",
-    description:
-      "Heart rate, sleep, activity, and blood sugar trends — easy to read micro-cards with gentle 7-day charts.",
+      "Lab reports, referrals, and imaging stay organized in your health folder so nothing gets lost between visits.",
     accent: "bg-lavender-100 text-lavender-900 dark:bg-lavender-950/50 dark:text-lavender-100",
   },
   {
-    icon: Pill,
-    title: "Medication reminders",
+    icon: Share2,
+    title: "Share on your terms",
     description:
-      "A visual pillbox makes daily doses feel manageable — tap to mark taken and celebrate small wins.",
-    accent: "bg-terracotta-100 text-terracotta-900 dark:bg-terracotta-900/50 dark:text-terracotta-100",
-  },
-  {
-    icon: Calendar,
-    title: "Unified care timeline",
-    description:
-      "Appointments, medication times, and lab releases flow together so you always know what comes next.",
+      "Send selected records to your practitioner or clinic when you choose — you stay in control of who sees your information.",
     accent: "bg-amber-100 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200",
   },
   {
-    icon: Lock,
-    title: "Your health, kept private",
+    icon: HeartHandshake,
+    title: "Built for patients and caregivers",
     description:
-      "Medical information stays between you and your care team — protected, personal, and never shared without you.",
+      "Upload for yourself or someone you care for, with clear status labels so you always know what is ready or under review.",
+    accent: "bg-terracotta-100 text-terracotta-900 dark:bg-terracotta-900/50 dark:text-terracotta-100",
+  },
+  {
+    icon: Lock,
+    title: "Private by default",
+    description:
+      "Your health information stays between you and practitioners you authorize — protected, personal, and never shared without you.",
     accent: "bg-primary/15 text-primary",
   },
 ];
@@ -64,11 +64,12 @@ export function LandingFeatures() {
             Features
           </p>
           <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-            Everything your care journey needs
+            Everything you need to manage health records
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Vitals, appointments, prescriptions, and records — brought together
-            in a warm space that feels like care, not a computer system.
+            Secure upload, practitioner-reviewed plain English summaries, and
+            sharing with your care team — in a calm portal designed for real
+            people, not hospital IT departments.
           </p>
         </div>
 

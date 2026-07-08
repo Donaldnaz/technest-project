@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import { SiteContainer } from "@/components/layout/site-container";
 import { cn } from "@/lib/utils";
 
@@ -22,8 +24,9 @@ export function SiteHeader({
 
   return (
     <header
+      style={{ "--site-header-height": "4rem" } as CSSProperties}
       className={cn(
-        "sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl",
+        "sticky top-0 z-50 border-b border-border/50 bg-background/90 pt-safe backdrop-blur-md",
         className,
       )}
     >

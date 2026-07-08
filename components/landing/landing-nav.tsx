@@ -1,16 +1,11 @@
 import { LandingMobileMenu } from "@/components/landing/landing-mobile-menu";
 import { LandingNavLinks } from "@/components/landing/landing-nav-links";
-import { PublicNavActions } from "@/components/layout/public-nav-actions";
+import { PublicNavActionsClient } from "@/components/layout/public-nav-actions-client";
 import { SiteBrandLink } from "@/components/layout/site-brand-link";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeIconToggle } from "@/components/layout/theme-icon-toggle";
-import type { PublicNavState } from "@/lib/navigation/public-nav-state";
 
-type LandingNavProps = {
-  navState: PublicNavState;
-};
-
-export function LandingNav({ navState }: LandingNavProps) {
+export function LandingNav() {
   return (
     <SiteHeader
       brand={<SiteBrandLink compact />}
@@ -18,13 +13,13 @@ export function LandingNav({ navState }: LandingNavProps) {
       actions={
         <>
           <ThemeIconToggle />
-          <PublicNavActions navState={navState} />
+          <PublicNavActionsClient />
         </>
       }
       mobileActions={
         <div className="flex items-center gap-2 lg:hidden">
           <ThemeIconToggle />
-          <LandingMobileMenu navState={navState} />
+          <LandingMobileMenu />
         </div>
       }
     />

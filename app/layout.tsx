@@ -1,11 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
-import { NeonAuthUIProvider } from "@neondatabase/auth-ui";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthUIProvider } from "@/components/providers/auth-ui-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-
-import { authClient } from "@/lib/auth/client";
-import { POST_AUTH_REDIRECT } from "@/lib/routes/auth";
 
 import "./globals.css";
 
@@ -21,16 +18,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "iCare — Simple Health Records Portal",
+  title: "iCare — Secure Medical Document Upload Portal",
   description:
-    "A simple healthcare management portal for patients. Upload medical documents securely and share them with practitioners for review.",
-  other: {
-    "business:contact_data:street_address": "548 Market Street, Suite 35410",
-    "business:contact_data:locality": "San Francisco",
-    "business:contact_data:region": "CA",
-    "business:contact_data:postal_code": "94104",
-    "business:contact_data:country_name": "United States",
-  },
+    "Upload and manage medical records in a simple, protected healthcare portal. Share lab results and clinical documents with your practitioner when you are ready.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -44,26 +40,12 @@ export default function RootLayout({
       className={`${plusJakarta.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="flex min-h-full flex-col overflow-x-hidden font-sans">
         <ThemeProvider>
-          <NeonAuthUIProvider
-            authClient={authClient}
-            account={{ basePath: "/account", fields: [] }}
-            avatar={false}
-            changeEmail={false}
-            deleteUser={false}
-            nameRequired
-            signUp={{ fields: ["name"] }}
-            credentials={{
-              confirmPassword: true,
-              forgotPassword: false,
-            }}
-            social={{ providers: ["google"] }}
-            redirectTo={POST_AUTH_REDIRECT}
-          >
+          <AuthUIProvider>
             {children}
             <Toaster richColors closeButton position="top-center" />
-          </NeonAuthUIProvider>
+          </AuthUIProvider>
         </ThemeProvider>
       </body>
     </html>

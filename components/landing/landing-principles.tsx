@@ -1,29 +1,29 @@
-import { Heart, Leaf, Sparkles, Waves } from "lucide-react";
+import { Heart, Leaf, ShieldCheck, Sparkles } from "lucide-react";
 
 const principles = [
   {
     icon: Leaf,
-    title: "Warm, not sterile",
+    title: "Plain language first",
     description:
-      "Sage greens and oat creams replace harsh hospital blues — comfort first.",
+      "Health information should be easy to understand — we use clear words, not clinical jargon.",
   },
   {
     icon: Heart,
-    title: "Readable, caring design",
+    title: "Patient-centered design",
     description:
-      "Clear words and generous spacing — because health information should never feel rushed or cold.",
+      "Calm layouts and generous spacing — because managing health records should never feel rushed or cold.",
   },
   {
-    icon: Waves,
-    title: "Soft geometry",
+    icon: ShieldCheck,
+    title: "Trust by default",
     description:
-      "16–24px radii and gentle shadows — every surface feels approachable.",
+      "Encryption, access controls, and practitioner review — your health records stay private until you share them.",
   },
   {
     icon: Sparkles,
-    title: "Delightful moments",
+    title: "Respectful and inclusive",
     description:
-      "Check-off animations and subtle celebrations when daily care is complete.",
+      "Built for patients and caregivers of all backgrounds — with accessible, respectful language throughout.",
   },
 ];
 

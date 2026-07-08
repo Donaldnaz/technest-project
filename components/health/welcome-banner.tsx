@@ -1,11 +1,14 @@
+import Link from "next/link";
+import { ArrowRight, FileUp } from "lucide-react";
+
+import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
 import {
   getFirstName,
   getGreetingGradient,
   getTimeOfDayGreeting,
 } from "@/lib/health/greeting";
-import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
-import { patientTabHref } from "@/lib/navigation/patient-nav";
-import { LinkButton } from "@/components/ui/link-button";
+import { profilePath } from "@/lib/routes/profile";
+import { cn } from "@/lib/utils";
 
 type WelcomeBannerProps = {
   userName?: string | null;
@@ -21,41 +24,58 @@ export function WelcomeBanner({
   const greeting = getTimeOfDayGreeting();
   const firstName = getFirstName(userName);
   const gradient = getGreetingGradient();
+  const hasDocuments = documentCount > 0;
+  const { welcome } = patientDashboardCopy;
 
   return (
     <section
-      className={`health-card relative overflow-hidden rounded-3xl bg-gradient-to-br ${gradient} p-7 shadow-sm md:p-10`}
+      className={cn(
+        "health-card relative overflow-hidden rounded-3xl shadow-sm",
+        `bg-gradient-to-br ${gradient}`,
+      )}
     >
-      <div className="relative z-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-8">
-        <div className="space-y-3">
-          <p className="text-sm font-medium text-muted-foreground">
-            {patientDashboardCopy.welcome.eyebrow}
-          </p>
-          <h1 className="font-heading text-3xl font-semibold tracking-tight md:text-4xl">
+      <div className="relative flex flex-col gap-6 px-7 py-8 md:flex-row md:items-end md:justify-between md:gap-8 md:px-10 md:py-10">
+        <div className="min-w-0 max-w-2xl space-y-2">
+          <h1 className="break-words font-heading text-3xl font-semibold tracking-tight text-foreground md:text-[2.125rem] md:leading-tight lg:text-4xl">
             {greeting}, {firstName}
           </h1>
-          <p className="max-w-xl text-base leading-relaxed text-muted-foreground md:text-[1.05rem] md:leading-7">
-            {documentCount === 0
-              ? patientDashboardCopy.welcome.emptyBody
-              : patientDashboardCopy.welcome.withDocuments(documentCount)}
+          <p className="text-sm leading-relaxed text-muted-foreground md:text-base md:leading-7">
+            {hasDocuments
+              ? welcome.withDocuments(documentCount)
+              : welcome.emptyBody}
           </p>
         </div>
-        {profileId && (
-          <LinkButton
-            href={patientTabHref(profileId, "upload")}
-            size="lg"
-            className="shrink-0 rounded-2xl px-6"
+
+        {profileId ? (
+          <Link
+            href={profilePath(profileId)}
+            className="group flex w-full shrink-0 items-center gap-3 rounded-2xl border border-primary/25 bg-background/90 px-5 py-4 shadow-sm backdrop-blur-sm transition-colors hover:border-primary/40 hover:bg-background md:w-auto md:min-w-[15rem]"
           >
-            {patientDashboardCopy.welcome.cta}
-          </LinkButton>
-        )}
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary">
+              <FileUp className="size-5" aria-hidden />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-medium text-foreground">
+                {welcome.primaryAction.label}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {welcome.primaryAction.hint}
+              </span>
+            </span>
+            <ArrowRight
+              className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
+              aria-hidden
+            />
+          </Link>
+        ) : null}
       </div>
+
       <div
-        className="pointer-events-none absolute -right-8 -top-8 size-40 rounded-full bg-primary/10 blur-2xl"
+        className="pointer-events-none absolute -right-10 -top-10 -z-10 size-44 rounded-full bg-primary/10 blur-3xl"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -bottom-10 left-1/3 size-32 rounded-full bg-accent/30 blur-2xl"
+        className="pointer-events-none absolute -bottom-12 left-1/4 -z-10 size-36 rounded-full bg-accent/25 blur-3xl"
         aria-hidden
       />
     </section>

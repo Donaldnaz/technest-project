@@ -1,13 +1,18 @@
-import { selectClassName } from "@/components/ui/native-select";
+"use client";
+
+import { useMemo, useState } from "react";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  CALIFORNIA_CITY_SUGGESTIONS,
-  CALIFORNIA_HEALTH_QUARTERS,
-  DEFAULT_COUNTRY,
-  DEFAULT_STATE,
-} from "@/lib/constants/california-locations";
 import { patientOnboardingCopy } from "@/lib/copy/patient/onboarding";
+import {
+  SUPPORTED_COUNTRIES,
+  getCareRegions,
+  getCitySuggestions,
+  getSubdivisionLabel,
+  getSubdivisions,
+  type SupportedCountry,
+} from "@/lib/constants/north-america-locations";
 import { cn } from "@/lib/utils";
 
 type LocationFieldsProps = {
@@ -15,6 +20,8 @@ type LocationFieldsProps = {
     Record<
       | "healthcareLocation"
       | "city"
+      | "state"
+      | "country"
       | "healthQuarter",
       string
     >
@@ -22,6 +29,8 @@ type LocationFieldsProps = {
   defaults?: Partial<{
     healthcareLocation: string;
     city: string;
+    state: string;
+    country: SupportedCountry;
     healthQuarter: string;
   }>;
   idPrefix?: string;
@@ -29,118 +38,219 @@ type LocationFieldsProps = {
   selectClassName?: string;
 };
 
+function RequiredMark() {
+  return (
+    <span className="text-destructive" aria-hidden>
+      {" "}
+      *
+    </span>
+  );
+}
+
 export function LocationFields({
   errors,
   defaults,
   idPrefix = "location",
   inputClassName,
-  selectClassName: selectClassNameOverride,
+  selectClassName,
 }: LocationFieldsProps) {
+  const copy = patientOnboardingCopy.fields.location;
+  const [country, setCountry] = useState<SupportedCountry>(
+    defaults?.country ?? "United States",
+  );
+  const [subdivision, setSubdivision] = useState(defaults?.state ?? "");
+
   const locationId = `${idPrefix}HealthcareLocation`;
   const cityId = `${idPrefix}City`;
-  const quarterId = `${idPrefix}HealthQuarter`;
+  const countryId = `${idPrefix}Country`;
+  const stateId = `${idPrefix}State`;
+  const regionId = `${idPrefix}HealthQuarter`;
+  const regionHintId = `${idPrefix}-region-hint`;
+
+  const subdivisions = useMemo(() => getSubdivisions(country), [country]);
+  const careRegions = useMemo(() => getCareRegions(country), [country]);
+  const citySuggestions = useMemo(
+    () => getCitySuggestions(country, subdivision),
+    [country, subdivision],
+  );
+  const subdivisionLabel = getSubdivisionLabel(country);
+
+  function handleCountryChange(nextCountry: SupportedCountry) {
+    setCountry(nextCountry);
+    setSubdivision("");
+  }
 
   return (
-    <fieldset className="grid gap-4">
-      <legend className="font-heading text-xl font-semibold">
-        {patientOnboardingCopy.fields.location.sectionTitle}
-      </legend>
-      <p className="text-sm text-muted-foreground">
-        {patientOnboardingCopy.fields.location.sectionDescription}
-      </p>
+    <div className="grid gap-5">
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid gap-2">
+          <Label htmlFor={countryId}>
+            {copy.country}
+            <RequiredMark />
+          </Label>
+          <select
+            id={countryId}
+            name="country"
+            required
+            autoComplete="country-name"
+            className={cn(
+              selectClassName,
+              errors?.country && "border-destructive",
+            )}
+            value={country}
+            onChange={(event) =>
+              handleCountryChange(event.target.value as SupportedCountry)
+            }
+            aria-invalid={Boolean(errors?.country)}
+            aria-errormessage={
+              errors?.country ? `${countryId}-error` : undefined
+            }
+          >
+            <option value="">{copy.countryPlaceholder}</option>
+            {SUPPORTED_COUNTRIES.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          {errors?.country ? (
+            <p id={`${countryId}-error`} className="text-sm text-destructive" role="alert">
+              {errors.country}
+            </p>
+          ) : null}
+        </div>
 
-      <div className="mt-2 grid gap-4">
+        <div className="grid gap-2">
+          <Label htmlFor={stateId}>
+            {subdivisionLabel}
+            <RequiredMark />
+          </Label>
+          <select
+            id={stateId}
+            name="state"
+            required
+            autoComplete="address-level1"
+            className={cn(
+              selectClassName,
+              errors?.state && "border-destructive",
+            )}
+            value={subdivision}
+            onChange={(event) => setSubdivision(event.target.value)}
+            aria-invalid={Boolean(errors?.state)}
+            aria-errormessage={
+              errors?.state ? `${stateId}-error` : undefined
+            }
+          >
+            <option value="">{copy.subdivisionPlaceholder}</option>
+            {subdivisions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          {errors?.state ? (
+            <p id={`${stateId}-error`} className="text-sm text-destructive" role="alert">
+              {errors.state}
+            </p>
+          ) : null}
+        </div>
+      </div>
+
       <div className="grid gap-2">
-        <Label htmlFor={locationId}>{patientOnboardingCopy.fields.location.site}</Label>
+        <Label htmlFor={locationId}>
+          {copy.site}
+          <RequiredMark />
+        </Label>
         <Input
           id={locationId}
           name="healthcareLocation"
-          className={cn("rounded-xl", inputClassName)}
-          placeholder={patientOnboardingCopy.fields.location.sitePlaceholder}
+          required
+          autoComplete="organization"
+          className={cn(inputClassName)}
+          placeholder={copy.sitePlaceholder}
           defaultValue={defaults?.healthcareLocation}
           aria-invalid={Boolean(errors?.healthcareLocation)}
+          aria-errormessage={
+            errors?.healthcareLocation ? `${locationId}-error` : undefined
+          }
         />
-        {errors?.healthcareLocation && (
-          <p className="text-sm text-destructive" role="alert">
+        {errors?.healthcareLocation ? (
+          <p id={`${locationId}-error`} className="text-sm text-destructive" role="alert">
             {errors.healthcareLocation}
           </p>
-        )}
+        ) : null}
       </div>
 
-      <div className="grid gap-2">
-        <Label htmlFor={cityId}>{patientOnboardingCopy.fields.location.city}</Label>
-        <Input
-          id={cityId}
-          name="city"
-          className={cn("rounded-xl", inputClassName)}
-          list={`${idPrefix}-city-suggestions`}
-          placeholder={patientOnboardingCopy.fields.location.cityPlaceholder}
-          defaultValue={defaults?.city}
-          aria-invalid={Boolean(errors?.city)}
-        />
-        <datalist id={`${idPrefix}-city-suggestions`}>
-          {CALIFORNIA_CITY_SUGGESTIONS.map((city) => (
-            <option key={city} value={city} />
-          ))}
-        </datalist>
-        {errors?.city && (
-          <p className="text-sm text-destructive" role="alert">
-            {errors.city}
-          </p>
-        )}
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">
-          <Label htmlFor={`${idPrefix}State`}>{patientOnboardingCopy.fields.location.state}</Label>
+          <Label htmlFor={cityId}>
+            {copy.city}
+            <RequiredMark />
+          </Label>
           <Input
-            id={`${idPrefix}State`}
-            name="state"
-            className={cn("rounded-xl bg-muted/40", inputClassName)}
-            value={DEFAULT_STATE}
-            readOnly
+            id={cityId}
+            name="city"
+            required
+            autoComplete="address-level2"
+            className={cn(inputClassName)}
+            list={`${idPrefix}-city-suggestions`}
+            placeholder={copy.cityPlaceholder}
+            defaultValue={defaults?.city}
+            aria-invalid={Boolean(errors?.city)}
+            aria-errormessage={errors?.city ? `${cityId}-error` : undefined}
           />
+          {citySuggestions.length > 0 ? (
+            <datalist id={`${idPrefix}-city-suggestions`}>
+              {citySuggestions.map((city) => (
+                <option key={city} value={city} />
+              ))}
+            </datalist>
+          ) : null}
+          {errors?.city ? (
+            <p id={`${cityId}-error`} className="text-sm text-destructive" role="alert">
+              {errors.city}
+            </p>
+          ) : null}
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor={`${idPrefix}Country`}>{patientOnboardingCopy.fields.location.country}</Label>
-          <Input
-            id={`${idPrefix}Country`}
-            name="country"
-            className={cn("rounded-xl bg-muted/40", inputClassName)}
-            value={DEFAULT_COUNTRY}
-            readOnly
-          />
-        </div>
-      </div>
 
-      <div className="grid gap-2">
-        <Label htmlFor={quarterId}>{patientOnboardingCopy.fields.location.region}</Label>
-        <select
-          id={quarterId}
-          name="healthQuarter"
-          className={cn(
-            selectClassNameOverride ?? selectClassName,
-            errors?.healthQuarter && "border-destructive",
-          )}
-          defaultValue={defaults?.healthQuarter ?? ""}
-          aria-invalid={Boolean(errors?.healthQuarter)}
-        >
-          <option value="" disabled>
-            {patientOnboardingCopy.fields.location.regionPlaceholder}
-          </option>
-          {CALIFORNIA_HEALTH_QUARTERS.map((quarter) => (
-            <option key={quarter} value={quarter}>
-              {quarter}
-            </option>
-          ))}
-        </select>
-        {errors?.healthQuarter && (
-          <p className="text-sm text-destructive" role="alert">
-            {errors.healthQuarter}
+        <div className="grid gap-2">
+          <Label htmlFor={regionId}>
+            {copy.region}
+            <RequiredMark />
+          </Label>
+          <select
+            id={regionId}
+            name="healthQuarter"
+            key={`${country}-region`}
+            required
+            className={cn(
+              selectClassName,
+              errors?.healthQuarter && "border-destructive",
+            )}
+            defaultValue={defaults?.healthQuarter ?? ""}
+            aria-describedby={regionHintId}
+            aria-invalid={Boolean(errors?.healthQuarter)}
+            aria-errormessage={
+              errors?.healthQuarter ? `${regionId}-error` : undefined
+            }
+          >
+            <option value="">{copy.regionPlaceholder}</option>
+            {careRegions.map((region) => (
+              <option key={region} value={region}>
+                {region}
+              </option>
+            ))}
+          </select>
+          <p id={regionHintId} className="text-xs leading-relaxed text-muted-foreground">
+            {copy.regionHint}
           </p>
-        )}
+          {errors?.healthQuarter ? (
+            <p id={`${regionId}-error`} className="text-sm text-destructive" role="alert">
+              {errors.healthQuarter}
+            </p>
+          ) : null}
+        </div>
       </div>
-      </div>
-    </fieldset>
+    </div>
   );
 }

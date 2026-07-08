@@ -1,57 +1,62 @@
-import Link from "next/link";
 import {
   CalendarPlus,
   FileUp,
 } from "lucide-react";
 
-import { patientTabHref } from "@/lib/navigation/patient-nav";
 import type { DocumentCategory } from "@/lib/constants/document-categories";
 import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
-import {
-  getPatientCategoryLabel,
-} from "@/lib/copy/patient/library";
-import { patientStatusCopy } from "@/lib/copy/patient/status";
+import { getPatientCategoryLabel } from "@/lib/copy/patient/library";
 import type { DocumentWithExtraction } from "@/lib/db/queries/documents";
-import { toDate, toIsoDateTime } from "@/lib/dates";
+import { formatCareTimelineDateTime, toDate, toIsoDateTime } from "@/lib/dates";
 
 type TimelineItem = {
   id: string;
   title: string;
   subtitle: string;
   time: Date;
-  href: string;
 };
 
 type CareTimelineProps = {
   documents: DocumentWithExtraction[];
   variant?: "health" | "clinical";
+  /** When set, only the most recent N items are shown. Omit for the full history. */
+  limit?: number;
+  showHeader?: boolean;
 };
 
-const recordStatusLabels = patientStatusCopy.dbMapping;
+/** Max items shown in My Records → Overview recent activity preview. */
+export const RECENT_ACTIVITY_PREVIEW_LIMIT = 3;
+
+/** Max items fetched for the dashboard home recent activity panel. */
+export const RECENT_ACTIVITY_LIMIT = 5;
 
 function buildTimelineItems(
   documents: DocumentWithExtraction[],
+  limit?: number,
 ): TimelineItem[] {
-  return documents
+  const uploadedLabel = patientDashboardCopy.patient.timeline.uploadedLabel;
+
+  const sorted = documents
     .map((document) => ({
       id: `document-${document.id}`,
       title: document.fileName,
-      subtitle: document.extraction?.summary
-        ? `${getPatientCategoryLabel(document.category as DocumentCategory)} · ${document.extraction.summary.slice(0, 80)}${document.extraction.summary.length > 80 ? "…" : ""}`
-        : `${getPatientCategoryLabel(document.category as DocumentCategory)} · ${recordStatusLabels[document.status]}`,
+      subtitle: `${getPatientCategoryLabel(document.category as DocumentCategory)} · ${uploadedLabel}`,
       time: toDate(document.createdAt) ?? new Date(0),
-      href: patientTabHref(document.patientId, "documents"),
     }))
-    .sort((a, b) => b.time.getTime() - a.time.getTime())
-    .slice(0, 8);
+    .sort((a, b) => b.time.getTime() - a.time.getTime());
+
+  return limit !== undefined ? sorted.slice(0, limit) : sorted;
 }
 
 export function CareTimeline({
   documents,
   variant = "health",
+  limit,
+  showHeader,
 }: CareTimelineProps) {
-  const items = buildTimelineItems(documents);
+  const items = buildTimelineItems(documents, limit);
   const isClinical = variant === "clinical";
+  const shouldShowHeader = showHeader ?? !isClinical;
 
   return (
     <section
@@ -60,8 +65,9 @@ export function CareTimeline({
           ? "space-y-4"
           : "health-card rounded-3xl p-6 shadow-sm md:p-8"
       }
+      aria-label={patientDashboardCopy.patient.timeline.title}
     >
-      {!isClinical && (
+      {shouldShowHeader && (
         <div className="mb-6 flex items-start justify-between gap-4">
           <div className="space-y-2">
             <h2 className="font-heading text-lg font-semibold md:text-xl">
@@ -93,23 +99,20 @@ export function CareTimeline({
                 <FileUp className="size-4" aria-hidden />
               </div>
               <div className="min-w-0 flex-1 pt-1">
-                <Link
-                  href={item.href}
-                  className="font-medium leading-snug hover:text-primary"
+                <p
+                  className="truncate font-medium leading-snug text-foreground"
+                  title={item.title}
                 >
                   {item.title}
-                </Link>
-                <p className="text-sm text-muted-foreground">{item.subtitle}</p>
+                </p>
+                <p className="truncate text-sm text-muted-foreground">
+                  {item.subtitle}
+                </p>
                 <time
                   dateTime={toIsoDateTime(item.time)}
                   className="mt-1 block text-xs text-muted-foreground"
                 >
-                  {item.time.toLocaleString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
+                  {formatCareTimelineDateTime(item.time)}
                 </time>
               </div>
             </li>

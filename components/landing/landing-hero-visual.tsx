@@ -4,15 +4,15 @@ import { FileCheck2, ShieldCheck, Upload } from "lucide-react";
 const floatingCards = [
   {
     icon: Upload,
-    title: "3 records uploaded",
-    subtitle: "Lab report · Imaging · Summary",
+    title: "3 health records uploaded",
+    subtitle: "Lab report · Imaging · Visit note",
     className: "left-4 top-6 sm:left-6 sm:top-8",
     iconClassName: "bg-sage-100 text-sage-800 dark:bg-sage-950/50 dark:text-sage-200",
   },
   {
     icon: FileCheck2,
-    title: "Summary ready",
-    subtitle: "Plain-language review complete",
+    title: "Plain English summary ready",
+    subtitle: "Practitioner review complete",
     className: "bottom-8 right-4 sm:bottom-10 sm:right-6",
     iconClassName: "bg-teal-100 text-teal-800 dark:bg-teal-950/50 dark:text-teal-200",
   },
@@ -46,7 +46,7 @@ export function LandingHeroVisual() {
             <ShieldCheck className="size-4" aria-hidden />
           </div>
           <p className="text-sm text-muted-foreground">
-            Private uploads · You choose what to share
+            Encrypted uploads · You choose what to share
           </p>
         </div>
       </div>
@@ -54,7 +54,7 @@ export function LandingHeroVisual() {
       {floatingCards.map((card) => (
         <div
           key={card.title}
-          className={`absolute z-10 hidden max-w-[11rem] rounded-2xl border border-border/60 bg-card/95 p-3 shadow-lg backdrop-blur-md sm:block ${card.className}`}
+          className={`absolute z-10 hidden max-w-[11rem] rounded-2xl border border-border/60 bg-card/95 p-3 shadow-lg backdrop-blur-md sm:block lg:hidden ${card.className}`}
         >
           <div className="flex items-start gap-2.5">
             <div

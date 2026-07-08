@@ -1,8 +1,7 @@
 import "server-only";
 
-import { generateText } from "ai";
-
-import { getGoogleModel, isGeminiConfigured } from "@/lib/ai/google-model";
+import { generateTextWithGeminiFallback } from "@/lib/ai/gemini-fallback";
+import { isGeminiConfigured } from "@/lib/ai/google-model";
 import { ORGANIZATION_KNOWLEDGE } from "@/lib/ai/organization-knowledge";
 import { contactEmail } from "@/lib/landing/navigation";
 
@@ -57,8 +56,7 @@ export async function generateOrganizationAssistantReply(
   }
 
   try {
-    const { text } = await generateText({
-      model: getGoogleModel(),
+    const { text } = await generateTextWithGeminiFallback({
       system: SYSTEM_PROMPT,
       messages: messages.map((message) => ({
         role: message.role,

@@ -1,101 +1,80 @@
 export const landingCopy = {
   hero: {
-    eyebrow: "Secure health records portal",
-    headline: "Upload your medical documents.",
-    headlineAccent: "Share with your doctor.",
-    body: "A simple healthcare management portal for patients. Upload lab reports, imaging, and doctor's notes securely — then share them with your practitioner for review.",
-    tags: "Secure upload · Practitioner review · Your records in one place",
+    eyebrow: "Health records portal",
+    headline: "Upload health records safely.",
+    headlineAccent: "Share only when you choose.",
+    body: "Upload lab results, imaging, and clinical notes to a private folder. Practitioners review plain English summaries before you share anything with your care team.",
+    tags: "Encrypted upload · Private storage · Practitioner-reviewed summaries",
+    primaryCta: "Create free account",
+    secondaryCta: "See the portal",
     preview: {
-      documentsSaved: "Documents saved",
-      readyToRead: "Ready to read",
-      processing: "Still processing",
-      shareChip: "Share with Dr. Lee",
-      shareHint: "Ready for practitioner review",
+      greetingLabel: "Your health records",
+      userName: "Sarah",
+      documentsSaved: "Health records saved",
+      readyToRead: "Plain English ready",
+      processing: "Under review",
+      recentLabel: "Recent uploads",
+      recentItems: [
+        { name: "CBC lab results.pdf", status: "Ready" },
+        { name: "Chest X-ray report.pdf", status: "Ready" },
+        { name: "Referral cardiology.jpg", status: "Reviewing" },
+      ],
+      shareChip: "Share with your practitioner",
+      shareHint: "3 records ready to send",
     },
   },
   whatWeDo: {
     eyebrow: "What we do",
-    title: "Everything you need to manage your health records",
+    title: "A place for your health records",
     description:
-      "iCare helps patients upload, organize, and share medical documents with practitioners — without the complexity of hospital software.",
+      "Upload, organize, and share health documents — with plain English summaries reviewed by practitioners.",
     offerings: [
       {
         title: "Secure document upload",
         description:
-          "Add lab reports, imaging, referrals, and doctor's notes as PDFs or images — stored safely in your private folder.",
+          "Add PDFs and photos of lab reports, imaging, referrals, and visit notes. Files are encrypted in transit and stored in your private health folder.",
       },
       {
-        title: "Records library",
+        title: "Organized records library",
         description:
-          "See every file in one place with clear status tracking so you always know what's ready and what's still being processed.",
+          "See your uploads in one place, with status labels for what is ready, under review, or still being processed.",
       },
       {
-        title: "Plain-language summaries",
+        title: "Plain English summaries",
         description:
-          "Review organized summaries of your uploads in language that's easy to understand before you share them.",
+          "Read summaries of your documents in everyday language, reviewed by a practitioner on your care team before they are finalized.",
       },
       {
-        title: "Share with your practitioner",
+        title: "Share with your care team",
         description:
-          "Send your records to your doctor or care team when you're ready — they review what you choose to share.",
+          "Send selected health records to your practitioner or clinic when you choose, so appointments have the documents you need.",
       },
       {
-        title: "Consent-first access",
+        title: "You choose what to share",
         description:
-          "Providers only see what you invite them to. You stay in control of your medical information at every step.",
+          "Practitioners only see what you explicitly share. Upload privately, review summaries first, and decide when to share.",
       },
       {
-        title: "A calm, simple portal",
+        title: "Kept straightforward",
         description:
-          "Clear layouts and plain language keep the focus on your health records — not paperwork or confusing menus.",
+          "Clear layouts, plain language, and focused steps for managing health records.",
       },
     ],
   },
   experience: {
     eyebrow: "Portal",
-    title: "A simple place for your health records",
+    title: "Your upload workspace",
     description:
-      "Upload documents securely, track their status, and share them with your practitioner for review — all from one patient portal.",
+      "Upload health records, track their status, and share them with practitioners from one portal.",
     welcomeStrip: {
       badge: "Your health records",
       body: (documentCount: number, readyCount: number) =>
-        `${documentCount} document${documentCount === 1 ? "" : "s"} in your folder — ${readyCount} ready for your doctor to review.`,
-    },
-    documents: {
-      title: "Your documents",
-      description: "Medical files you have uploaded and their current status",
-      columns: ["File name", "Type", "Status"],
-      rows: [
-        {
-          fileName: "CBC_lab_results.pdf",
-          type: "PDF",
-          status: "ready" as const,
-        },
-        {
-          fileName: "Chest_X-ray_report.pdf",
-          type: "PDF",
-          status: "ready" as const,
-        },
-        {
-          fileName: "Referral_cardiology.jpg",
-          type: "Image",
-          status: "processing" as const,
-        },
-      ],
+        `${documentCount} health record${documentCount === 1 ? "" : "s"} in your folder — ${readyCount} plain English summar${readyCount === 1 ? "y" : "ies"} ready for your care team to review.`,
     },
     upload: {
-      title: "Upload documents",
-      description: "Drag lab reports, imaging, or doctor's notes here",
-      hint: "PDF and image files supported",
-    },
-    share: {
-      title: "Send to my doctor",
-      description: "Share your records with a provider for review",
-      providerLabel: "Provider email",
-      providerPlaceholder: "doctor@clinic.example",
-      messageLabel: "Message (optional)",
-      messagePlaceholder: "Please review before my appointment on Thursday.",
-      submit: "Send records",
+      title: "Upload health records",
+      description: "Drag and drop lab reports, imaging, or visit notes here",
+      hint: "PDF and JPEG files · Encrypted before storage",
     },
     activity: {
       title: "Recent activity",
@@ -103,59 +82,83 @@ export const landingCopy = {
       items: [
         {
           title: "CBC lab results uploaded",
-          subtitle: "Ready for review · 2 hours ago",
+          subtitle: "Plain English summary ready · 2 hours ago",
         },
         {
           title: "Chest X-ray report uploaded",
-          subtitle: "Ready for review · Yesterday",
+          subtitle: "Practitioner review complete · Yesterday",
         },
         {
-          title: "Shared with Dr. Lee",
-          subtitle: "3 documents sent · 3 days ago",
+          title: "Shared with your care team",
+          subtitle: "3 health records sent · 3 days ago",
         },
       ],
     },
   },
   about: {
     eyebrow: "About us",
-    title: "Health records that work for patients and practitioners",
+    title: "Health records, handled carefully",
     description:
-      "iCare was built so uploading and sharing medical records feels simple — not like hospital software. Patients stay in control; practitioners get what they need to review before the visit.",
+      "iCare is for people who need a clear way to upload and manage health records, with control over who can see their information.",
     highlights: [
       {
-        title: "Patients & caregivers",
+        title: "For patients and caregivers",
         description:
-          "Upload for yourself or someone you care for, then share with their doctor when the time is right.",
+          "Upload for yourself or someone you care for. Keep health records organized in one folder until you are ready to share them.",
       },
       {
-        title: "Practitioner review",
+        title: "Made for clinical review",
         description:
-          "Doctors and care teams receive the documents you share — organized and ready to review.",
+          "Practitioners receive the documents you choose in a review-ready format, with plain English summaries to support conversations about your care.",
       },
       {
-        title: "Private by default",
+        title: "Private until you share",
         description:
-          "Records are stored securely and opened only through your signed-in account until you choose to share.",
+          "Your files stay in your account until you share them. Encryption, access controls, and clear privacy practices apply throughout.",
       },
     ],
   },
-  cta: {
-    title: "Ready to upload your first document?",
+  contact: {
+    eyebrow: "Contact us",
+    title: "Get in touch",
     description:
-      "Create a free account and start building your health records folder. Share with your practitioner whenever you're ready.",
+      "Questions about uploads, sharing with your care team, or getting started? Reach out — we support patients, caregivers, and clinic partners.",
+    phoneLabel: "Phone",
+    emailLabel: "Email",
+    addressLabel: "Headquarters",
+    hoursLabel: "Hours",
+    hours: "Monday–Friday, 9:00 AM – 5:00 PM PT",
+    responseNote: "We typically respond within 1–2 business days.",
+  },
+  cta: {
+    title: "Ready to upload a health record?",
+    description:
+      "Create a free account, add your documents to a protected folder, and share with your practitioner when you are ready.",
     createAccount: "Create account",
     signIn: "Sign in",
+    signedIn: {
+      title: "Your health folder is ready",
+      description:
+        "Continue uploading health records or share files with your care team from your dashboard.",
+      dashboard: "Go to dashboard",
+    },
+  },
+  signedInBanner: {
+    welcome: (firstName: string) => `Welcome back, ${firstName}.`,
+    signedIn: "You are signed in.",
+    hint: "Continue to your upload workspace or browse the site.",
+    dashboard: "Go to dashboard",
   },
   footer: {
     tagline:
-      "A simple healthcare management portal for secure document upload and practitioner review.",
+      "A health records portal for encrypted upload, private storage, practitioner-reviewed summaries, and sharing on your terms.",
   },
   assistant: {
     welcome:
-      "Hi! I can answer questions about iCare — how uploads work, sharing with your doctor, and keeping your records private.",
+      "Hi! I can help with questions about uploading health records, sharing with your care team, and how iCare handles privacy.",
     title: "Ask iCare",
-    subtitle: "Questions about the portal and how it works",
-    placeholder: "Ask about uploads, sharing, or privacy…",
+    subtitle: "Help with uploads, sharing, and privacy",
+    placeholder: "Ask about upload, sharing, or privacy…",
     thinking: "One moment…",
     disclaimer:
       "General information only — not medical advice. Do not share personal health details in this chat.",

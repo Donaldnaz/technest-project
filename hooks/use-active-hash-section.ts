@@ -45,6 +45,16 @@ export function useActiveHashSection() {
     if (sections.length === 0) return;
 
     const ratios = new Map<string, number>();
+    let lastPickedId: string | null | undefined;
+    let pickRafId = 0;
+    let hashSyncTimer: ReturnType<typeof setTimeout> | null = null;
+
+    function scheduleHashSync(sectionId: string | null) {
+      if (hashSyncTimer) clearTimeout(hashSyncTimer);
+      hashSyncTimer = setTimeout(() => {
+        syncUrlHash(sectionId);
+      }, 150);
+    }
 
     function pickActiveSection() {
       let bestId: string | null = null;
@@ -57,14 +67,18 @@ export function useActiveHashSection() {
         }
       }
 
-      if (bestId && bestRatio > 0) {
-        setScrollActiveId(bestId);
-        syncUrlHash(bestId);
+      const nextId = bestId && bestRatio > 0 ? bestId : null;
+      if (nextId === lastPickedId) return;
+      lastPickedId = nextId;
+
+      if (nextId) {
+        setScrollActiveId(nextId);
+        scheduleHashSync(nextId);
         return;
       }
 
       setScrollActiveId(null);
-      syncUrlHash(null);
+      scheduleHashSync(null);
     }
 
     const observer = new IntersectionObserver(
@@ -72,11 +86,12 @@ export function useActiveHashSection() {
         for (const entry of entries) {
           ratios.set(entry.target.id, entry.intersectionRatio);
         }
-        pickActiveSection();
+        cancelAnimationFrame(pickRafId);
+        pickRafId = requestAnimationFrame(pickActiveSection);
       },
       {
         rootMargin: "-20% 0px -55% 0px",
-        threshold: [0, 0.25, 0.5, 0.75, 1],
+        threshold: [0, 0.5, 1],
       },
     );
 
@@ -84,7 +99,11 @@ export function useActiveHashSection() {
       observer.observe(section);
     }
 
-    return () => observer.disconnect();
+    return () => {
+      if (hashSyncTimer) clearTimeout(hashSyncTimer);
+      cancelAnimationFrame(pickRafId);
+      observer.disconnect();
+    };
   }, []);
 
   // Scroll position drives nav highlight; hash is fallback until observer runs

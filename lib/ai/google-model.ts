@@ -2,12 +2,10 @@ import "server-only";
 
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
+import { env, getGeminiApiKeyFromEnv } from "@/lib/env";
+
 export function getGeminiApiKey(): string | undefined {
-  return (
-    process.env.GEMINI_API_KEY?.trim() ||
-    process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ||
-    undefined
-  );
+  return getGeminiApiKeyFromEnv();
 }
 
 export function getGoogleModel(modelId?: string) {
@@ -19,7 +17,7 @@ export function getGoogleModel(modelId?: string) {
 
   const resolvedModel =
     modelId?.trim() ||
-    process.env.GEMINI_MODEL?.trim() ||
+    env.GEMINI_MODEL?.trim() ||
     "gemini-2.5-flash-lite";
 
   const google = createGoogleGenerativeAI({ apiKey });

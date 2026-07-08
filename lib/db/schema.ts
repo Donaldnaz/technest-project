@@ -42,14 +42,6 @@ export const careShareStatusEnum = pgEnum("care_share_status", [
   "revoked",
 ]);
 
-export const ingestCategoryTagEnum = pgEnum("ingest_category_tag", [
-  "lab",
-  "prescription",
-  "imaging",
-  "insurance",
-  "other",
-]);
-
 export const userProfiles = pgTable("user_profiles", {
   userId: text("user_id").primaryKey(),
   firstName: text("first_name").notNull(),
@@ -194,49 +186,6 @@ export const careShares = pgTable(
   ],
 );
 
-/** Portal intake: client contact details (maps to "patients" in the ingest spec). */
-export const clients = pgTable(
-  "clients",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    fullName: text("full_name").notNull(),
-    email: text("email").notNull(),
-    phone: text("phone").notNull(),
-    dateOfBirth: date("date_of_birth"),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [
-    index("clients_email_idx").on(table.email),
-    index("clients_created_at_idx").on(table.createdAt),
-  ],
-);
-
-/** Portal intake documents linked to a client (maps to "documents" in the ingest spec). */
-export const ingestDocuments = pgTable(
-  "ingest_documents",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    clientId: uuid("client_id")
-      .notNull()
-      .references(() => clients.id, { onDelete: "cascade" }),
-    fileName: text("file_name").notNull(),
-    vercelBlobUrl: text("vercel_blob_url").notNull(),
-    fileSize: bigint("file_size", { mode: "number" }).notNull(),
-    categoryTag: ingestCategoryTagEnum("category_tag")
-      .default("other")
-      .notNull(),
-    uploadedAt: timestamp("uploaded_at", { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [
-    index("ingest_documents_client_id_idx").on(table.clientId),
-    index("ingest_documents_uploaded_at_idx").on(table.uploadedAt),
-  ],
-);
-
 export type UserProfile = typeof userProfiles.$inferSelect;
 export type NewUserProfile = typeof userProfiles.$inferInsert;
 export type Patient = typeof patients.$inferSelect;
@@ -245,7 +194,3 @@ export type Document = typeof documents.$inferSelect;
 export type DocumentExtraction = typeof documentExtractions.$inferSelect;
 export type DocumentAccessLog = typeof documentAccessLogs.$inferSelect;
 export type CareShare = typeof careShares.$inferSelect;
-export type Client = typeof clients.$inferSelect;
-export type NewClient = typeof clients.$inferInsert;
-export type IngestDocument = typeof ingestDocuments.$inferSelect;
-export type NewIngestDocument = typeof ingestDocuments.$inferInsert;

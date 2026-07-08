@@ -1,9 +1,17 @@
+"use client";
+
 import { LinkButton } from "@/components/ui/link-button";
 import { SiteContainer } from "@/components/layout/site-container";
+import { authClient } from "@/lib/auth/client";
 import { landingCopy } from "@/lib/copy/landing";
 
 export function LandingCta() {
+  const { data: session, isPending } = authClient.useSession();
   const { cta } = landingCopy;
+
+  if (isPending || session?.user) {
+    return null;
+  }
 
   return (
     <section className="site-section border-t border-border/50">
@@ -26,7 +34,11 @@ export function LandingCta() {
               {cta.description}
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <LinkButton href="/auth/sign-up" size="lg" className="rounded-2xl">
+              <LinkButton
+                href="/auth/sign-up"
+                size="lg"
+                className="rounded-2xl"
+              >
                 {cta.createAccount}
               </LinkButton>
               <LinkButton

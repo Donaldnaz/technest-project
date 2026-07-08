@@ -1,32 +1,35 @@
 import "server-only";
 
-import { getSignedDocumentUrl } from "@/lib/blob/access";
 import {
   DOCUMENT_CATEGORY_LABELS,
   type DocumentCategory,
 } from "@/lib/constants/document-categories";
 import { slackCopy } from "@/lib/copy/slack";
-import { maskPatientName } from "@/lib/slack/mask-phi";
+import { getSlackWebhookUrl } from "@/lib/env";
+import {
+  maskMedicalRecordNumber,
+  maskPatientName,
+} from "@/lib/slack/mask-phi";
 
 export type DashboardDocumentSlackPayload = {
   documentId: string;
+  fileName: string;
   patientFirstName: string;
   patientLastName: string;
   uploaderEmail: string;
   category: DocumentCategory;
-  vercelBlobUrl: string;
+  typeOfCare: string;
+  hospitalName: string;
+  medicalRecordNumber: string | null;
+  filePermalink?: string;
+  fileAttachedInChannel?: boolean;
 };
-
-function getWebhookUrl(): string | null {
-  const url = process.env.SLACK_WEBHOOK_URL?.trim();
-  return url || null;
-}
 
 async function postSlackWebhook(payload: {
   text: string;
   blocks: Record<string, unknown>[];
 }): Promise<{ sent: boolean }> {
-  const webhookUrl = getWebhookUrl();
+  const webhookUrl = getSlackWebhookUrl();
 
   if (!webhookUrl) {
     console.warn(
@@ -57,6 +60,60 @@ async function postSlackWebhook(payload: {
   }
 }
 
+function sanitizeSlackLinkText(text: string): string {
+  return text.replace(/[<>|]/g, "_").trim() || "document";
+}
+
+function buildDocumentLine(payload: DashboardDocumentSlackPayload): string {
+  const label = slackCopy.documentIngested.fields.document;
+  const safeFileName = sanitizeSlackLinkText(payload.fileName);
+
+  if (payload.filePermalink) {
+    return `*${label}:* <${payload.filePermalink}|${safeFileName}>`;
+  }
+
+  if (payload.fileAttachedInChannel) {
+    return `*${label}:* ${safeFileName} (${slackCopy.documentIngested.documentAttachedInChannel})`;
+  }
+
+  return `*${label}:* ${safeFileName} (${slackCopy.documentIngested.documentUnavailable})`;
+}
+
+function buildDocumentIngestedFieldLines(
+  payload: DashboardDocumentSlackPayload,
+  documentLine: string,
+): string[] {
+  const maskedName = maskPatientName(
+    payload.patientFirstName,
+    payload.patientLastName,
+  );
+  const categoryLabel = DOCUMENT_CATEGORY_LABELS[payload.category];
+  const maskedMrn = maskMedicalRecordNumber(payload.medicalRecordNumber);
+
+  return [
+    `*${slackCopy.documentIngested.fields.patient}:* ${maskedName}`,
+    `*${slackCopy.documentIngested.fields.uploadedBy}:* ${payload.uploaderEmail}`,
+    `*${slackCopy.documentIngested.fields.typeOfCare}:* ${payload.typeOfCare}`,
+    `*${slackCopy.documentIngested.fields.hospitalName}:* ${payload.hospitalName}`,
+    `*${slackCopy.documentIngested.fields.medicalRecordNumber}:* \`${maskedMrn}\``,
+    `*${slackCopy.documentIngested.fields.documentType}:* \`${categoryLabel}\``,
+    `*${slackCopy.documentIngested.fields.documentId}:* \`${payload.documentId}\``,
+    documentLine,
+  ];
+}
+
+/** Full alert text for a single Slack file-upload message (PDF + metadata together). */
+export function buildDocumentIngestedAlertText(
+  payload: DashboardDocumentSlackPayload,
+): string {
+  const documentLine = `*${slackCopy.documentIngested.fields.document}:* ${sanitizeSlackLinkText(payload.fileName)}`;
+
+  return [
+    `*${slackCopy.documentIngested.header}*`,
+    ...buildDocumentIngestedFieldLines(payload, documentLine),
+  ].join("\n");
+}
+
 export async function notifyDashboardDocumentUploaded(
   payload: DashboardDocumentSlackPayload,
 ): Promise<{ sent: boolean }> {
@@ -64,11 +121,14 @@ export async function notifyDashboardDocumentUploaded(
     payload.patientFirstName,
     payload.patientLastName,
   );
-  const categoryLabel = DOCUMENT_CATEGORY_LABELS[payload.category];
-  const fileLink = getSignedDocumentUrl(payload.vercelBlobUrl);
+  const lines = buildDocumentIngestedFieldLines(payload, buildDocumentLine(payload));
 
   return postSlackWebhook({
-    text: slackCopy.documentIngested.fallback(maskedName, payload.documentId),
+    text: slackCopy.documentIngested.fallback(
+      maskedName,
+      payload.fileName,
+      payload.documentId,
+    ),
     blocks: [
       {
         type: "header",
@@ -82,14 +142,7 @@ export async function notifyDashboardDocumentUploaded(
         type: "section",
         text: {
           type: "mrkdwn",
-          text: [
-            `*${slackCopy.documentIngested.fields.patient}:* ${maskedName}`,
-            `*${slackCopy.documentIngested.fields.uploadedBy}:* ${payload.uploaderEmail}`,
-            `*${slackCopy.documentIngested.fields.documentType}:* \`${categoryLabel}\``,
-            `*${slackCopy.documentIngested.fields.documentId}:* \`${payload.documentId}\``,
-            `*${slackCopy.documentIngested.fields.status}:* ${slackCopy.documentIngested.statusValue}`,
-            `*${slackCopy.documentIngested.fields.fileLink}:* <${fileLink}|${slackCopy.documentIngested.fileLinkLabel}>`,
-          ].join("\n"),
+          text: lines.join("\n"),
         },
       },
     ],

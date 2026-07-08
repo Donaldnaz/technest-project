@@ -57,11 +57,12 @@ export default function AccessibilityPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="Contact us" id="contact">
+      <LegalSection title="Contact us" id="contact" variant="callout">
         <p>
-          Email <a href={`mailto:${contactEmail}`}>{contactEmail}</a> with the
-          subject line &ldquo;Accessibility&rdquo; and we will respond as soon as
-          we can.
+          If you have accessibility questions or feedback, email us at{" "}
+          <a href={`mailto:${contactEmail}`}>{contactEmail}</a>{" "}
+          with the subject
+          line &ldquo;Accessibility.&rdquo; We will respond as soon as we can.
         </p>
       </LegalSection>
     </LegalPageShell>

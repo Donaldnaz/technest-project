@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { DOCUMENT_CATEGORIES } from "@/lib/constants/document-categories";
 import { ALLOWED_MIME_TYPES } from "@/lib/constants/upload";
-import { patientValidationCopy } from "@/lib/copy/patient/validation";
 
 export const uploadClientPayloadSchema = z.object({
   patientId: z.string().uuid(),
@@ -25,7 +24,7 @@ export type UploadTokenPayload = z.infer<typeof uploadTokenPayloadSchema>;
 
 export const shareWithProviderSchema = z.object({
   patientId: z.string().uuid(),
-  providerEmail: z.string().email(patientValidationCopy.share.email),
+  providerEmail: z.string().email("Enter a valid email address"),
   message: z
     .string()
     .trim()

@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
+
+import { useClientMounted } from "@/hooks/use-client-mounted";
 
 type ConfettiBurstProps = {
   active: boolean;
@@ -27,39 +29,26 @@ function createParticles() {
 }
 
 export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
-  const [particles, setParticles] = useState<
-    { id: number; x: number; delay: number; color: string; size: number }[]
-  >([]);
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
+  const mounted = useClientMounted();
   const onCompleteRef = useRef(onComplete);
+
+  const particles = useMemo(
+    () => (active ? createParticles() : []),
+    [active],
+  );
 
   useEffect(() => {
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
   useEffect(() => {
-    if (!active) {
-      const resetTimer = window.setTimeout(() => setParticles([]), 0);
-      return () => window.clearTimeout(resetTimer);
-    }
+    if (!active) return;
 
-    const spawnTimer = window.setTimeout(() => {
-      setParticles(createParticles());
-    }, 0);
-
-    const completeTimer = window.setTimeout(() => {
-      setParticles([]);
+    const timer = setTimeout(() => {
       onCompleteRef.current?.();
     }, 2200);
 
-    return () => {
-      window.clearTimeout(spawnTimer);
-      window.clearTimeout(completeTimer);
-    };
+    return () => clearTimeout(timer);
   }, [active]);
 
   if (!mounted || particles.length === 0) return null;

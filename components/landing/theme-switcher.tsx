@@ -2,17 +2,13 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useSyncExternalStore } from "react";
 
+import { useClientMounted } from "@/hooks/use-client-mounted";
 import { cn } from "@/lib/utils";
 
 export function ThemeSwitcher({ className }: { className?: string }) {
   const { theme, setTheme, resolvedTheme } = useTheme();
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
+  const mounted = useClientMounted();
 
   const active = mounted ? (resolvedTheme ?? theme) : "light";
 

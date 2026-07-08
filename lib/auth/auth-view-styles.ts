@@ -1,7 +1,7 @@
 import type { AuthViewClassNames } from "@neondatabase/auth-ui";
 
 const inputClassName =
-  "h-11 w-full rounded-xl border-input bg-background px-3.5 text-base shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:text-sm";
+  "h-11 w-full rounded-xl border-input bg-background px-3.5 text-base shadow-none md:text-sm";
 
 const buttonClassName = "h-11 rounded-xl text-base font-medium";
 
@@ -25,7 +25,8 @@ export const authViewClassNames: AuthViewClassNames = {
     providerButton: `${buttonClassName} w-full border-border/80 bg-background hover:bg-muted/50`,
     button: `${buttonClassName} w-full`,
     error: "text-sm text-destructive",
-    forgotPasswordLink: "text-sm font-medium text-primary hover:underline",
+    forgotPasswordLink:
+      "text-sm font-medium text-primary hover:text-primary/80 hover:underline",
     icon: "size-5 shrink-0",
   },
 };

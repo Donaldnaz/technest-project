@@ -1,75 +1,29 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Menu, X } from "lucide-react";
 
-import { LandingMobileNavLinks } from "@/components/landing/landing-nav-links";
+import {
+  LandingMobileNavLinks,
+} from "@/components/landing/landing-nav-links";
 import { LinkButton } from "@/components/ui/link-button";
-import { focusRingClassName } from "@/lib/landing/nav-link-styles";
-import type { PublicNavState } from "@/lib/navigation/public-nav-state";
-import { cn } from "@/lib/utils";
+import { authClient } from "@/lib/auth/client";
 
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
-
-export function LandingMobileMenu({ navState }: { navState: PublicNavState }) {
+export function LandingMobileMenu() {
   const [open, setOpen] = useState(false);
   const panelId = useId();
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const panelRef = useRef<HTMLElement>(null);
-  const wasOpenRef = useRef(false);
-
-  useEffect(() => {
-    const main = document.getElementById("main-content");
-    if (!main) return;
-
-    if (open) {
-      main.setAttribute("inert", "");
-    } else {
-      main.removeAttribute("inert");
-    }
-
-    return () => {
-      main.removeAttribute("inert");
-    };
-  }, [open]);
+  const { data: session } = authClient.useSession();
+  const dashboardHref = session?.user ? "/dashboard" : undefined;
 
   useEffect(() => {
     if (!open) return;
 
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setOpen(false);
-        return;
-      }
-
-      if (event.key !== "Tab" || !panelRef.current) return;
-
-      const focusable = Array.from(
-        panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
-      ).filter((element) => !element.hasAttribute("disabled"));
-
-      if (focusable.length === 0) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
+      if (event.key === "Escape") setOpen(false);
     }
 
     document.addEventListener("keydown", onKeyDown);
     document.body.style.overflow = "hidden";
-
-    const firstLink = panelRef.current?.querySelector<HTMLElement>(
-      FOCUSABLE_SELECTOR,
-    );
-    firstLink?.focus();
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
@@ -77,28 +31,15 @@ export function LandingMobileMenu({ navState }: { navState: PublicNavState }) {
     };
   }, [open]);
 
-  useEffect(() => {
-    if (wasOpenRef.current && !open) {
-      menuButtonRef.current?.focus();
-    }
-    wasOpenRef.current = open;
-  }, [open]);
-
   function close() {
     setOpen(false);
   }
 
-  const { dashboardHref } = navState;
-
   return (
     <div className="lg:hidden">
       <button
-        ref={menuButtonRef}
         type="button"
-        className={cn(
-          "inline-flex size-9 cursor-pointer items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
-          focusRingClassName,
-        )}
+        className="inline-flex size-11 cursor-pointer items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={open ? "Close menu" : "Open menu"}
@@ -116,23 +57,19 @@ export function LandingMobileMenu({ navState }: { navState: PublicNavState }) {
             onClick={close}
           />
           <nav
-            ref={panelRef}
             id={panelId}
-            role="dialog"
-            aria-modal="true"
-            className="fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-border/50 bg-background/95 px-6 py-6 shadow-lg backdrop-blur-xl"
-            aria-label="Primary"
+            className="fixed inset-x-0 top-[var(--site-header-height,4rem)] z-50 max-h-[calc(100dvh-var(--site-header-height,4rem))] overflow-y-auto border-b border-border/50 bg-background/95 px-4 py-4 shadow-lg backdrop-blur-xl"
+            aria-label="Mobile"
           >
             <ul className="space-y-1">
               <LandingMobileNavLinks onNavigate={close} />
             </ul>
-
-            <div className="mt-6 flex flex-col gap-3 border-t border-border/50 pt-6">
+            <div className="mt-4 flex flex-col gap-2 border-t border-border/50 pt-4">
               {dashboardHref ? (
                 <LinkButton
                   href={dashboardHref}
                   size="lg"
-                  className="w-full rounded-xl"
+                  className="w-full rounded-2xl"
                   onClick={close}
                 >
                   Dashboard
@@ -142,8 +79,7 @@ export function LandingMobileMenu({ navState }: { navState: PublicNavState }) {
                   <LinkButton
                     href="/auth/sign-in"
                     variant="outline"
-                    size="lg"
-                    className="w-full rounded-xl"
+                    className="w-full rounded-2xl"
                     onClick={close}
                   >
                     Sign in
@@ -151,7 +87,7 @@ export function LandingMobileMenu({ navState }: { navState: PublicNavState }) {
                   <LinkButton
                     href="/auth/sign-up"
                     size="lg"
-                    className="w-full rounded-xl"
+                    className="w-full rounded-2xl"
                     onClick={close}
                   >
                     Get started

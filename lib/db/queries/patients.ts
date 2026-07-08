@@ -2,7 +2,7 @@ import "server-only";
 
 import { and, desc, eq } from "drizzle-orm";
 
-import { db } from "@/lib/db";
+import { db, dbQuery } from "@/lib/db";
 import { patients, type NewPatient, type Patient } from "@/lib/db/schema";
 
 export async function listPatients(userId: string): Promise<Patient[]> {
@@ -42,10 +42,12 @@ export async function listRecentPatients(
   userId: string,
   limit = 5,
 ): Promise<Patient[]> {
-  return db
-    .select()
-    .from(patients)
-    .where(eq(patients.userId, userId))
-    .orderBy(desc(patients.createdAt))
-    .limit(limit);
+  return dbQuery(() =>
+    db
+      .select()
+      .from(patients)
+      .where(eq(patients.userId, userId))
+      .orderBy(desc(patients.createdAt))
+      .limit(limit),
+  );
 }

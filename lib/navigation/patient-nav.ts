@@ -2,10 +2,9 @@ import { profilePath } from "@/lib/routes/profile";
 
 export const PATIENT_TABS = [
   "overview",
-  "documents",
   "upload",
-  "share",
   "timeline",
+  "download",
 ] as const;
 
 export type PatientTab = (typeof PATIENT_TABS)[number];

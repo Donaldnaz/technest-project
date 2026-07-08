@@ -1,14 +1,14 @@
 export const authCopy = {
   hero: {
-    title: "Secure clinical document workspace",
+    title: "Secure health records workspace",
     description:
-      "Sign in to upload, review, and share health records under strict compliance controls.",
+      "Sign in to upload, review, and share health records with encryption and practitioner oversight.",
     highlights: [
-      "Encrypted document ingestion with audit-ready storage",
-      "AI-assisted extraction with mandatory clinician verification",
+      "Encrypted upload and private storage for every health record",
+      "Plain English summaries reviewed by practitioners before they are finalized",
     ],
     footer:
-      "Your health records are securely managed under applicable privacy and security requirements.",
+      "Your health records are managed under applicable privacy and security requirements. iCare does not provide medical advice.",
   },
   signUp: {
     hint: "Full name, email, and password are required. Use at least 8 characters.",
@@ -20,11 +20,11 @@ export const authCopy = {
   signIn: {
     hint: "Sign in with Google, GitHub, or your registered email and password.",
     sessionNote:
-      "Sessions expire after inactivity. Sign in again to resume document ingestion.",
+      "Sessions expire after inactivity. Sign in again to continue working with your health records.",
   },
   oauth: {
-    google: "Continue with Google — identity verified by your Google account",
-    github: "Continue with GitHub — identity verified by your GitHub account",
+    google: "Continue with Google",
+    github: "Continue with GitHub",
   },
   backToHome: "Back to home",
 } as const;

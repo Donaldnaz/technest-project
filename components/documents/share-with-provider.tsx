@@ -14,7 +14,6 @@ import { sharePatientWithProvider } from "@/app/actions/shares";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { patientShareCopy } from "@/lib/copy/patient/share";
 import { cn } from "@/lib/utils";
 
 type ShareWithProviderProps = {
@@ -38,8 +37,8 @@ export function ShareWithProvider({
 
   const notePlaceholder =
     patientRelationship === "self"
-      ? patientShareCopy.form.notePlaceholderSelf
-      : patientShareCopy.form.notePlaceholderOther(patientName.split(" ")[0]);
+      ? "e.g. Records for my cardiology follow-up next week"
+      : `e.g. Records for ${patientName.split(" ")[0]}'s upcoming visit`;
 
   function handleShare(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -55,7 +54,7 @@ export function ShareWithProvider({
         setProviderEmail("");
         setMessage("");
         setSent(true);
-        toast.success(patientShareCopy.success.toast);
+        toast.success("Request submitted — our care team will follow up.");
         return;
       }
 
@@ -87,17 +86,19 @@ export function ShareWithProvider({
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
                 <p className="font-heading text-lg font-semibold text-foreground">
-                  {patientShareCopy.success.title}
+                  Request sent
                 </p>
                 <p className="max-w-prose text-sm leading-relaxed text-muted-foreground">
-                  {patientShareCopy.success.body}
+                  Our care team will follow up and coordinate sharing your
+                  records with your provider. You do not need to do anything
+                  else.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={handleDismissSent}
                 className="shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-sage-100/80 dark:hover:bg-sage-900/40"
-                aria-label={patientShareCopy.success.dismissAria}
+                aria-label="Dismiss success message"
               >
                 <X className="size-4" aria-hidden />
               </button>
@@ -106,20 +107,20 @@ export function ShareWithProvider({
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <Button
                 type="button"
-                size="lg"
-                className="w-full rounded-xl sm:w-auto"
+                size="default"
+                className="min-h-11 w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto"
                 onClick={handleDismissSent}
               >
-                {patientShareCopy.success.done}
+                Done
               </Button>
               <Button
                 type="button"
-                size="lg"
+                size="default"
                 variant="outline"
-                className="w-full rounded-xl sm:w-auto"
+                className="min-h-11 w-full rounded-xl sm:w-auto"
                 onClick={handleSendAnother}
               >
-                {patientShareCopy.success.sendAnother}
+                Send another request
               </Button>
             </div>
           </div>
@@ -138,14 +139,19 @@ export function ShareWithProvider({
           <div className="min-w-0 flex-1 space-y-3">
             <div>
               <p className="font-heading text-base font-semibold text-foreground">
-                {patientShareCopy.form.title}
+                Send records to your provider
               </p>
               <p className="mt-1 max-w-prose text-sm leading-relaxed text-muted-foreground">
-                {patientShareCopy.form.description}
+                Enter your doctor or clinic email. Our care team handles
+                secure sharing — no invite links to manage.
               </p>
             </div>
             <ol className="grid gap-2 text-xs text-muted-foreground sm:grid-cols-3 sm:gap-3">
-              {patientShareCopy.form.steps.map((step, index) => (
+              {[
+                "Enter provider email",
+                "Add an optional note",
+                "We coordinate the rest",
+              ].map((step, index) => (
                 <li
                   key={step}
                   className="flex items-center gap-2 rounded-xl border border-border/50 bg-background/80 px-3 py-2"
@@ -171,7 +177,7 @@ export function ShareWithProvider({
               htmlFor="providerEmail"
               className="text-sm font-medium text-foreground"
             >
-              {patientShareCopy.form.providerEmailLabel}
+              Provider email
             </Label>
             <div className="relative">
               <Mail
@@ -181,7 +187,7 @@ export function ShareWithProvider({
               <Input
                 id="providerEmail"
                 type="email"
-                placeholder={patientShareCopy.form.providerEmailPlaceholder}
+                placeholder="doctor@clinic.org"
                 value={providerEmail}
                 onChange={(event) => setProviderEmail(event.target.value)}
                 required
@@ -190,7 +196,7 @@ export function ShareWithProvider({
               />
             </div>
             <p className="text-xs leading-relaxed text-muted-foreground">
-              {patientShareCopy.form.providerEmailHint}
+              Use the email address your clinic or doctor gave you for records.
             </p>
           </div>
 
@@ -199,10 +205,10 @@ export function ShareWithProvider({
               htmlFor="shareMessage"
               className="text-sm font-medium text-foreground"
             >
-              {patientShareCopy.form.noteLabel}
+              Optional note
               <span className="font-normal text-muted-foreground">
                 {" "}
-                — {patientShareCopy.form.noteLabelSuffix}
+                — for our care team
               </span>
             </Label>
             <div className="relative">
@@ -221,24 +227,22 @@ export function ShareWithProvider({
               />
             </div>
             <p className="text-xs leading-relaxed text-muted-foreground">
-              {patientShareCopy.form.noteHint}
+              Mention the visit type or anything helpful for your care team.
             </p>
           </div>
         </div>
 
         <div className="flex flex-col gap-3 border-t border-border/60 pt-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-md text-xs leading-relaxed text-muted-foreground">
-            {patientShareCopy.form.consent}
+            By submitting, you authorize iCare to coordinate sharing your
+            uploaded records with the provider listed above.
           </p>
           <Button
             type="submit"
-            size="lg"
             disabled={pending}
-            className="w-full shrink-0 rounded-xl px-6 sm:w-auto"
+            className="min-h-11 w-full shrink-0 rounded-xl px-6 sm:w-auto"
           >
-            {pending
-              ? patientShareCopy.form.submitting
-              : patientShareCopy.form.submit}
+            {pending ? "Sending…" : "Submit to care team"}
           </Button>
         </div>
       </form>

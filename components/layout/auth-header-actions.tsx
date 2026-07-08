@@ -6,15 +6,37 @@ import { usePathname } from "next/navigation";
 import { ThemeIconToggle } from "@/components/layout/theme-icon-toggle";
 import { LinkButton } from "@/components/ui/link-button";
 import { focusRingClassName } from "@/lib/landing/nav-link-styles";
+import type { PublicNavState } from "@/lib/navigation/public-nav-state";
 import { cn } from "@/lib/utils";
 
-export function AuthHeaderActions() {
+type AuthHeaderActionsProps = {
+  navState: PublicNavState;
+};
+
+export function AuthHeaderActions({ navState }: AuthHeaderActionsProps) {
   const pathname = usePathname();
   const isSignUp = pathname.includes("/auth/sign-up");
   const isSignIn = pathname.includes("/auth/sign-in");
   const isForgotOrReset =
     pathname.includes("/auth/forgot-password") ||
     pathname.includes("/auth/reset-password");
+  const showDashboard =
+    navState.isAuthenticated && navState.dashboardHref;
+
+  if (showDashboard) {
+    return (
+      <>
+        <LinkButton
+          href={navState.dashboardHref!}
+          size="lg"
+          className="rounded-xl"
+        >
+          Dashboard
+        </LinkButton>
+        <ThemeIconToggle />
+      </>
+    );
+  }
 
   return (
     <>

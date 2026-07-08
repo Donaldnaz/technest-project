@@ -1,11 +1,15 @@
 import { z } from "zod";
 
 import {
-  CALIFORNIA_HEALTH_QUARTERS,
-  DEFAULT_COUNTRY,
-  DEFAULT_STATE,
-} from "@/lib/constants/california-locations";
-import { patientValidationCopy } from "@/lib/copy/patient/validation";
+  CA_CARE_REGIONS,
+  CA_PROVINCES,
+  SUPPORTED_COUNTRIES,
+  US_CARE_REGIONS,
+  US_STATES,
+  isValidCareRegion,
+  isValidSubdivision,
+  type SupportedCountry,
+} from "@/lib/constants/north-america-locations";
 import {
   HEALTHCARE_SPECIALTIES,
   OTHER_SPECIALTY,
@@ -13,24 +17,49 @@ import {
 
 const relationshipSchema = z.enum(["self", "other"]);
 
-const locationSchema = z.object({
-  healthcareLocation: z
-    .string()
-    .trim()
-    .min(1, patientValidationCopy.onboarding.healthcareLocation)
-    .max(200),
-  city: z.string().trim().min(1, patientValidationCopy.onboarding.city).max(100),
-  state: z.literal(DEFAULT_STATE),
-  country: z.literal(DEFAULT_COUNTRY),
-  healthQuarter: z.enum(CALIFORNIA_HEALTH_QUARTERS, {
-    message: patientValidationCopy.onboarding.healthQuarter,
-  }),
+const countrySchema = z.enum(SUPPORTED_COUNTRIES, {
+  message: "Select a country",
 });
+
+const locationSchema = z
+  .object({
+    healthcareLocation: z
+      .string()
+      .trim()
+      .min(1, "Healthcare location is required")
+      .max(200),
+    city: z.string().trim().min(1, "City is required").max(100),
+    state: z.string().trim().min(1, "State or province is required").max(100),
+    country: countrySchema,
+    healthQuarter: z.string().trim().min(1, "Select a care region").max(100),
+  })
+  .superRefine((data, ctx) => {
+    const country = data.country as SupportedCountry;
+
+    if (!isValidSubdivision(country, data.state)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          country === "Canada"
+            ? "Select a valid province or territory"
+            : "Select a valid state",
+        path: ["state"],
+      });
+    }
+
+    if (!isValidCareRegion(country, data.healthQuarter)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Select a valid care region",
+        path: ["healthQuarter"],
+      });
+    }
+  });
 
 const specialtySchema = z
   .object({
     healthcareSpecialty: z.enum(HEALTHCARE_SPECIALTIES, {
-      message: patientValidationCopy.onboarding.specialty,
+      message: "Select a healthcare specialty",
     }),
     customSpecialty: z
       .string()
@@ -46,61 +75,72 @@ const specialtySchema = z
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: patientValidationCopy.onboarding.customSpecialty,
+        message: "Please describe your specialty",
         path: ["customSpecialty"],
       });
     }
   });
 
-export const patientFieldsSchema = z
-  .object({
-    relationship: relationshipSchema,
-    patientFirstName: z
-      .string()
-      .trim()
-      .min(1, patientValidationCopy.onboarding.firstName)
-      .max(100),
-    patientLastName: z
-      .string()
-      .trim()
-      .min(1, patientValidationCopy.onboarding.lastName)
-      .max(100),
-    dateOfBirth: z
-      .string()
-      .trim()
-      .optional()
-      .transform((value) => (value === "" ? undefined : value))
-      .pipe(z.string().date(patientValidationCopy.onboarding.dateOfBirth).optional()),
-    medicalRecordNumber: z
-      .string()
-      .trim()
-      .max(50)
-      .optional()
-      .transform((value) => (value === "" ? undefined : value)),
-    additionalNotes: z
-      .string()
-      .trim()
-      .max(2000)
-      .optional()
-      .transform((value) => (value === "" ? undefined : value)),
-  })
-  .merge(locationSchema)
-  .merge(specialtySchema);
+const consentSchema = z.object({
+  consentAccuracy: z.literal("on", {
+    message: "Please confirm the information is accurate",
+  }),
+  consentAuthorization: z.literal("on", {
+    message: "Please confirm you are authorized to submit this information",
+  }),
+});
 
-export const onboardingSchema = z
-  .object({
-    accountFirstName: z
-      .string()
-      .trim()
-      .min(1, patientValidationCopy.onboarding.firstName)
-      .max(100),
-    accountLastName: z
-      .string()
-      .trim()
-      .min(1, patientValidationCopy.onboarding.lastName)
-      .max(100),
-  })
-  .merge(patientFieldsSchema);
+const patientBaseSchema = z.object({
+  relationship: relationshipSchema,
+  patientFirstName: z
+    .string()
+    .trim()
+    .min(1, "First name is required")
+    .max(100),
+  patientLastName: z
+    .string()
+    .trim()
+    .min(1, "Last name is required")
+    .max(100),
+  dateOfBirth: z
+    .string()
+    .trim()
+    .min(1, "Date of birth is required")
+    .pipe(z.string().date("Enter a valid date (YYYY-MM-DD)")),
+  medicalRecordNumber: z
+    .string()
+    .trim()
+    .min(1, "Medical record number is required")
+    .max(50),
+  additionalNotes: z
+    .string()
+    .trim()
+    .max(2000)
+    .optional()
+    .transform((value) => (value === "" ? undefined : value)),
+});
+
+// Zod 4: .merge() fails on schemas that already have refinements; use .and() instead.
+export const patientFieldsSchema = patientBaseSchema
+  .and(locationSchema)
+  .and(specialtySchema);
+
+const accountSchema = z.object({
+  accountFirstName: z
+    .string()
+    .trim()
+    .min(1, "First name is required")
+    .max(100),
+  accountLastName: z
+    .string()
+    .trim()
+    .min(1, "Last name is required")
+    .max(100),
+});
+
+export const onboardingSchema = accountSchema
+  .and(patientFieldsSchema)
+  .and(consentSchema);
 
 export type OnboardingInput = z.infer<typeof onboardingSchema>;
 
@@ -112,21 +152,36 @@ export function resolveSpecialtyValue(input: OnboardingInput): string {
 }
 
 export function parseOnboardingFormData(formData: FormData): OnboardingInput {
+  const value = (key: string) => {
+    const entry = formData.get(key);
+    return typeof entry === "string" ? entry : "";
+  };
+
   return onboardingSchema.parse({
-    accountFirstName: formData.get("accountFirstName"),
-    accountLastName: formData.get("accountLastName"),
-    relationship: formData.get("relationship"),
-    patientFirstName: formData.get("patientFirstName"),
-    patientLastName: formData.get("patientLastName"),
-    dateOfBirth: formData.get("dateOfBirth") ?? undefined,
-    medicalRecordNumber: formData.get("medicalRecordNumber") ?? undefined,
-    healthcareSpecialty: formData.get("healthcareSpecialty"),
-    customSpecialty: formData.get("customSpecialty") ?? undefined,
-    healthcareLocation: formData.get("healthcareLocation"),
-    city: formData.get("city"),
-    state: formData.get("state") ?? DEFAULT_STATE,
-    country: formData.get("country") ?? DEFAULT_COUNTRY,
-    healthQuarter: formData.get("healthQuarter"),
-    additionalNotes: formData.get("additionalNotes") ?? undefined,
+    accountFirstName: value("accountFirstName"),
+    accountLastName: value("accountLastName"),
+    relationship: value("relationship"),
+    patientFirstName: value("patientFirstName"),
+    patientLastName: value("patientLastName"),
+    dateOfBirth: value("dateOfBirth"),
+    medicalRecordNumber: value("medicalRecordNumber"),
+    healthcareSpecialty: value("healthcareSpecialty"),
+    customSpecialty: value("customSpecialty") || undefined,
+    healthcareLocation: value("healthcareLocation"),
+    city: value("city"),
+    state: value("state"),
+    country: value("country"),
+    healthQuarter: value("healthQuarter"),
+    additionalNotes: value("additionalNotes") || undefined,
+    consentAccuracy: formData.get("consentAccuracy"),
+    consentAuthorization: formData.get("consentAuthorization"),
   });
 }
+
+export {
+  CA_CARE_REGIONS,
+  CA_PROVINCES,
+  SUPPORTED_COUNTRIES,
+  US_CARE_REGIONS,
+  US_STATES,
+};
