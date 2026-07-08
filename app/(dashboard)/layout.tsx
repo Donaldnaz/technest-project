@@ -44,7 +44,7 @@ export default async function DashboardGroupLayout({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 pt-safe backdrop-blur-md">
-          <div className="mx-auto grid min-h-16 w-full max-w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-4 px-4 py-3 md:gap-x-6 md:px-6 lg:px-8">
+          <div className="mx-auto grid min-h-[3.75rem] w-full max-w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-4 px-4 py-3.5 md:gap-x-6 md:px-6 lg:px-8">
             <div className="flex min-w-0 items-center gap-2.5 sm:gap-3 lg:invisible lg:w-0 lg:overflow-hidden">
               <Link
                 href="/"

@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 
 import { OnboardingForm } from "@/components/onboarding/onboarding-form";
+import { OnboardingProgress } from "@/components/onboarding/onboarding-progress";
 import { SiteContainer } from "@/components/layout/site-container";
+import { patientOnboardingCopy } from "@/lib/copy/patient/onboarding";
 import { isOnboardingComplete } from "@/lib/auth/onboarding";
 import { getOptionalSession } from "@/lib/auth/session";
 
@@ -34,18 +36,28 @@ export default async function OnboardingPage() {
   }
 
   const { firstName, lastName } = splitDisplayName(session.user.name);
+  const copy = patientOnboardingCopy;
 
   return (
-    <SiteContainer className="max-w-2xl">
-      <header className="mb-8 text-center md:mb-10">
-        <h1 className="font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-          Welcome to iCare
+    <SiteContainer className="max-w-3xl">
+      <header className="mx-auto mb-8 max-w-2xl text-center md:mb-10">
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+            {copy.page.eyebrow}
+          </p>
+          <p className="rounded-full border border-border/60 bg-muted/30 px-3 py-1 text-xs font-medium text-muted-foreground">
+            {copy.page.timeEstimate}
+          </p>
+        </div>
+        <h1 className="mt-4 font-heading text-3xl font-semibold tracking-tight text-balance md:text-4xl">
+          {copy.page.title}
         </h1>
-        <p className="mt-3 text-lg leading-relaxed text-muted-foreground">
-          Before you upload health records, tell us a little about you and who
-          you are caring for.
+        <p className="mt-4 text-base leading-relaxed text-muted-foreground text-pretty md:text-lg">
+          {copy.page.description}
         </p>
       </header>
+
+      <OnboardingProgress />
 
       <OnboardingForm
         defaultAccountFirstName={firstName}

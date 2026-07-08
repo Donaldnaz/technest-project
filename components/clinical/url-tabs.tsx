@@ -66,7 +66,7 @@ export function UrlTabs({
       onValueChange={setTab}
       className={cn("w-full", className)}
     >
-      <div className="sticky top-16 z-20 border-b border-border/60 bg-background/95 backdrop-blur-md">
+      <div className="sticky top-app-header z-20 border-b border-border/60 bg-background/95 backdrop-blur-md">
         <div className="overflow-x-auto pb-1">
           <TabsList
             variant="line"

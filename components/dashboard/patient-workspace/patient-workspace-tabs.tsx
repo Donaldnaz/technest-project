@@ -125,7 +125,7 @@ export function PatientWorkspaceTabs({
         className="w-full"
         aria-label={patientDashboardCopy.patient.workspaceTitle}
       >
-        <div className="sticky top-16 z-20 -mx-4 border-b border-border/60 bg-background/95 px-4 backdrop-blur-md md:-mx-8 md:px-8">
+        <div className="sticky top-app-header z-20 -mx-4 border-b border-border/60 bg-background/95 px-4 backdrop-blur-md md:-mx-8 md:px-8">
           <div className="overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <TabsList
               variant="line"

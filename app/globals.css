@@ -10,7 +10,11 @@
 }
 
 @utility pt-safe {
-  padding-top: env(safe-area-inset-top);
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+
+@utility top-app-header {
+  top: calc(3.75rem + max(1rem, env(safe-area-inset-top)));
 }
 
 @theme inline {

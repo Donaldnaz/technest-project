@@ -38,7 +38,7 @@ function SidebarToggle({ collapsed, onToggle }: SidebarToggleProps) {
       aria-controls="app-sidebar"
       aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
       className={cn(
-        "absolute -right-3 top-7 z-10 flex size-7 items-center justify-center rounded-full border border-border/60 bg-card text-muted-foreground shadow-sm transition-all duration-200",
+        "absolute -right-3 top-[calc(max(1rem,env(safe-area-inset-top))+1rem)] z-10 flex size-7 items-center justify-center rounded-full border border-border/60 bg-card text-muted-foreground shadow-sm transition-all duration-200",
         "hover:border-primary/30 hover:bg-primary/5 hover:text-primary hover:shadow-md",
         "active:scale-95",
         focusRingClassName,
@@ -72,7 +72,7 @@ export function AppSidebar({ profileId }: AppSidebarProps) {
     <aside
       id="app-sidebar"
       className={cn(
-        "relative hidden flex-col border-r border-sidebar-border bg-sidebar p-4 transition-[width] duration-200 lg:flex",
+        "relative hidden flex-col border-r border-sidebar-border bg-sidebar px-4 pb-4 pt-safe transition-[width] duration-200 lg:flex",
         widthClass,
       )}
       suppressHydrationWarning
@@ -81,7 +81,7 @@ export function AppSidebar({ profileId }: AppSidebarProps) {
 
       <div
         className={cn(
-          "mb-8 flex items-center",
+          "mb-8 flex min-h-[3.75rem] items-center py-3.5",
           collapsed ? "justify-center" : "gap-3",
         )}
       >

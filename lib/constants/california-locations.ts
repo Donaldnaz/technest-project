@@ -1,20 +1,11 @@
-export const DEFAULT_STATE = "California" as const;
-export const DEFAULT_COUNTRY = "United States" as const;
+/** @deprecated Import from `@/lib/constants/north-america-locations` instead */
+export {
+  CALIFORNIA_HEALTH_QUARTERS,
+  DEFAULT_COUNTRY,
+  DEFAULT_STATE,
+} from "@/lib/constants/north-america-locations";
 
-export const CALIFORNIA_HEALTH_QUARTERS = [
-  "Northern California",
-  "Bay Area",
-  "Central Valley",
-  "Central Coast",
-  "Los Angeles Metro",
-  "Orange County",
-  "San Diego & Inland Empire",
-  "Other California region",
-] as const;
-
-export type CaliforniaHealthQuarter =
-  (typeof CALIFORNIA_HEALTH_QUARTERS)[number];
-
+/** @deprecated Use getCitySuggestions with country + subdivision */
 export const CALIFORNIA_CITY_SUGGESTIONS = [
   "Los Angeles",
   "San Francisco",
