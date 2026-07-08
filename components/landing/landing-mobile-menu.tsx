@@ -58,7 +58,7 @@ export function LandingMobileMenu() {
           />
           <nav
             id={panelId}
-            className="fixed inset-x-0 top-[var(--site-header-height,4rem)] z-50 max-h-[calc(100dvh-var(--site-header-height,4rem))] overflow-y-auto border-b border-border/50 bg-background/95 px-4 py-4 shadow-lg backdrop-blur-xl"
+            className="fixed inset-x-0 top-[var(--site-header-height,3.5rem)] z-50 max-h-[calc(100dvh-var(--site-header-height,3.5rem))] overflow-y-auto border-b border-border/50 bg-background/95 px-4 py-4 shadow-lg backdrop-blur-xl"
             aria-label="Mobile"
           >
             <ul className="space-y-1">

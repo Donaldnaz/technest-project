@@ -16,7 +16,7 @@ const highlights = [
 
 export function AuthHeroPanel() {
   return (
-    <section className="relative hidden overflow-hidden bg-gradient-to-br from-teal-100/70 via-oat-50 to-sage-100/80 px-10 py-12 lg:flex lg:flex-col lg:justify-between dark:from-charcoal-950 dark:via-charcoal-900 dark:to-teal-950/40">
+    <section className="relative hidden overflow-hidden bg-gradient-to-br from-teal-100/70 via-oat-50 to-sage-100/80 px-8 py-8 lg:flex lg:flex-col lg:justify-between lg:py-10 dark:from-charcoal-950 dark:via-charcoal-900 dark:to-teal-950/40">
       <div
         className="pointer-events-none absolute -left-16 top-0 size-72 rounded-full bg-primary/10 blur-3xl"
         aria-hidden
@@ -26,8 +26,8 @@ export function AuthHeroPanel() {
         aria-hidden
       />
 
-      <div className="relative z-10 max-w-lg space-y-8 pt-2">
-        <div className="space-y-4">
+      <div className="relative z-10 max-w-lg space-y-6 pt-1">
+        <div className="space-y-3">
           <h1 className="font-heading text-4xl font-semibold leading-tight tracking-tight xl:text-[2.75rem]">
             {patientAuthCopy.hero.title}
           </h1>
@@ -37,7 +37,7 @@ export function AuthHeroPanel() {
         </div>
 
         <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 shadow-sm">
-          <div className="relative aspect-[4/3]">
+          <div className="relative aspect-[3/2]">
             <Image
               src="/landing/healthcare-hero.png"
               alt="Patient and care team reviewing health records together in a calm, modern clinic"
@@ -53,7 +53,7 @@ export function AuthHeroPanel() {
           </div>
         </div>
 
-        <ul className="space-y-4">
+        <ul className="space-y-3">
           {highlights.map((item) => (
             <li key={item.text} className="flex items-start gap-3">
               <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-background/70 text-primary shadow-sm dark:bg-card/60">

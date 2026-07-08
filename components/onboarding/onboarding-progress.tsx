@@ -146,7 +146,7 @@ export function OnboardingProgress() {
     <nav
       ref={navRef}
       aria-label={patientOnboardingCopy.progress.navLabel}
-      className="sticky top-[calc(var(--site-header-height,4rem)+env(safe-area-inset-top,0px))] z-40 -mx-4 mb-6 border-b border-border/40 bg-background/95 px-4 py-3 backdrop-blur-md md:mb-8"
+      className="sticky top-[calc(var(--site-header-height,3.5rem)+env(safe-area-inset-top,0px))] z-40 -mx-4 mb-6 border-b border-border/40 bg-background/95 px-4 py-3 backdrop-blur-md md:mb-8"
     >
       <p className="sr-only" aria-live="polite">
         {patientOnboardingCopy.progress.stepLabel(

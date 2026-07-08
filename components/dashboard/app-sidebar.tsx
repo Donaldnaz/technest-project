@@ -81,7 +81,7 @@ export function AppSidebar({ profileId }: AppSidebarProps) {
 
       <div
         className={cn(
-          "mb-8 flex min-h-[3.75rem] items-center py-3.5",
+          "mb-8 flex h-14 items-center",
           collapsed ? "justify-center" : "gap-3",
         )}
       >

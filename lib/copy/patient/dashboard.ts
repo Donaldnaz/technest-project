@@ -14,7 +14,7 @@ export const patientDashboardCopy = {
   welcome: {
     eyebrow: "Your health records",
     emptyBody:
-      "Your health folder is ready. Upload recent lab results, imaging reports, or visit notes — your care team will prepare plain English summaries you can review before sharing.",
+      "Your health folder is ready. Upload recent lab results, imaging reports, or prescriptions",
     withDocuments: (count: number) =>
       `${count} health record${count === 1 ? "" : "s"} saved · review status below`,
     primaryAction: {

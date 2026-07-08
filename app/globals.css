@@ -25,7 +25,7 @@
 }
 
 @utility top-app-header {
-  top: calc(var(--site-header-height, 4rem) + max(1rem, env(safe-area-inset-top)));
+  top: calc(var(--site-header-height, 3.5rem) + max(1rem, env(safe-area-inset-top)));
 }
 
 @utility min-h-dvh-screen {
@@ -116,7 +116,7 @@
   --animate-vital-sign-scroll: vital-sign-scroll 14s linear infinite;
   --animate-vital-sign-scroll-fast: vital-sign-scroll 11s linear infinite;
   --text-hero: clamp(2rem, 1.5rem + 2.5vw, 3.25rem);
-  --site-header-height: 4rem;
+  --site-header-height: 3.5rem;
 }
 
 @keyframes vital-sign-scroll {

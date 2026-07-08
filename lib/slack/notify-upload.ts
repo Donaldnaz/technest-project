@@ -5,6 +5,7 @@ import {
   type DocumentCategory,
 } from "@/lib/constants/document-categories";
 import { slackCopy } from "@/lib/copy/slack";
+import { agentDebugLog } from "@/lib/debug/agent-log";
 import { getSlackWebhookUrl } from "@/lib/env";
 import {
   maskMedicalRecordNumber,
@@ -30,6 +31,18 @@ async function postSlackWebhook(payload: {
   blocks: Record<string, unknown>[];
 }): Promise<{ sent: boolean }> {
   const webhookUrl = getSlackWebhookUrl();
+  const webhookConfigured = Boolean(webhookUrl);
+
+  // #region agent log
+  agentDebugLog(
+    "H1",
+    "lib/slack/notify-upload.ts:postSlackWebhook",
+    "slack-webhook-config",
+    {
+      webhookConfigured,
+    },
+  );
+  // #endregion
 
   if (!webhookUrl) {
     console.warn(
@@ -44,6 +57,19 @@ async function postSlackWebhook(payload: {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+
+    // #region agent log
+    agentDebugLog(
+      "H5",
+      "lib/slack/notify-upload.ts:postSlackWebhook",
+      "slack-webhook-response",
+      {
+        webhookConfigured,
+        status: response.status,
+        ok: response.ok,
+      },
+    );
+    // #endregion
 
     if (!response.ok) {
       const body = await response.text();
