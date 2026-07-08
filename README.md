@@ -97,24 +97,6 @@ Provider redirect URIs follow the pattern `{NEON_AUTH_BASE_URL}/callback/{provid
 
 Optional: configure a custom SMTP provider in Neon for production email delivery.
 
-### Troubleshooting
-
-**Google sign-in returns to `/auth/sign-in`**
-
-- The auth proxy (`proxy.ts`) must handle the OAuth callback on `/` when `neon_auth_session_verifier` is present.
-- Restart the dev server after changing `NEON_AUTH_COOKIE_SECRET`.
-- Confirm your origin is listed in Neon trusted domains.
-
-**Email sign-up returns 422**
-
-- Enable the Email provider in Neon Console.
-- Use a password of at least 8 characters and include your full name.
-- If the email is already registered, sign in instead.
-
-**"Verify your email before signing in"**
-
-- Complete OTP verification at `/auth/email-otp`, or request a new code from that screen.
-
 ## Scripts
 
 | Script | Description |
@@ -145,11 +127,3 @@ Run `npm run build` locally to verify the build before deploying.
 - Upload routes validate MIME type and file size server-side
 - Security headers are configured in `next.config.ts`
 - Slack notifications mask PHI where applicable
-
-## Project structure
-
-```
-app/           # Routes: marketing, auth, onboarding, dashboard, API
-components/    # UI: landing, auth, dashboard, upload, documents
-lib/           # Auth, database, AI extraction, Slack, env validation
-```
