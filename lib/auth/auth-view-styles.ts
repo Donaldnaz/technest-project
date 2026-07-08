@@ -7,7 +7,7 @@ const buttonClassName = "h-11 rounded-xl text-base font-medium";
 
 export const authViewClassNames: AuthViewClassNames = {
   base: "w-full max-w-none gap-0 border-0 bg-transparent p-0 shadow-none ring-0",
-  header: "space-y-2 px-0 pb-6 pt-0 text-center",
+  header: "space-y-2 px-0 pb-4 pt-0 text-center",
   title: "font-heading text-2xl font-semibold tracking-tight md:text-[1.75rem]",
   description: "mx-auto max-w-sm text-sm leading-relaxed text-muted-foreground md:text-base",
   content: "gap-6 px-0",

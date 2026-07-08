@@ -35,7 +35,7 @@ export default async function AuthPage({
     return (
       <main
         id="main-content"
-        className="flex min-h-dvh-screen min-h-[calc(100vh-4rem)] items-center justify-center bg-background"
+        className="flex min-h-dvh-screen min-h-[calc(100vh-var(--site-header-height,3.5rem))] items-center justify-center bg-background"
       >
         <SignOutPage />
       </main>
@@ -44,17 +44,17 @@ export default async function AuthPage({
 
   return (
     <main id="main-content" className="icare-auth-page bg-background">
-      <div className="grid min-h-dvh-screen min-h-[calc(100vh-4rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,28rem)]">
+      <div className="grid min-h-dvh-screen min-h-[calc(100vh-var(--site-header-height,3.5rem))] lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,28rem)]">
         <AuthHeroPanel />
 
-        <section className="relative flex flex-col justify-center px-4 py-10 sm:px-6 lg:px-10 lg:py-12 xl:px-14">
+        <section className="relative flex flex-col justify-center px-4 py-8 sm:px-6 lg:px-10 lg:py-10 xl:px-14">
           <div
             className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-oat-50/80 to-transparent lg:hidden dark:from-charcoal-950/80"
             aria-hidden
           />
 
           <div className="relative mx-auto w-full max-w-md">
-            <div className="health-card rounded-3xl p-6 sm:p-8 md:p-10">
+            <div className="health-card rounded-3xl p-5 sm:p-6 md:p-8">
               <ICareAuthView path={path} />
               {path === "sign-in" && (
                 <p className="mt-6 text-center text-xs leading-relaxed text-muted-foreground">
@@ -64,6 +64,11 @@ export default async function AuthPage({
               {path === "sign-up" && (
                 <p className="mt-3 text-center text-xs leading-relaxed text-muted-foreground">
                   {patientAuthCopy.signUp.consent}
+                </p>
+              )}
+              {path === "email-otp" && (
+                <p className="mt-6 text-center text-xs leading-relaxed text-muted-foreground">
+                  {patientAuthCopy.emailOtp.hint}
                 </p>
               )}
               {path === "forgot-password" && (

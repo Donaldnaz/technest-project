@@ -8,9 +8,9 @@ export async function AuthSiteHeader() {
 
   return (
     <SiteHeader
-      variant="minimal"
       brand={<SiteBrandLink compact />}
       actions={<AuthHeaderActions navState={navState} />}
+      actionsVisibility="all"
     />
   );
 }
