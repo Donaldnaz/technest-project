@@ -16,6 +16,10 @@ function isPublicRoute(request: NextRequest): boolean {
     return true;
   }
 
+  if (pathname.startsWith("/auth/")) {
+    return true;
+  }
+
   if (pathname !== "/") {
     return false;
   }

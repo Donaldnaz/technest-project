@@ -68,9 +68,22 @@ function stopExistingDevServer() {
 
 stopExistingDevServer();
 
-const child = spawn(process.platform === "win32" ? "npx.cmd" : "npx", ["next", "dev", ...process.argv.slice(2)], {
+const cwd = process.cwd();
+const nextBinPath = path.join(cwd, "node_modules/.bin/next");
+const nextBinExists = fs.existsSync(nextBinPath);
+
+const spawnCommand = nextBinExists
+  ? nextBinPath
+  : process.platform === "win32"
+    ? "npx.cmd"
+    : "npx";
+const spawnArgs = nextBinExists
+  ? ["dev", ...process.argv.slice(2)]
+  : ["next", "dev", ...process.argv.slice(2)];
+
+const child = spawn(spawnCommand, spawnArgs, {
   stdio: "inherit",
-  cwd: process.cwd(),
+  cwd,
 });
 
 child.on("exit", (code) => {

@@ -1,3 +1,4 @@
+import { OrganizationAssistant } from "@/components/assistant/organization-assistant";
 import { SiteBrandLink } from "@/components/layout/site-brand-link";
 import { SiteContainer } from "@/components/layout/site-container";
 
@@ -15,6 +16,7 @@ export default function AuthLayout({
       </header>
 
       <div className="flex-1">{children}</div>
+      <OrganizationAssistant />
     </div>
   );
 }
