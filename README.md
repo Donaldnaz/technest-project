@@ -1,114 +1,119 @@
-# iCare — Patient Ingestion Engine
+# iCare — Secure Medical Document Portal
 
-Serverless patient ingestion and clinical document management built with Next.js App Router, Neon Auth, Drizzle ORM, and Vercel Blob.
+iCare is a patient-facing health records portal built with Next.js. Users create an account, upload clinical documents (PDFs and images), organize them in a private library, and optionally share records with their care team. Document summaries can be generated with Gemini; all patient data is scoped to the authenticated user.
+
+**Stack:** Next.js App Router · Neon Postgres + Auth · Drizzle ORM · Vercel Blob · Vercel AI SDK (Gemini)
 
 ## Features
 
-- Google OAuth via Neon Auth
-- Tenant-isolated patient CRUD (per authenticated user)
-- Secure PDF/JPEG uploads via Vercel Blob client upload pipeline
-- Dashboard with patient and document overview
-- Typed environment validation with `@t3-oss/env-nextjs`
+- Email/password sign-up with OTP verification, plus Google OAuth
+- Tenant-isolated patient profiles and document storage (per authenticated user)
+- Secure PDF/JPEG uploads via Vercel Blob
+- AI-assisted document extraction and plain-language summaries (optional, requires `GEMINI_API_KEY`)
+- Practitioner onboarding flow and care-share requests with optional Slack notifications
+- Typed environment validation via `@t3-oss/env-nextjs`
 
 ## Prerequisites
 
-- Node.js 18+
-- Neon project with Auth enabled
-- Vercel project with Blob store linked (for production uploads)
+- **Node.js 20+** and npm
+- **Neon** project with Postgres and Auth enabled
+- **Vercel** project with a linked Blob store (required for uploads in production)
+- **Google Cloud** API key for Gemini (optional, for AI extraction)
 
 ## Local setup
 
-1. Copy environment variables:
+1. Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/Donaldnaz/technest-project.git
+cd technest-project
+npm ci
+```
+
+2. Create a local env file from the template:
 
 ```bash
 cp .env.example .env.local
 ```
 
-2. Fill in `.env.local`:
+3. Fill in the required values in `.env.local`. See [Environment variables](#environment-variables) below and `.env.example` for the full list.
 
-- `DATABASE_URL` — Neon pooled connection string
-- `NEON_AUTH_BASE_URL` — from Neon Console → Branch → Auth
-- `NEON_AUTH_COOKIE_SECRET` — at least 32 characters (`openssl rand -base64 32`)
-- `BLOB_READ_WRITE_TOKEN` — from Vercel Blob store
-
-Alternatively, pull from Vercel after linking the project:
-
-```bash
-vercel env pull .env.local
-```
-
-3. Apply database migrations:
+4. Apply database migrations:
 
 ```bash
 npm run db:migrate
 ```
 
-4. Start the dev server:
+5. Start the development server:
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) for the landing page, then sign in or sign up with Google.
+Open [http://localhost:3000](http://localhost:3000) for the landing page.
 
-## OAuth configuration
+Alternatively, after linking the project to Vercel:
 
-In the Neon Console (Branch → Auth):
+```bash
+vercel env pull .env.local
+```
 
-- Enable the **Google** and **Email** providers
-- Add `http://localhost:3000` to trusted domains for local development
-- Register provider redirect URIs as `{NEON_AUTH_BASE_URL}/callback/{provider}`
+## Environment variables
 
-For production/preview deployments, add each deployment URL to trusted domains.
+Copy `.env.example` to `.env.local` and set values there. **Never commit `.env`, `.env.local`, or real secrets.**
 
-## Auth troubleshooting
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `DATABASE_URL` | Yes | Neon pooled Postgres connection string |
+| `NEON_AUTH_BASE_URL` | Yes | From Neon Console → Branch → Auth → Configuration |
+| `NEON_AUTH_COOKIE_SECRET` | Yes | At least 32 characters (`openssl rand -base64 32`) |
+| `BLOB_READ_WRITE_TOKEN` | For uploads | From Vercel Blob store (auto-injected when linked) |
+| `GEMINI_API_KEY` | No | Google AI key for document extraction |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | No | Alternative name accepted by Vercel AI SDK |
+| `GEMINI_MODEL` | No | Override default model (`gemini-2.5-flash-lite`) |
+| `SLACK_WEBHOOK_URL` | No | Incoming webhook for care-share alerts |
+| `SLACK_BOT_TOKEN` / `SLACK_CHANNEL_ID` | No | Slack bot file uploads (requires `files:write` scope) |
+| `SKIP_ENV_VALIDATION` | CI only | Set to `true` for builds without real secrets |
 
-**Google sign-in returns to `/auth/sign-in` after choosing an account**
+## Authentication
 
-- Middleware must run on the OAuth return URL (`/` with `neon_auth_session_verifier`). This app uses Neon’s broad middleware matcher so the session exchange completes server-side.
+### Providers
+
+In **Neon Console → Branch → Auth → Providers**, enable:
+
+- **Google** — OAuth sign-in
+- **Email** — email/password sign-up and sign-in
+
+Add `http://localhost:3000` to **Trusted domains** for local development. For production and preview deployments, add each deployment URL.
+
+Provider redirect URIs follow the pattern `{NEON_AUTH_BASE_URL}/callback/{provider}`.
+
+### Email sign-up and OTP verification
+
+1. In Neon Auth, enable **Verify at sign-up** and choose **Verification code (OTP)**.
+2. User signs up with email, password, and full name.
+3. After sign-up, the app redirects to `/auth/email-otp` to enter the 6-digit code sent by email.
+4. Once verified, the user signs in and completes onboarding before reaching the dashboard.
+
+Optional: configure a custom SMTP provider in Neon for production email delivery.
+
+### Troubleshooting
+
+**Google sign-in returns to `/auth/sign-in`**
+
+- The auth proxy (`proxy.ts`) must handle the OAuth callback on `/` when `neon_auth_session_verifier` is present.
 - Restart the dev server after changing `NEON_AUTH_COOKIE_SECRET`.
-- Confirm `http://localhost:3000` is in Neon trusted domains.
+- Confirm your origin is listed in Neon trusted domains.
 
 **Email sign-up returns 422**
 
-- Enable the **Email** provider in Neon Console → Branch → Auth → Providers.
-- Use a password of at least 8 characters and include your full name on sign-up.
-- If the email is already registered, sign in instead or use a different address.
-- Check the toast error message on the sign-up form for the exact reason.
+- Enable the Email provider in Neon Console.
+- Use a password of at least 8 characters and include your full name.
+- If the email is already registered, sign in instead.
 
-## Vercel deployment
+**"Verify your email before signing in"**
 
-Production builds succeed (commit `558c5a3` on `main`). If the site shows **404 NOT_FOUND** or redirects to Vercel login, fix these in the [Vercel dashboard](https://vercel.com/ikennaanasieze-7574s-projects/technest-project):
-
-### 1. Turn off deployment protection (required for public access)
-
-1. Open **Project → Settings → Deployment Protection**
-2. Under **Production**, set protection to **None** (or disable *Vercel Authentication*)
-3. Save
-
-Without this, visitors are redirected to `vercel.com/sso-api` instead of your app.
-
-### 2. Use a working production URL
-
-| URL | Status |
-|-----|--------|
-| `https://technest-project-pi.vercel.app` | Broken (404) — do not use |
-| `https://technest-project-git-main-ikennaanasieze-7574s-projects.vercel.app` | Correct production alias (after step 1) |
-| `https://technest-project-ikennaanasieze-7574s-projects.vercel.app` | Team production domain (after step 1) |
-
-To fix the broken `-pi` domain: **Settings → Domains** → remove `technest-project-pi.vercel.app` → add it again → redeploy from `main`.
-
-### 3. Required Vercel environment variables
-
-Set these under **Project → Settings → Environment Variables** (Production):
-
-- `DATABASE_URL`
-- `NEON_AUTH_BASE_URL`
-- `NEON_AUTH_COOKIE_SECRET` (32+ chars)
-- `BLOB_READ_WRITE_TOKEN`
-- `GEMINI_API_KEY` (optional)
-
-Also add your production URL to **Neon Console → Auth → Trusted domains**.
+- Complete OTP verification at `/auth/email-otp`, or request a new code from that screen.
 
 ## Scripts
 
@@ -116,19 +121,35 @@ Also add your production URL to **Neon Console → Auth → Trusted domains**.
 |--------|-------------|
 | `npm run dev` | Start development server |
 | `npm run build` | Production build |
+| `npm run start` | Serve production build |
+| `npm test` | Run Vitest unit and integration tests |
+| `npm run test:watch` | Run tests in watch mode |
 | `npm run typecheck` | TypeScript check |
 | `npm run lint` | ESLint |
 | `npm run db:migrate` | Apply Drizzle migrations |
+| `npm run db:generate` | Generate migrations from schema changes |
 | `npm run db:studio` | Open Drizzle Studio |
 
-## Security notes
+## Deployment (Vercel)
 
-- All patient and document queries are scoped by authenticated `userId`
-- Upload route validates MIME type and size server-side
+1. Connect the repository to Vercel and link a Blob store.
+2. Set required environment variables for Production (and Preview if needed): `DATABASE_URL`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_COOKIE_SECRET`, `BLOB_READ_WRITE_TOKEN`.
+3. Add your production URL to **Neon Console → Auth → Trusted domains**.
+4. Under **Project → Settings → Deployment Protection**, disable Vercel Authentication for public access if the app should be reachable without a Vercel login.
+
+Run `npm run build` locally to verify the build before deploying.
+
+## Security
+
+- Patient and document queries are scoped by authenticated `userId`
+- Upload routes validate MIME type and file size server-side
 - Security headers are configured in `next.config.ts`
-- Do not commit `.env.local` or real secrets
+- Slack notifications mask PHI where applicable
 
-## Phase 2 (planned)
+## Project structure
 
-- Gemini 2.5 Flash document ingestion with structured Zod output
-- Slack alerts with PHI masking
+```
+app/           # Routes: marketing, auth, onboarding, dashboard, API
+components/    # UI: landing, auth, dashboard, upload, documents
+lib/           # Auth, database, AI extraction, Slack, env validation
+```
