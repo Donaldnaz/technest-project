@@ -8,35 +8,27 @@ import {
 import { authClient } from "@/lib/auth/client";
 
 export function useLinkedAccounts(userId: string | undefined) {
-  const [accounts, setAccounts] = useState<LinkedAccount[] | null>(null);
-  const [isPending, setIsPending] = useState(Boolean(userId));
+  const [state, setState] = useState<{
+    forUserId?: string;
+    accounts: LinkedAccount[] | null;
+    isPending: boolean;
+  }>({ accounts: null, isPending: false });
 
   useEffect(() => {
-    if (!userId) {
-      setAccounts(null);
-      setIsPending(false);
-      return;
-    }
+    if (!userId) return;
 
     let cancelled = false;
-    setIsPending(true);
-    setAccounts(null);
 
     void authClient
       .listAccounts({ fetchOptions: { throw: true } })
       .then((data) => {
         if (!cancelled) {
-          setAccounts(data);
+          setState({ forUserId: userId, accounts: data, isPending: false });
         }
       })
       .catch(() => {
         if (!cancelled) {
-          setAccounts([]);
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setIsPending(false);
+          setState({ forUserId: userId, accounts: [], isPending: false });
         }
       });
 
@@ -45,5 +37,13 @@ export function useLinkedAccounts(userId: string | undefined) {
     };
   }, [userId]);
 
-  return { accounts, isPending };
+  if (!userId) {
+    return { accounts: null, isPending: false };
+  }
+
+  if (state.forUserId !== userId) {
+    return { accounts: null, isPending: true };
+  }
+
+  return { accounts: state.accounts, isPending: state.isPending };
 }
