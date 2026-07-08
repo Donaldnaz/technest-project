@@ -1,9 +1,9 @@
 export const landingCopy = {
   hero: {
-    eyebrow: "Secure health records portal",
+    eyebrow: "Health records portal",
     headline: "Upload health records safely.",
     headlineAccent: "Share only when you choose.",
-    body: "iCare helps patients and caregivers upload lab results, imaging, and clinical notes to a private, encrypted folder — then receive plain English summaries reviewed by practitioners before sharing with your care team.",
+    body: "Upload lab results, imaging, and clinical notes to a private folder. Practitioners review plain English summaries before you share anything with your care team.",
     tags: "Encrypted upload · Private storage · Practitioner-reviewed summaries",
     primaryCta: "Create free account",
     secondaryCta: "See the portal",
@@ -25,47 +25,47 @@ export const landingCopy = {
   },
   whatWeDo: {
     eyebrow: "What we do",
-    title: "One trusted place for your health records",
+    title: "A place for your health records",
     description:
-      "iCare gives you a calm, secure way to upload, organize, and share health documents — with plain English summaries reviewed by practitioners, not confusing hospital portals built for administrators.",
+      "Upload, organize, and share health documents — with plain English summaries reviewed by practitioners.",
     offerings: [
       {
         title: "Secure document upload",
         description:
-          "Add PDFs and photos of lab reports, imaging, referrals, and visit notes. Every file is encrypted in transit and stored in your private health folder.",
+          "Add PDFs and photos of lab reports, imaging, referrals, and visit notes. Files are encrypted in transit and stored in your private health folder.",
       },
       {
         title: "Organized records library",
         description:
-          "See everything you have uploaded in one place, with clear status labels so you know what is ready, under review, or still being processed.",
+          "See your uploads in one place, with status labels for what is ready, under review, or still being processed.",
       },
       {
         title: "Plain English summaries",
         description:
-          "Read organized summaries of your documents in everyday language — reviewed by a practitioner on your care team before they are finalized.",
+          "Read summaries of your documents in everyday language, reviewed by a practitioner on your care team before they are finalized.",
       },
       {
         title: "Share with your care team",
         description:
-          "Send selected health records to your practitioner or clinic when you choose — so appointments start with context, not a search for paperwork.",
+          "Send selected health records to your practitioner or clinic when you choose, so appointments have the documents you need.",
       },
       {
-        title: "You stay in control",
+        title: "You choose what to share",
         description:
-          "Practitioners only see what you explicitly share. Upload privately, review summaries first, and decide when your information leaves your folder.",
+          "Practitioners only see what you explicitly share. Upload privately, review summaries first, and decide when to share.",
       },
       {
-        title: "Built to stay simple",
+        title: "Kept straightforward",
         description:
-          "Clear layouts, plain language, and focused steps — so managing health records feels manageable, not overwhelming.",
+          "Clear layouts, plain language, and focused steps for managing health records.",
       },
     ],
   },
   experience: {
     eyebrow: "Portal",
-    title: "Your secure upload workspace",
+    title: "Your upload workspace",
     description:
-      "Upload health records, track their status, and share them with practitioners — all from one patient-friendly portal.",
+      "Upload health records, track their status, and share them with practitioners from one portal.",
     welcomeStrip: {
       badge: "Your health records",
       body: (documentCount: number, readyCount: number) =>
@@ -97,30 +97,30 @@ export const landingCopy = {
   },
   about: {
     eyebrow: "About us",
-    title: "Health records, handled with care",
+    title: "Health records, handled carefully",
     description:
-      "iCare was built for people who need a trustworthy way to upload and manage health records — without confusing hospital software or uncertainty about who can see their information.",
+      "iCare is for people who need a clear way to upload and manage health records, with control over who can see their information.",
     highlights: [
       {
-        title: "Built for patients and caregivers",
+        title: "For patients and caregivers",
         description:
-          "Upload for yourself or someone you care for. Keep health records organized in one secure folder until you are ready to share them.",
+          "Upload for yourself or someone you care for. Keep health records organized in one folder until you are ready to share them.",
       },
       {
-        title: "Designed for clinical review",
+        title: "Made for clinical review",
         description:
-          "Practitioners receive the documents you choose in a clear, review-ready format — with plain English summaries that support informed conversations about your care.",
+          "Practitioners receive the documents you choose in a review-ready format, with plain English summaries to support conversations about your care.",
       },
       {
-        title: "Private and protected by default",
+        title: "Private until you share",
         description:
-          "Your files stay in your account until you share them. Encryption, access controls, and transparent privacy practices are built into every step.",
+          "Your files stay in your account until you share them. Encryption, access controls, and clear privacy practices apply throughout.",
       },
     ],
   },
   contact: {
     eyebrow: "Contact us",
-    title: "We are here to help",
+    title: "Get in touch",
     description:
       "Questions about uploads, sharing with your care team, or getting started? Reach out — we support patients, caregivers, and clinic partners.",
     phoneLabel: "Phone",
@@ -131,9 +131,9 @@ export const landingCopy = {
     responseNote: "We typically respond within 1–2 business days.",
   },
   cta: {
-    title: "Ready to upload your first health record?",
+    title: "Ready to upload a health record?",
     description:
-      "Create a free account, add your documents to a protected folder, and share with your practitioner whenever you are ready. iCare provides information tools — not medical advice.",
+      "Create a free account, add your documents to a protected folder, and share with your practitioner when you are ready.",
     createAccount: "Create account",
     signIn: "Sign in",
     signedIn: {
@@ -146,19 +146,19 @@ export const landingCopy = {
   signedInBanner: {
     welcome: (firstName: string) => `Welcome back, ${firstName}.`,
     signedIn: "You are signed in.",
-    hint: "Continue to your secure upload workspace or browse the site.",
+    hint: "Continue to your upload workspace or browse the site.",
     dashboard: "Go to dashboard",
   },
   footer: {
     tagline:
-      "A secure health records portal for encrypted upload, private storage, practitioner-reviewed plain English summaries, and sharing on your terms.",
+      "A health records portal for encrypted upload, private storage, practitioner-reviewed summaries, and sharing on your terms.",
   },
   assistant: {
     welcome:
-      "Hi! I can help with questions about uploading health records securely, sharing with your care team, and how iCare keeps your information private.",
+      "Hi! I can help with questions about uploading health records, sharing with your care team, and how iCare handles privacy.",
     title: "Ask iCare",
     subtitle: "Help with uploads, sharing, and privacy",
-    placeholder: "Ask about secure upload, sharing, or privacy…",
+    placeholder: "Ask about upload, sharing, or privacy…",
     thinking: "One moment…",
     disclaimer:
       "General information only — not medical advice. Do not share personal health details in this chat.",
