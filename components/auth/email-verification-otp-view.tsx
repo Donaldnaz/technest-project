@@ -47,11 +47,13 @@ export function EmailVerificationOtpView() {
     return null;
   }
 
+  const verifiedEmail = email;
+
   async function resendCode() {
     setIsSending(true);
     try {
       await authClient.emailOtp.sendVerificationOtp({
-        email,
+        email: verifiedEmail,
         type: "email-verification",
         fetchOptions: { throw: true },
       });
@@ -78,7 +80,7 @@ export function EmailVerificationOtpView() {
     setIsVerifying(true);
     try {
       const result = await authClient.emailOtp.verifyEmail({
-        email,
+        email: verifiedEmail,
         otp,
       });
 
@@ -108,7 +110,9 @@ export function EmailVerificationOtpView() {
       }
 
       toast.success(patientAuthCopy.emailOtp.verifiedSignIn);
-      router.push(`/auth/sign-in?email=${encodeURIComponent(email)}&verified=1`);
+      router.push(
+        `/auth/sign-in?email=${encodeURIComponent(verifiedEmail)}&verified=1`,
+      );
       router.refresh();
     } catch (error) {
       const message =
@@ -135,7 +139,7 @@ export function EmailVerificationOtpView() {
           {patientAuthCopy.emailOtp.enterCodeTitle}
         </h1>
         <p className="mx-auto max-w-sm text-sm leading-relaxed text-muted-foreground md:text-base">
-          {patientAuthCopy.emailOtp.enterCodeDescription(email)}
+          {patientAuthCopy.emailOtp.enterCodeDescription(verifiedEmail)}
         </p>
       </div>
 
