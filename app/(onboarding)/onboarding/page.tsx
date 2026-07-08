@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import { OnboardingForm } from "@/components/onboarding/onboarding-form";
-import { OnboardingProgress } from "@/components/onboarding/onboarding-progress";
 import { SiteContainer } from "@/components/layout/site-container";
 import { patientOnboardingCopy } from "@/lib/copy/patient/onboarding";
 import { isOnboardingComplete } from "@/lib/auth/onboarding";
@@ -49,15 +48,13 @@ export default async function OnboardingPage() {
             {copy.page.timeEstimate}
           </p>
         </div>
-        <h1 className="mt-4 font-heading text-3xl font-semibold tracking-tight text-balance md:text-4xl">
+        <h1 className="mt-4 font-heading text-2xl font-semibold tracking-tight text-balance max-sm:text-xl md:text-3xl lg:text-4xl">
           {copy.page.title}
         </h1>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground text-pretty md:text-lg">
           {copy.page.description}
         </p>
       </header>
-
-      <OnboardingProgress />
 
       <OnboardingForm
         defaultAccountFirstName={firstName}

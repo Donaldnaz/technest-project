@@ -13,6 +13,7 @@ import {
 
 import { completeOnboarding } from "@/app/actions/onboarding";
 import { LocationFields } from "@/components/onboarding/location-fields";
+import { OnboardingProgress, onboardingSectionScrollMarginClass } from "@/components/onboarding/onboarding-progress";
 import { SpecialtySelect } from "@/components/onboarding/specialty-select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,7 +57,7 @@ function SectionCard({
   return (
     <section
       id={id}
-      className="health-card scroll-mt-32 overflow-hidden rounded-3xl"
+      className={cn("health-card overflow-hidden rounded-3xl", onboardingSectionScrollMarginClass)}
       aria-labelledby={`${id}-title`}
     >
       <div className="border-b border-border/50 bg-muted/15 px-6 py-5 md:px-8 md:py-6">
@@ -274,6 +275,8 @@ export function OnboardingForm({
       noValidate
     >
       <p className="text-sm text-muted-foreground">{copy.form.requiredLegend}</p>
+
+      <OnboardingProgress />
 
       {serverErrors ? (
         <div ref={errorSummaryRef} tabIndex={-1} className="outline-none">
@@ -614,6 +617,7 @@ export function OnboardingForm({
             <input
               type="checkbox"
               name="consentAccuracy"
+              value="on"
               checked={consentAccuracy}
               onChange={(event) => setConsentAccuracy(event.target.checked)}
               aria-invalid={Boolean(serverErrors?.consentAccuracy?.[0])}
@@ -641,6 +645,7 @@ export function OnboardingForm({
             <input
               type="checkbox"
               name="consentAuthorization"
+              value="on"
               checked={consentAuthorization}
               onChange={(event) =>
                 setConsentAuthorization(event.target.checked)

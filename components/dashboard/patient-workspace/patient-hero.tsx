@@ -113,7 +113,7 @@ export function PatientHero({
 
             <p className="inline-flex max-w-xl items-start gap-1.5 text-sm text-foreground/80">
               <MapPin className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
-              <span>
+              <span className="line-clamp-2 break-words">
                 {patient.healthcareLocation}
                 {patient.city ? ` · ${patient.city}` : ""}
               </span>

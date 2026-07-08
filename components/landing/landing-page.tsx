@@ -4,13 +4,8 @@ import { LandingCta } from "@/components/landing/landing-cta";
 import { LandingDashboardShowcase } from "@/components/landing/landing-dashboard-showcase";
 import { LandingHero } from "@/components/landing/landing-hero";
 import { LandingWhatWeDo } from "@/components/landing/landing-what-we-do";
-import type { PublicNavState } from "@/lib/navigation/public-nav-state";
 
-type LandingPageProps = {
-  navState: PublicNavState;
-};
-
-export function LandingPage({ navState }: LandingPageProps) {
+export function LandingPage() {
   return (
     <div className="bg-gradient-to-b from-oat-50/50 via-background to-oat-50/30 text-foreground dark:from-charcoal-950 dark:via-background dark:to-charcoal-950">
       <LandingHero />
@@ -18,7 +13,7 @@ export function LandingPage({ navState }: LandingPageProps) {
       <LandingDashboardShowcase />
       <LandingAbout />
       <LandingContact />
-      <LandingCta navState={navState} />
+      <LandingCta />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { maskFreeTextNote, maskPatientName } from "@/lib/slack/mask-phi";
+import { getSlackWebhookUrl } from "@/lib/env";
 
 export type CareShareSlackPayload = {
   shareId: string;
@@ -12,15 +13,10 @@ export type CareShareSlackPayload = {
   message?: string | null;
 };
 
-function getWebhookUrl(): string | null {
-  const url = process.env.SLACK_WEBHOOK_URL?.trim();
-  return url || null;
-}
-
 export async function notifyCareShareRequest(
   payload: CareShareSlackPayload,
 ): Promise<{ sent: boolean }> {
-  const webhookUrl = getWebhookUrl();
+  const webhookUrl = getSlackWebhookUrl();
 
   if (!webhookUrl) {
     console.warn(

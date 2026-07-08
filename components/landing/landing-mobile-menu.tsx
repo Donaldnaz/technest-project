@@ -4,20 +4,16 @@ import { useEffect, useId, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 import {
-  LandingNavLink,
-} from "@/components/landing/landing-nav-link";
+  LandingMobileNavLinks,
+} from "@/components/landing/landing-nav-links";
 import { LinkButton } from "@/components/ui/link-button";
-import { primaryNavLinks } from "@/lib/landing/navigation";
-import { landingNavLinkClassName } from "@/lib/landing/nav-link-styles";
-import { cn } from "@/lib/utils";
+import { authClient } from "@/lib/auth/client";
 
-export function LandingMobileMenu({
-  dashboardHref,
-}: {
-  dashboardHref?: string;
-}) {
+export function LandingMobileMenu() {
   const [open, setOpen] = useState(false);
   const panelId = useId();
+  const { data: session } = authClient.useSession();
+  const dashboardHref = session?.user ? "/dashboard" : undefined;
 
   useEffect(() => {
     if (!open) return;
@@ -43,7 +39,7 @@ export function LandingMobileMenu({
     <div className="lg:hidden">
       <button
         type="button"
-        className="inline-flex size-10 cursor-pointer items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="inline-flex size-11 cursor-pointer items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={open ? "Close menu" : "Open menu"}
@@ -62,20 +58,11 @@ export function LandingMobileMenu({
           />
           <nav
             id={panelId}
-            className="fixed inset-x-0 top-16 z-50 border-b border-border/50 bg-background/95 px-4 py-4 shadow-lg backdrop-blur-xl"
+            className="fixed inset-x-0 top-[var(--site-header-height,4rem)] z-50 max-h-[calc(100dvh-var(--site-header-height,4rem))] overflow-y-auto border-b border-border/50 bg-background/95 px-4 py-4 shadow-lg backdrop-blur-xl"
             aria-label="Mobile"
           >
             <ul className="space-y-1">
-              {primaryNavLinks.map((link) => (
-                <li key={link.href}>
-                  <LandingNavLink
-                    href={link.href}
-                    label={link.label}
-                    className={cn(landingNavLinkClassName(), "block px-3 py-2")}
-                    onNavigate={close}
-                  />
-                </li>
-              ))}
+              <LandingMobileNavLinks onNavigate={close} />
             </ul>
             <div className="mt-4 flex flex-col gap-2 border-t border-border/50 pt-4">
               {dashboardHref ? (

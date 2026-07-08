@@ -5,6 +5,7 @@ import { google } from "@ai-sdk/google";
 import { get } from "@vercel/blob";
 import { z } from "zod";
 
+import { isGeminiConfigured } from "@/lib/ai/google-model";
 import {
   updateDocumentStatus,
   upsertDocumentExtraction,
@@ -39,7 +40,7 @@ export async function processDocumentExtraction(
   mimeType: string,
   fileName: string,
 ): Promise<void> {
-  if (!process.env.GEMINI_API_KEY) {
+  if (!isGeminiConfigured()) {
     await updateDocumentStatus(documentId, "ready");
     return;
   }

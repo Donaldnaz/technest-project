@@ -49,7 +49,7 @@ export function UploadSuccessPanel({
             <button
               type="button"
               onClick={onDismiss}
-              className="upload-interactive shrink-0 rounded-lg p-1 text-muted-foreground hover:bg-sage-100/80 dark:hover:bg-sage-900/40"
+              className="upload-interactive flex size-11 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-sage-100/80 lg:size-9 lg:p-1 dark:hover:bg-sage-900/40"
               aria-label="Dismiss success message"
             >
               <X className="size-4" />
@@ -59,7 +59,7 @@ export function UploadSuccessPanel({
           {isFirstUpload && (
             <p className="inline-flex items-center gap-1.5 text-xs font-medium text-sage-800 dark:text-sage-200">
               <Sparkles className="size-3.5" aria-hidden />
-              Welcome to iCare — you're off to a great start
+              Welcome to iCare — you&apos;re off to a great start
             </p>
           )}
 

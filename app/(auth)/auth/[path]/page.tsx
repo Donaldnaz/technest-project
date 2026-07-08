@@ -35,7 +35,7 @@ export default async function AuthPage({
     return (
       <main
         id="main-content"
-        className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-background"
+        className="flex min-h-dvh-screen min-h-[calc(100vh-4rem)] items-center justify-center bg-background"
       >
         <SignOutPage />
       </main>
@@ -44,7 +44,7 @@ export default async function AuthPage({
 
   return (
     <main id="main-content" className="icare-auth-page bg-background">
-      <div className="grid min-h-[calc(100vh-4rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,28rem)]">
+      <div className="grid min-h-dvh-screen min-h-[calc(100vh-4rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,28rem)]">
         <AuthHeroPanel />
 
         <section className="relative flex flex-col justify-center px-4 py-10 sm:px-6 lg:px-10 lg:py-12 xl:px-14">

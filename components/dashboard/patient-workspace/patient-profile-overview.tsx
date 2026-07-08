@@ -33,7 +33,7 @@ function ProfileField({ icon: Icon, label, value, className }: ProfileFieldProps
         <Icon className="size-3.5 shrink-0" aria-hidden />
         {label}
       </dt>
-      <dd className="mt-2 whitespace-pre-wrap text-sm font-medium leading-snug text-foreground">
+      <dd className="mt-2 break-words whitespace-pre-wrap text-sm font-medium leading-snug text-foreground [overflow-wrap:anywhere]">
         {value}
       </dd>
     </div>

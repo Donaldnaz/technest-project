@@ -87,7 +87,7 @@ export function LandingHeroPreview() {
             </div>
 
             <div
-              className="grid grid-cols-3 gap-2 sm:gap-3"
+              className="grid grid-cols-1 gap-2 max-xs:grid-cols-2 sm:grid-cols-3 sm:gap-3"
               aria-hidden
             >
               <VitalSignWaveform
@@ -110,7 +110,7 @@ export function LandingHeroPreview() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
               {statTiles.map((tile) => (
                 <div
                   key={tile.label}
@@ -127,7 +127,7 @@ export function LandingHeroPreview() {
                   <p className="mt-2 font-heading text-xl font-semibold leading-none">
                     {tile.value}
                   </p>
-                  <p className="mt-1 truncate text-[10px] leading-tight text-muted-foreground">
+                  <p className="mt-1 truncate text-xs leading-tight text-muted-foreground">
                     {tile.label}
                   </p>
                 </div>
@@ -135,7 +135,7 @@ export function LandingHeroPreview() {
             </div>
 
             <div className="rounded-2xl bg-card/85 p-3 dark:bg-card/65">
-              <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {preview.recentLabel}
               </p>
               <ul className="space-y-2">
@@ -148,7 +148,7 @@ export function LandingHeroPreview() {
                     <span className="min-w-0 flex-1 truncate font-medium">
                       {item.name}
                     </span>
-                    <span className="shrink-0 text-[10px] text-muted-foreground">
+                    <span className="shrink-0 text-xs text-muted-foreground">
                       {item.status}
                     </span>
                   </li>
@@ -165,7 +165,7 @@ export function LandingHeroPreview() {
                   <p className="truncate text-xs font-medium leading-tight">
                     {preview.shareChip}
                   </p>
-                  <p className="truncate text-[10px] text-muted-foreground">
+                  <p className="truncate text-xs text-muted-foreground">
                     {preview.shareHint}
                   </p>
                 </div>

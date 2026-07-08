@@ -52,7 +52,7 @@ function UploadPreviewPane({ items }: { items: QueueItem[] }) {
       <iframe
         src={pdfUrl}
         title={stagedItem.file.name}
-        className="h-full min-h-[16rem] w-full flex-1 border-0"
+        className="h-full min-h-[12rem] max-h-[50dvh] w-full flex-1 border-0 md:max-h-[60dvh] lg:max-h-none"
       />
     );
   }
@@ -63,7 +63,7 @@ function UploadPreviewPane({ items }: { items: QueueItem[] }) {
       <img
         src={stagedItem.previewUrl}
         alt={stagedItem.file.name}
-        className="h-full max-h-[32rem] w-full object-contain p-4"
+        className="h-full max-h-[50dvh] w-full object-contain p-4 md:max-h-[60dvh] lg:max-h-[32rem]"
       />
     );
   }

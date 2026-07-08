@@ -5,6 +5,7 @@ import {
   type DocumentCategory,
 } from "@/lib/constants/document-categories";
 import { slackCopy } from "@/lib/copy/slack";
+import { getSlackWebhookUrl } from "@/lib/env";
 import {
   maskMedicalRecordNumber,
   maskPatientName,
@@ -24,16 +25,11 @@ export type DashboardDocumentSlackPayload = {
   fileAttachedInChannel?: boolean;
 };
 
-function getWebhookUrl(): string | null {
-  const url = process.env.SLACK_WEBHOOK_URL?.trim();
-  return url || null;
-}
-
 async function postSlackWebhook(payload: {
   text: string;
   blocks: Record<string, unknown>[];
 }): Promise<{ sent: boolean }> {
-  const webhookUrl = getWebhookUrl();
+  const webhookUrl = getSlackWebhookUrl();
 
   if (!webhookUrl) {
     console.warn(

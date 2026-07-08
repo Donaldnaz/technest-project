@@ -143,7 +143,7 @@ export function PatientWorkspaceTabs({
                     value={tab.value}
                     aria-controls={panelId}
                     aria-label={tab.ariaLabel}
-                    className="inline-flex h-10 shrink-0 items-center gap-2 rounded-none px-3 py-2 data-active:bg-transparent sm:px-4"
+                    className="inline-flex h-11 shrink-0 items-center gap-2 rounded-none px-3 py-2 data-active:bg-transparent sm:px-4"
                   >
                     <span className="inline-flex items-center gap-2">
                       {tab.label}

@@ -12,16 +12,16 @@ export function LandingContact() {
       className="site-section scroll-mt-20 border-t border-border/50 bg-gradient-to-b from-background to-oat-50/40 dark:to-charcoal-950/30"
     >
       <SiteContainer className="py-16 md:py-24">
-        <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-14">
+        <div className="grid items-start gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-14">
           <SectionHeader
             eyebrow={contact.eyebrow}
             title={contact.title}
             description={contact.description}
-            className="lg:col-span-5 lg:pt-2"
+            className="md:col-span-1 lg:col-span-5 lg:pt-2"
           />
 
           <LandingContactDetails
-            className="lg:col-span-7"
+            className="md:col-span-1 lg:col-span-7"
             phoneLabel={contact.phoneLabel}
             emailLabel={contact.emailLabel}
             addressLabel={contact.addressLabel}

@@ -7,6 +7,7 @@ import {
   type DocumentCategory,
 } from "@/lib/constants/document-categories";
 import { slackCopy } from "@/lib/copy/slack";
+import { getSlackBotConfig } from "@/lib/env";
 
 export type UploadPdfToSlackPayload = {
   blobUrl: string;
@@ -14,17 +15,6 @@ export type UploadPdfToSlackPayload = {
   category: DocumentCategory;
   maskedPatientName: string;
 };
-
-function getSlackBotConfig(): { token: string; channelId: string } | null {
-  const token = process.env.SLACK_BOT_TOKEN?.trim();
-  const channelId = process.env.SLACK_CHANNEL_ID?.trim();
-
-  if (!token || !channelId) {
-    return null;
-  }
-
-  return { token, channelId };
-}
 
 export async function uploadPdfToSlackChannel(
   payload: UploadPdfToSlackPayload,

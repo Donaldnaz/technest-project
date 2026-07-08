@@ -12,8 +12,8 @@ export function ThemeToggle() {
     <Button
       type="button"
       variant="ghost"
-      size="icon"
-      className="size-9 shrink-0 rounded-full"
+      size="icon-touch"
+      className="shrink-0 rounded-full lg:size-9"
       aria-label="Toggle rest mode"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >

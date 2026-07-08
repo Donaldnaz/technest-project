@@ -2,6 +2,7 @@ import "server-only";
 
 import { fetchPrivateBlob } from "@/lib/blob/fetch-private-blob";
 import { ALLOWED_MIME_TYPES } from "@/lib/constants/upload";
+import { getSlackBotConfig } from "@/lib/env";
 import {
   callSlackApi,
   getSlackFilePermalink,
@@ -17,17 +18,6 @@ export type UploadDocumentToSlackPayload = {
 };
 
 type SlackUploadMimeType = (typeof ALLOWED_MIME_TYPES)[number];
-
-function getSlackBotConfig(): { token: string; channelId: string } | null {
-  const token = process.env.SLACK_BOT_TOKEN?.trim();
-  const channelId = process.env.SLACK_CHANNEL_ID?.trim();
-
-  if (!token || !channelId) {
-    return null;
-  }
-
-  return { token, channelId };
-}
 
 function resolveUploadMimeType(mimeType: string): SlackUploadMimeType | null {
   const normalized = mimeType.toLowerCase().trim();

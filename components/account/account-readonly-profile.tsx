@@ -1,11 +1,12 @@
 "use client";
 
-import { useContext } from "react";
-import { AuthUIContext, GoogleIcon } from "@neondatabase/auth-ui";
-import { Mail, UserRound } from "lucide-react";
+import { GoogleIcon } from "@neondatabase/auth-ui";
+import { KeyRound, Mail, UserRound } from "lucide-react";
 
+import { getPrimarySignInMethod } from "@/lib/auth/account-providers";
 import { authClient } from "@/lib/auth/client";
 import { patientAccountCopy } from "@/lib/copy/patient/account";
+import { useLinkedAccounts } from "@/hooks/use-linked-accounts";
 
 function getInitials(name: string | null | undefined): string {
   if (!name?.trim()) return "?";
@@ -48,27 +49,61 @@ function ProfileField({
   );
 }
 
-function GoogleSignInIndicator() {
-  const { hooks } = useContext(AuthUIContext);
-  const { data: accounts, isPending: accountsPending } = hooks.useListAccounts();
-  const usesGoogle = accounts?.some((account) => account.providerId === "google");
-
-  if (accountsPending || !usesGoogle) {
+function SignInMethodIndicator({
+  accounts,
+  isPending,
+}: {
+  accounts: ReturnType<typeof useLinkedAccounts>["accounts"];
+  isPending: boolean;
+}) {
+  if (isPending) {
     return null;
   }
 
-  return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background px-3 py-1.5 text-sm shadow-sm">
-      <GoogleIcon className="size-4 shrink-0" aria-hidden />
-      <span className="font-medium text-foreground">
-        {patientAccountCopy.profile.googleSignIn}
-      </span>
-    </div>
-  );
+  const signInMethod = getPrimarySignInMethod(accounts);
+
+  if (signInMethod === "credential") {
+    return (
+      <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background px-3 py-1.5 text-sm shadow-sm">
+        <KeyRound className="size-4 shrink-0" aria-hidden />
+        <span className="font-medium text-foreground">
+          {patientAccountCopy.profile.emailSignIn}
+        </span>
+      </div>
+    );
+  }
+
+  if (signInMethod === "google") {
+    return (
+      <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background px-3 py-1.5 text-sm shadow-sm">
+        <GoogleIcon className="size-4 shrink-0" aria-hidden />
+        <span className="font-medium text-foreground">
+          {patientAccountCopy.profile.googleSignIn}
+        </span>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+function getProfileDescription(signInMethod: ReturnType<typeof getPrimarySignInMethod>) {
+  if (signInMethod === "credential") {
+    return patientAccountCopy.profile.description.credential;
+  }
+
+  if (signInMethod === "google") {
+    return patientAccountCopy.profile.description.google;
+  }
+
+  return patientAccountCopy.profile.description.default;
 }
 
 export function AccountReadonlyProfile() {
   const { data: session, isPending } = authClient.useSession();
+  const { accounts, isPending: accountsPending } = useLinkedAccounts(
+    session?.user?.id,
+  );
 
   if (isPending) {
     return (
@@ -96,6 +131,9 @@ export function AccountReadonlyProfile() {
 
   const { user } = session;
   const displayName = user.name?.trim() || "—";
+  const signInMethod = accountsPending
+    ? "unknown"
+    : getPrimarySignInMethod(accounts);
 
   return (
     <div className="space-y-6">
@@ -111,9 +149,9 @@ export function AccountReadonlyProfile() {
             {patientAccountCopy.profile.title}
           </h2>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            {patientAccountCopy.profile.description}
+            {getProfileDescription(signInMethod)}
           </p>
-          <GoogleSignInIndicator />
+          <SignInMethodIndicator accounts={accounts} isPending={accountsPending} />
         </div>
       </div>
 

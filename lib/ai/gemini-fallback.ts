@@ -3,6 +3,7 @@ import "server-only";
 import { generateText } from "ai";
 
 import { getGoogleModel } from "@/lib/ai/google-model";
+import { env } from "@/lib/env";
 
 export const GEMINI_FALLBACK_MODELS = [
   "gemini-2.5-flash-lite",
@@ -11,7 +12,7 @@ export const GEMINI_FALLBACK_MODELS = [
 ] as const;
 
 export function getGeminiModelCandidates(): string[] {
-  const preferred = process.env.GEMINI_MODEL?.trim();
+  const preferred = env.GEMINI_MODEL?.trim();
   const models = preferred
     ? [preferred, ...GEMINI_FALLBACK_MODELS.filter((model) => model !== preferred)]
     : [...GEMINI_FALLBACK_MODELS];

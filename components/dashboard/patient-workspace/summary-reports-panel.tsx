@@ -44,35 +44,68 @@ export function SummaryReportsPanel({
         </p>
       </div>
 
-      <DataTableShell columns={[...patientDownloadsCopy.table.columns]}>
+      <ul className="space-y-3 sm:hidden">
         {reports.map((report) => (
-          <TableRow key={report.id} className="clinical-table-row">
-            <TableCell className={truncateCellClassName()}>
-              <span title={report.fileName}>{report.fileName}</span>
-            </TableCell>
-            <TableCell>
+          <li
+            key={report.id}
+            className="rounded-xl border border-border/60 bg-muted/20 p-4"
+          >
+            <p className="truncate font-medium" title={report.fileName}>
+              {report.fileName}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
               {report.extraction.documentType ??
                 getPatientCategoryLabel(report.category as DocumentCategory)}
-            </TableCell>
-            <TableCell className="text-muted-foreground">
+            </p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
               {formatDisplayDate(report.extraction.extractedAt)}
-            </TableCell>
-            <TableCell>
-              <a
-                href={`/api/documents/${report.id}/summary`}
-                download
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-background px-2.5 py-1.5 text-sm font-medium text-primary transition-colors hover:border-primary/40 hover:bg-primary/5"
-                aria-label={patientDownloadsCopy.table.downloadAria(
-                  report.fileName,
-                )}
-              >
-                <Download className="size-3.5" aria-hidden />
-                {patientDownloadsCopy.table.downloadLabel}
-              </a>
-            </TableCell>
-          </TableRow>
+            </p>
+            <a
+              href={`/api/documents/${report.id}/summary`}
+              download
+              className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border border-border/70 bg-background px-3 py-2.5 text-sm font-medium text-primary transition-colors hover:border-primary/40 hover:bg-primary/5"
+              aria-label={patientDownloadsCopy.table.downloadAria(
+                report.fileName,
+              )}
+            >
+              <Download className="size-4" aria-hidden />
+              {patientDownloadsCopy.table.downloadLabel}
+            </a>
+          </li>
         ))}
-      </DataTableShell>
+      </ul>
+
+      <div className="hidden sm:block">
+        <DataTableShell columns={[...patientDownloadsCopy.table.columns]}>
+          {reports.map((report) => (
+            <TableRow key={report.id} className="clinical-table-row">
+              <TableCell className={truncateCellClassName()}>
+                <span title={report.fileName}>{report.fileName}</span>
+              </TableCell>
+              <TableCell>
+                {report.extraction.documentType ??
+                  getPatientCategoryLabel(report.category as DocumentCategory)}
+              </TableCell>
+              <TableCell className="text-muted-foreground">
+                {formatDisplayDate(report.extraction.extractedAt)}
+              </TableCell>
+              <TableCell>
+                <a
+                  href={`/api/documents/${report.id}/summary`}
+                  download
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border/70 bg-background px-3 py-2.5 text-sm font-medium text-primary transition-colors hover:border-primary/40 hover:bg-primary/5"
+                  aria-label={patientDownloadsCopy.table.downloadAria(
+                    report.fileName,
+                  )}
+                >
+                  <Download className="size-3.5" aria-hidden />
+                  {patientDownloadsCopy.table.downloadLabel}
+                </a>
+              </TableCell>
+            </TableRow>
+          ))}
+        </DataTableShell>
+      </div>
 
       <p className="mt-3 text-xs text-muted-foreground">
         {patientDownloadsCopy.notice}

@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { LogOutIcon, SettingsIcon } from "lucide-react";
 import { Menu } from "@base-ui/react/menu";
 import { UserAvatar } from "@neondatabase/auth-ui";
 
-import { SignOutConfirmDialog } from "@/components/auth/sign-out-confirm-dialog";
+import { useClientMounted } from "@/hooks/use-client-mounted";
 import { authClient } from "@/lib/auth/client";
 import { patientAccountCopy } from "@/lib/copy/patient/account";
 import { patientAuthCopy } from "@/lib/copy/patient/auth";
@@ -48,7 +48,7 @@ function getInitials(name: string | null | undefined): string {
 function AvatarPlaceholder() {
   return (
     <span
-      className="inline-flex size-9 shrink-0 rounded-full bg-muted"
+      className="inline-flex size-11 shrink-0 rounded-full bg-muted lg:size-9"
       aria-hidden
     />
   );
@@ -85,22 +85,12 @@ function UserMenuHeader({
 }
 
 export function UserMenu() {
-  const [signOutOpen, setSignOutOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useClientMounted();
   const { data: session, isPending } = authClient.useSession();
 
   const showAvatar = mounted && !isPending && Boolean(session?.user);
   const user = session?.user;
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  function handleSignOutClick() {
-    setMenuOpen(false);
-    setSignOutOpen(true);
-  }
 
   return (
     <>
@@ -109,8 +99,8 @@ export function UserMenu() {
           render={
             <Button
               variant="ghost"
-              size="icon"
-              className="size-9 rounded-full ring-offset-background focus-visible:ring-2 focus-visible:ring-ring/50 aria-expanded:bg-muted/80"
+              size="icon-touch"
+              className="rounded-full ring-offset-background focus-visible:ring-2 focus-visible:ring-ring/50 aria-expanded:bg-muted/80 lg:size-9"
               aria-label="Account menu"
               aria-haspopup="menu"
             />
@@ -120,7 +110,7 @@ export function UserMenu() {
             <UserAvatar
               isPending={false}
               user={session!.user}
-              className="size-9"
+              className="size-11 lg:size-9"
             />
           ) : (
             <AvatarPlaceholder />
@@ -162,8 +152,14 @@ export function UserMenu() {
               <Menu.Separator className="my-1 h-px bg-border/60" />
 
               <Menu.Item
-                className={signOutItemClassName}
-                onClick={handleSignOutClick}
+                render={
+                  <Link
+                    href="/auth/sign-out"
+                    className={signOutItemClassName}
+                    onClick={() => setMenuOpen(false)}
+                  />
+                }
+                nativeButton={false}
               >
                 <LogOutIcon className={menuItemIconClassName} aria-hidden />
                 {patientAuthCopy.signOut.label}
@@ -172,11 +168,6 @@ export function UserMenu() {
           </Menu.Positioner>
         </Menu.Portal>
       </Menu.Root>
-
-      <SignOutConfirmDialog
-        open={signOutOpen}
-        onOpenChange={setSignOutOpen}
-      />
     </>
   );
 }

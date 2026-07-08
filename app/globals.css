@@ -1,9 +1,20 @@
+/*
+ * Responsive breakpoint contract (mobile-first):
+ *   max-xs  — max-width 479px  (very small phones)
+ *   sm      — 640px+
+ *   md      — 768px+
+ *   lg      — 1024px+ (sidebar / desktop nav)
+ *   xl      — 1280px+
+ */
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@neondatabase/auth-ui/tailwind";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant max-xs (@media (max-width: 479px));
+@custom-variant max-sm (@media (max-width: 639px));
+@custom-variant coarse (@media (pointer: coarse));
 
 @utility pb-safe {
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
@@ -14,7 +25,15 @@
 }
 
 @utility top-app-header {
-  top: calc(3.75rem + max(1rem, env(safe-area-inset-top)));
+  top: calc(var(--site-header-height, 4rem) + max(1rem, env(safe-area-inset-top)));
+}
+
+@utility min-h-dvh-screen {
+  min-height: 100dvh;
+}
+
+@utility max-h-preview-mobile {
+  max-height: 50dvh;
 }
 
 @theme inline {
@@ -96,6 +115,8 @@
   --radius-4xl: calc(var(--radius) * 2.6);
   --animate-vital-sign-scroll: vital-sign-scroll 14s linear infinite;
   --animate-vital-sign-scroll-fast: vital-sign-scroll 11s linear infinite;
+  --text-hero: clamp(2rem, 1.5rem + 2.5vw, 3.25rem);
+  --site-header-height: 4rem;
 }
 
 @keyframes vital-sign-scroll {
@@ -235,6 +256,69 @@
 
   .landing-hero-stage {
     isolation: isolate;
+  }
+
+  .touch-target {
+    @apply min-h-11 min-w-11;
+  }
+
+  .touch-target-inline {
+    @apply relative;
+  }
+
+  .touch-target-inline::before {
+    content: "";
+    position: absolute;
+    inset: -0.375rem;
+  }
+
+  @media (pointer: coarse) {
+    .touch-target-coarse {
+      @apply min-h-11 min-w-11;
+    }
+  }
+
+  .mobile-stack {
+    @apply flex flex-col gap-4 sm:flex-row sm:items-center;
+  }
+
+  .responsive-table-wrap {
+    @apply -mx-1 overflow-x-auto px-1;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .responsive-table-wrap::after {
+    content: "";
+    display: block;
+    height: 1px;
+  }
+
+  .text-hero-fluid {
+    font-size: var(--text-hero);
+    line-height: 1.1;
+  }
+
+  .legal-subnav-scroll {
+    @apply relative overflow-x-auto;
+    scroll-padding-inline: 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .legal-subnav-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .legal-subnav-scroll::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2rem;
+    pointer-events: none;
+    background: linear-gradient(to left, var(--background), transparent);
   }
 
   @media (prefers-reduced-motion: reduce) {

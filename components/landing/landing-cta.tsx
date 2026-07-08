@@ -1,16 +1,15 @@
+"use client";
+
 import { LinkButton } from "@/components/ui/link-button";
 import { SiteContainer } from "@/components/layout/site-container";
+import { authClient } from "@/lib/auth/client";
 import { landingCopy } from "@/lib/copy/landing";
-import type { PublicNavState } from "@/lib/navigation/public-nav-state";
 
-type LandingCtaProps = {
-  navState: PublicNavState;
-};
-
-export function LandingCta({ navState }: LandingCtaProps) {
+export function LandingCta() {
+  const { data: session, isPending } = authClient.useSession();
   const { cta } = landingCopy;
 
-  if (navState.isAuthenticated) {
+  if (isPending || session?.user) {
     return null;
   }
 

@@ -71,8 +71,8 @@ export function UploadQueueItem({
                 <Button
                   type="button"
                   variant="ghost"
-                  size="icon-sm"
-                  className="upload-interactive shrink-0 rounded-xl text-muted-foreground hover:text-destructive"
+                  size="icon-touch"
+                  className="upload-interactive shrink-0 rounded-xl text-muted-foreground hover:text-destructive lg:size-7"
                   disabled={disabled}
                   aria-label={`Remove ${item.file.name}`}
                   onClick={() => onRemove(item.id)}

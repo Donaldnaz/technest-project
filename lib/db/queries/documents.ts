@@ -1,8 +1,8 @@
 import "server-only";
 
-import { and, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, like, sql } from "drizzle-orm";
 
-import { db } from "@/lib/db";
+import { db, dbQuery } from "@/lib/db";
 import type { DocumentCategory } from "@/lib/constants/document-categories";
 import {
   careShares,
@@ -139,71 +139,120 @@ export async function listRecentDocuments(
   userId: string,
   limit = 5,
 ): Promise<DocumentWithExtraction[]> {
-  const rows = await db
-    .select({
-      document: documents,
-      extraction: documentExtractions,
-    })
-    .from(documents)
-    .leftJoin(
-      documentExtractions,
-      eq(documentExtractions.documentId, documents.id),
-    )
-    .where(eq(documents.userId, userId))
-    .orderBy(desc(documents.createdAt))
-    .limit(limit);
+  return dbQuery(async () => {
+    const rows = await db
+      .select({
+        document: documents,
+        extraction: documentExtractions,
+      })
+      .from(documents)
+      .leftJoin(
+        documentExtractions,
+        eq(documentExtractions.documentId, documents.id),
+      )
+      .where(eq(documents.userId, userId))
+      .orderBy(desc(documents.createdAt))
+      .limit(limit);
 
-  return rows.map((row) => ({
-    ...row.document,
-    extraction: row.extraction,
-  }));
+    return rows.map((row) => ({
+      ...row.document,
+      extraction: row.extraction,
+    }));
+  });
+}
+
+export type DocumentDashboardStats = {
+  documentCount: number;
+  readyCount: number;
+  processingCount: number;
+  pdfCount: number;
+  jpegCount: number;
+};
+
+export async function getDocumentDashboardStats(
+  userId: string,
+): Promise<DocumentDashboardStats> {
+  return dbQuery(async () => {
+    const [row] = await db
+      .select({
+        documentCount: count(),
+        readyCount:
+          sql<number>`count(*) filter (where ${documents.status} = 'ready')`.mapWith(
+            Number,
+          ),
+        processingCount:
+          sql<number>`count(*) filter (where ${documents.status} = 'processing')`.mapWith(
+            Number,
+          ),
+        pdfCount:
+          sql<number>`count(*) filter (where ${documents.mimeType} like 'application/pdf%')`.mapWith(
+            Number,
+          ),
+        jpegCount:
+          sql<number>`count(*) filter (where ${documents.mimeType} like 'image/jpeg%')`.mapWith(
+            Number,
+          ),
+      })
+      .from(documents)
+      .where(eq(documents.userId, userId));
+
+    return {
+      documentCount: row?.documentCount ?? 0,
+      readyCount: row?.readyCount ?? 0,
+      processingCount: row?.processingCount ?? 0,
+      pdfCount: row?.pdfCount ?? 0,
+      jpegCount: row?.jpegCount ?? 0,
+    };
+  });
 }
 
 export async function countDocuments(userId: string): Promise<number> {
-  const rows = await db
-    .select({ id: documents.id })
+  const [row] = await db
+    .select({ total: count() })
     .from(documents)
     .where(eq(documents.userId, userId));
 
-  return rows.length;
+  return row?.total ?? 0;
 }
 
 export async function countDocumentsByStatus(
   userId: string,
   status: Document["status"],
 ): Promise<number> {
-  const rows = await db
-    .select({ id: documents.id })
+  const [row] = await db
+    .select({ total: count() })
     .from(documents)
     .where(and(eq(documents.userId, userId), eq(documents.status, status)));
 
-  return rows.length;
+  return row?.total ?? 0;
 }
 
 export async function countDocumentsByMimePrefix(
   userId: string,
   mimePrefix: string,
 ): Promise<number> {
-  const rows = await db
-    .select({ id: documents.id, mimeType: documents.mimeType })
+  const [row] = await db
+    .select({ total: count() })
     .from(documents)
-    .where(eq(documents.userId, userId));
+    .where(
+      and(eq(documents.userId, userId), like(documents.mimeType, `${mimePrefix}%`)),
+    );
 
-  return rows.filter((row) => row.mimeType.startsWith(mimePrefix)).length;
+  return row?.total ?? 0;
 }
 
 export async function countDocumentsForPatient(
   userId: string,
   patientId: string,
 ): Promise<number> {
-  const rows = await db
-    .select({ id: documents.id })
+  const [row] = await db
+    .select({ total: count() })
     .from(documents)
     .where(
       and(eq(documents.patientId, patientId), eq(documents.userId, userId)),
     );
 
-  return rows.length;
+  return row?.total ?? 0;
 }
 
 export async function createCareShare(

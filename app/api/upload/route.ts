@@ -14,6 +14,7 @@ import {
 } from "@/lib/constants/upload";
 import { finalizeDocumentUpload } from "@/lib/documents/finalize-upload";
 import { getPatientById } from "@/lib/db/queries/patients";
+import { env } from "@/lib/env";
 import { NotFoundError, UnauthorizedError } from "@/lib/errors";
 import { notifyDocumentUploadSlack } from "@/lib/slack/post-upload-notifications";
 import {
@@ -22,7 +23,7 @@ import {
 } from "@/lib/validations/document";
 
 function getBlobToken() {
-  return process.env.BLOB_READ_WRITE_TOKEN?.trim();
+  return env.BLOB_READ_WRITE_TOKEN?.trim();
 }
 
 export async function GET(): Promise<NextResponse> {

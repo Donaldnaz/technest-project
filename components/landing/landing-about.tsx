@@ -23,7 +23,7 @@ export function LandingAbout() {
           className="mx-auto max-w-3xl"
         />
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
           {about.highlights.map((item, index) => {
             const Icon = highlightIcons[index] ?? Users;
 

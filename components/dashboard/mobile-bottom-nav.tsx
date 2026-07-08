@@ -29,7 +29,7 @@ export function MobileBottomNav({ profileId }: MobileBottomNavProps) {
                 href={link.href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-1 rounded-2xl px-3 py-2 text-xs font-medium transition-colors",
+                  "flex min-h-11 flex-col items-center justify-center gap-1 rounded-2xl px-3 py-2.5 text-xs font-medium transition-colors",
                   isActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground",

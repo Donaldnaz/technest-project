@@ -1,8 +1,6 @@
 import { requireSession, requireUserId } from "@/lib/auth/session";
 import {
-  countDocuments,
-  countDocumentsByMimePrefix,
-  countDocumentsByStatus,
+  getDocumentDashboardStats,
   listRecentDocuments,
 } from "@/lib/db/queries/documents";
 import { listRecentPatients } from "@/lib/db/queries/patients";
@@ -18,22 +16,22 @@ export default async function DashboardPage() {
   const session = await requireSession();
 
   const [
+    documentStats,
+    recentDocuments,
+    recentPatients,
+  ] = await Promise.all([
+    getDocumentDashboardStats(userId),
+    listRecentDocuments(userId, 8),
+    listRecentPatients(userId, 5),
+  ]);
+
+  const {
     documentCount,
     readyCount,
     processingCount,
-    recentDocuments,
-    recentPatients,
     pdfCount,
     jpegCount,
-  ] = await Promise.all([
-    countDocuments(userId),
-    countDocumentsByStatus(userId, "ready"),
-    countDocumentsByStatus(userId, "processing"),
-    listRecentDocuments(userId, 8),
-    listRecentPatients(userId, 5),
-    countDocumentsByMimePrefix(userId, "application/pdf"),
-    countDocumentsByMimePrefix(userId, "image/jpeg"),
-  ]);
+  } = documentStats;
 
   const profileId = recentPatients[0]?.id;
 

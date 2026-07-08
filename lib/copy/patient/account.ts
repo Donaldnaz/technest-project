@@ -10,13 +10,20 @@ export const patientAccountCopy = {
   },
   profile: {
     title: "Your account",
-    description:
-      "Your name and email were set when you signed up. Contact support if you need to update them.",
+    description: {
+      credential:
+        "Your name and email were set when you signed up. Contact support if you need to update them.",
+      google:
+        "Your name and email are managed through your Google account. Contact support if you need to update them.",
+      default:
+        "Your account details were set at sign-up. Contact support if you need to update them.",
+    },
     fields: {
       name: "Full name",
       email: "Email address",
     },
     googleSignIn: "Signed in with Google",
+    emailSignIn: "Signed in with email and password",
     supportHint: "Need help with your account details? Contact support.",
     loading: "Loading your account…",
     signedOut: "Sign in to view your account details.",

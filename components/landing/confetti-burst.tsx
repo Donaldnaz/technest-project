@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
+
+import { useClientMounted } from "@/hooks/use-client-mounted";
 
 type ConfettiBurstProps = {
   active: boolean;
@@ -16,39 +18,33 @@ const COLORS = [
   "bg-amber-200",
 ];
 
+function createParticles() {
+  return Array.from({ length: 24 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    delay: Math.random() * 0.3,
+    color: COLORS[i % COLORS.length] ?? "bg-primary",
+    size: 4 + Math.random() * 6,
+  }));
+}
+
 export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
-  const [particles, setParticles] = useState<
-    { id: number; x: number; delay: number; color: string; size: number }[]
-  >([]);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useClientMounted();
   const onCompleteRef = useRef(onComplete);
+
+  const particles = useMemo(
+    () => (active ? createParticles() : []),
+    [active],
+  );
 
   useEffect(() => {
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!active) {
-      setParticles([]);
-      return;
-    }
-
-    setParticles(
-      Array.from({ length: 24 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        delay: Math.random() * 0.3,
-        color: COLORS[i % COLORS.length] ?? "bg-primary",
-        size: 4 + Math.random() * 6,
-      })),
-    );
+    if (!active) return;
 
     const timer = setTimeout(() => {
-      setParticles([]);
       onCompleteRef.current?.();
     }, 2200);
 

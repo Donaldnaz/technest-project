@@ -152,22 +152,27 @@ export function resolveSpecialtyValue(input: OnboardingInput): string {
 }
 
 export function parseOnboardingFormData(formData: FormData): OnboardingInput {
+  const value = (key: string) => {
+    const entry = formData.get(key);
+    return typeof entry === "string" ? entry : "";
+  };
+
   return onboardingSchema.parse({
-    accountFirstName: formData.get("accountFirstName"),
-    accountLastName: formData.get("accountLastName"),
-    relationship: formData.get("relationship"),
-    patientFirstName: formData.get("patientFirstName"),
-    patientLastName: formData.get("patientLastName"),
-    dateOfBirth: formData.get("dateOfBirth") ?? undefined,
-    medicalRecordNumber: formData.get("medicalRecordNumber") ?? undefined,
-    healthcareSpecialty: formData.get("healthcareSpecialty"),
-    customSpecialty: formData.get("customSpecialty") ?? undefined,
-    healthcareLocation: formData.get("healthcareLocation"),
-    city: formData.get("city"),
-    state: formData.get("state"),
-    country: formData.get("country"),
-    healthQuarter: formData.get("healthQuarter"),
-    additionalNotes: formData.get("additionalNotes") ?? undefined,
+    accountFirstName: value("accountFirstName"),
+    accountLastName: value("accountLastName"),
+    relationship: value("relationship"),
+    patientFirstName: value("patientFirstName"),
+    patientLastName: value("patientLastName"),
+    dateOfBirth: value("dateOfBirth"),
+    medicalRecordNumber: value("medicalRecordNumber"),
+    healthcareSpecialty: value("healthcareSpecialty"),
+    customSpecialty: value("customSpecialty") || undefined,
+    healthcareLocation: value("healthcareLocation"),
+    city: value("city"),
+    state: value("state"),
+    country: value("country"),
+    healthQuarter: value("healthQuarter"),
+    additionalNotes: value("additionalNotes") || undefined,
     consentAccuracy: formData.get("consentAccuracy"),
     consentAuthorization: formData.get("consentAuthorization"),
   });

@@ -79,9 +79,7 @@ export function SpecialtySelect({
           required
           aria-invalid={Boolean(specialtyError)}
         >
-          <option value="" disabled>
-            {copy.placeholder}
-          </option>
+          <option value="">{copy.placeholder}</option>
           {HEALTHCARE_SPECIALTIES.map((specialty) => (
             <option key={specialty} value={specialty}>
               {specialty}

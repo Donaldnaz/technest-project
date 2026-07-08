@@ -14,9 +14,9 @@ export function LegalSubnav({ className }: { className?: string }) {
   return (
     <nav
       aria-label={legalCopy.nav.label}
-      className={cn("border-b border-border/50", className)}
+      className={cn("legal-subnav-scroll border-b border-border/50", className)}
     >
-      <ul className="-mb-px flex gap-6 overflow-x-auto overscroll-x-contain">
+      <ul className="-mb-px flex gap-6 px-1">
         {legalNavLinks.map((link) => {
           const isActive = pathname === link.href;
 

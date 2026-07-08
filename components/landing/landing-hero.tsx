@@ -25,7 +25,7 @@ export function LandingHero() {
               {hero.eyebrow}
             </p>
 
-            <h1 className="font-heading text-4xl font-semibold leading-[1.12] tracking-tight md:text-5xl lg:text-[3.25rem]">
+            <h1 className="font-heading text-hero-fluid font-semibold tracking-tight">
               {hero.headline}{" "}
               <span className="text-primary">{hero.headlineAccent}</span>
             </h1>
@@ -37,7 +37,7 @@ export function LandingHero() {
             <p className="text-sm text-muted-foreground">{hero.tags}</p>
           </div>
 
-          <div className="relative overflow-visible px-2 py-4 sm:px-4">
+          <div className="relative overflow-hidden px-2 py-4 max-lg:overflow-hidden sm:px-4">
             <LandingHeroPreview />
           </div>
         </div>

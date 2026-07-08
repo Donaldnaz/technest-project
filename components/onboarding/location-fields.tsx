@@ -106,9 +106,7 @@ export function LocationFields({
               errors?.country ? `${countryId}-error` : undefined
             }
           >
-            <option value="" disabled>
-              {copy.countryPlaceholder}
-            </option>
+            <option value="">{copy.countryPlaceholder}</option>
             {SUPPORTED_COUNTRIES.map((option) => (
               <option key={option} value={option}>
                 {option}
@@ -143,9 +141,7 @@ export function LocationFields({
               errors?.state ? `${stateId}-error` : undefined
             }
           >
-            <option value="" disabled>
-              {copy.subdivisionPlaceholder}
-            </option>
+            <option value="">{copy.subdivisionPlaceholder}</option>
             {subdivisions.map((option) => (
               <option key={option} value={option}>
                 {option}
@@ -238,9 +234,7 @@ export function LocationFields({
               errors?.healthQuarter ? `${regionId}-error` : undefined
             }
           >
-            <option value="" disabled>
-              {copy.regionPlaceholder}
-            </option>
+            <option value="">{copy.regionPlaceholder}</option>
             {careRegions.map((region) => (
               <option key={region} value={region}>
                 {region}
