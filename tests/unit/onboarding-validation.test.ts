@@ -9,7 +9,7 @@ const validSelfOnboarding = {
   patientFirstName: "Jane",
   patientLastName: "Doe",
   dateOfBirth: "1990-05-01",
-  medicalRecordNumber: "MRN123456",
+  medicalRecordNumber: "12345",
   healthcareLocation: "City Medical Center",
   city: "San Francisco",
   state: "California",

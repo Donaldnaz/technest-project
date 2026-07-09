@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, X } from "lucide-react";
 import { toast } from "sonner";
@@ -58,9 +58,19 @@ export function UploadFormCard({
     acceptedTypes,
   } = useUploadQueue({ patientId });
 
+  const previewItemsSignature = items
+    .map(
+      (item) =>
+        `${item.id}:${item.status}:${item.mimeType}:${item.previewUrl ?? ""}:${item.file.name}:${item.file.size}`,
+    )
+    .join("|");
+
+  const itemsRef = useRef(items);
+  itemsRef.current = items;
+
   useEffect(() => {
-    onItemsChange?.(items);
-  }, [items, onItemsChange]);
+    onItemsChange?.(itemsRef.current);
+  }, [previewItemsSignature, onItemsChange]);
 
   const displayName =
     patientRelationship === "self" ? "you" : patientFirstName;

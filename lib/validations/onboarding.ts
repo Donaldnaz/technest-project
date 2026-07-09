@@ -110,8 +110,7 @@ const patientBaseSchema = z.object({
   medicalRecordNumber: z
     .string()
     .trim()
-    .min(1, "Medical record number is required")
-    .max(50),
+    .regex(/^\d{5}$/, "Medical record number must be exactly 5 digits"),
   additionalNotes: z
     .string()
     .trim()

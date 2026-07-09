@@ -18,17 +18,21 @@ type UploadSplitPaneProps = {
 };
 
 function UploadPreviewPane({ items }: { items: QueueItem[] }) {
-  const stagedItem = useMemo(
+  const previewItem = useMemo(
     () =>
       items.find((item) => item.status === "staged" || item.status === "uploading") ??
       items[0],
     [items],
   );
 
+  const previewItemId = previewItem?.id;
+  const previewFile = previewItem?.file;
+  const previewMimeType = previewItem?.mimeType;
+
   const pdfUrl = useMemo(() => {
-    if (!stagedItem || stagedItem.mimeType !== "application/pdf") return null;
-    return URL.createObjectURL(stagedItem.file);
-  }, [stagedItem]);
+    if (!previewFile || previewMimeType !== "application/pdf") return null;
+    return URL.createObjectURL(previewFile);
+  }, [previewItemId, previewFile, previewMimeType]);
 
   useEffect(() => {
     return () => {
@@ -36,7 +40,7 @@ function UploadPreviewPane({ items }: { items: QueueItem[] }) {
     };
   }, [pdfUrl]);
 
-  if (!stagedItem) {
+  if (!previewItem) {
     return (
       <EmptyState
         icon={FileText}
@@ -47,23 +51,23 @@ function UploadPreviewPane({ items }: { items: QueueItem[] }) {
     );
   }
 
-  if (stagedItem.mimeType === "application/pdf" && pdfUrl) {
+  if (previewItem.mimeType === "application/pdf" && pdfUrl) {
     return (
       <iframe
         src={pdfUrl}
-        title={stagedItem.file.name}
-        className="h-full min-h-[12rem] max-h-[50dvh] w-full flex-1 border-0 md:max-h-[60dvh] lg:max-h-none"
+        title={previewItem.file.name}
+        className="min-h-[12rem] w-full flex-1 border-0 md:min-h-0 md:h-full"
       />
     );
   }
 
-  if (stagedItem.previewUrl) {
+  if (previewItem.previewUrl) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={stagedItem.previewUrl}
-        alt={stagedItem.file.name}
-        className="h-full max-h-[50dvh] w-full object-contain p-4 md:max-h-[60dvh] lg:max-h-[32rem]"
+        src={previewItem.previewUrl}
+        alt={previewItem.file.name}
+        className="max-h-[50dvh] w-full object-contain p-4 md:max-h-full md:h-full"
       />
     );
   }
@@ -71,7 +75,7 @@ function UploadPreviewPane({ items }: { items: QueueItem[] }) {
   return (
     <div className="flex h-full min-h-[16rem] flex-col items-center justify-center gap-2 p-6 text-center text-sm text-muted-foreground">
       <FileImage className="size-8" aria-hidden />
-      <p className="font-medium text-foreground">{stagedItem.file.name}</p>
+      <p className="font-medium text-foreground">{previewItem.file.name}</p>
       <p>{patientUploadCopy.preview.pending}</p>
     </div>
   );
