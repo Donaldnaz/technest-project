@@ -20,6 +20,10 @@ function isPublicRoute(request: NextRequest): boolean {
     return true;
   }
 
+  if (pathname.startsWith("/api/auth")) {
+    return true;
+  }
+
   if (pathname !== "/") {
     return false;
   }
