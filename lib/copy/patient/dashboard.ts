@@ -34,11 +34,11 @@ export const patientDashboardCopy = {
       },
       ready: {
         label: "Plain English ready",
-        hint: "Practitioner-reviewed summaries you can read",
+        hint: "AI-reviewed summaries you can read",
       },
       processing: {
         label: "Under review",
-        hint: "Your care team is preparing your summary",
+        hint: "Our AI-enabled system is preparing your summary",
       },
     },
     quickActions: {

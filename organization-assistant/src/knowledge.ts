@@ -14,14 +14,14 @@ export const ORGANIZATION_KNOWLEDGE = `
 # iCare — Organization reference (from the public website)
 
 ## Tagline
-A secure health records portal for encrypted upload, private storage, and practitioner-reviewed plain English summaries.
+A secure health records portal for encrypted upload, private storage, and AI-reviewed plain English summaries.
 
 ## Mission
 iCare helps patients and caregivers upload health records in a calm, private space — not like hospital software. You stay in control of what you share with your care team.
 
 ## What we do
 - Secure health record upload: Add lab reports, referrals, imaging, and visit notes (PDF and JPEG). Files are encrypted and stored in your private folder.
-- Plain English summaries: Your care team prepares summaries in everyday language — reviewed by a practitioner before they are finalized.
+- Plain English summaries: Our AI-enabled system prepares summaries in everyday language — reviewed by a practitioner before they are finalized.
 - Share with your care team: Submit your practitioner's email and our care team coordinates secure delivery — you do not manage invite links yourself.
 - For patients and caregivers: Manage your own health records or upload for someone you care for in one workspace.
 

@@ -31,7 +31,7 @@ export const patientLibraryCopy = {
     empty: {
       title: "Your folder is empty",
       description:
-        "Your health folder is ready. Upload recent lab results, imaging reports, or visit notes — your care team will prepare plain English summaries for practitioner review.",
+        "Your health folder is ready. Upload recent lab results, imaging reports, or visit notes — AI will prepare plain English summaries for you to download.",
       cta: "Upload health records",
     },
     previewHint: "Select a document to preview it.",

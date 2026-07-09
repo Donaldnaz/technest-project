@@ -16,9 +16,9 @@ type ChatMessage = {
 
 export type OrganizationAssistantProps = {
   /** Server action or API handler that returns the assistant reply. */
-  askAssistant: (
-    messages: AssistantMessage[],
-  ) => Promise<ActionResult<{ reply: string }>>;
+  askAssistant: (input: {
+    messages: AssistantMessage[];
+  }) => Promise<ActionResult<{ reply: string }>>;
   /** Optional error handler (e.g. toast). Defaults to console.error. */
   onError?: (message: string) => void;
 };
@@ -53,9 +53,12 @@ export function OrganizationAssistant({
     setInput("");
 
     startTransition(async () => {
-      const result = await askAssistant(
-        nextMessages.map(({ role, content }) => ({ role, content })),
-      );
+      const result = await askAssistant({
+        messages: nextMessages.map(({ role, content }) => ({
+          role,
+          content,
+        })),
+      });
 
       if (!result.success) {
         onError(result.error);

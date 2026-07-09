@@ -152,7 +152,11 @@ function PatientWorkspaceContent({
               </>
             ),
             content: (
-              <SummaryReportsPanel reports={summaryReports} />
+              <SummaryReportsPanel
+                reports={summaryReports}
+                documents={documents}
+                patientId={patient.id}
+              />
             ),
           },
         ]}

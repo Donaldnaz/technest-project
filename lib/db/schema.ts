@@ -2,6 +2,7 @@ import {
   bigint,
   date,
   index,
+  jsonb,
   pgEnum,
   pgTable,
   text,
@@ -40,6 +41,12 @@ export const careShareStatusEnum = pgEnum("care_share_status", [
   "pending",
   "active",
   "revoked",
+]);
+
+export const extractionReviewStatusEnum = pgEnum("extraction_review_status", [
+  "pending_review",
+  "approved",
+  "rejected",
 ]);
 
 export const userProfiles = pgTable("user_profiles", {
@@ -112,6 +119,9 @@ export const documents = pgTable(
     fileSizeBytes: bigint("file_size_bytes", { mode: "number" }),
     category: documentCategoryEnum("category").default("other").notNull(),
     status: documentStatusEnum("status").default("uploaded").notNull(),
+    summaryGenerationRequestedAt: timestamp("summary_generation_requested_at", {
+      withTimezone: true,
+    }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -132,7 +142,15 @@ export const documentExtractions = pgTable(
     reportDate: date("report_date"),
     collectionDate: date("collection_date"),
     summary: text("summary"),
+    plainLanguageReport: text("plain_language_report"),
+    keyFindings: jsonb("key_findings").$type<string[]>(),
     attentionNote: text("attention_note"),
+    reviewStatus: extractionReviewStatusEnum("review_status")
+      .default("approved")
+      .notNull(),
+    reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+    reviewedBy: text("reviewed_by"),
+    reviewerNotes: text("reviewer_notes"),
     extractedAt: timestamp("extracted_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -192,5 +210,7 @@ export type Patient = typeof patients.$inferSelect;
 export type NewPatient = typeof patients.$inferInsert;
 export type Document = typeof documents.$inferSelect;
 export type DocumentExtraction = typeof documentExtractions.$inferSelect;
+export type ExtractionReviewStatus =
+  (typeof extractionReviewStatusEnum.enumValues)[number];
 export type DocumentAccessLog = typeof documentAccessLogs.$inferSelect;
 export type CareShare = typeof careShares.$inferSelect;

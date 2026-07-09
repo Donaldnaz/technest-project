@@ -1,39 +1,20 @@
 import "server-only";
 
-import { generateObject } from "ai";
-import { google } from "@ai-sdk/google";
 import { get } from "@vercel/blob";
-import { z } from "zod";
+import {
+  extractMedicalDocument,
+  isGeminiConfigured,
+} from "@icare/document-summary-ai";
 
-import { isGeminiConfigured } from "@/lib/ai/google-model";
 import {
   updateDocumentStatus,
   upsertDocumentExtraction,
 } from "@/lib/db/queries/documents";
 
-const extractionSchema = z.object({
-  documentType: z
-    .string()
-    .describe("Plain-language type, e.g. Lab results, Imaging, Prescription"),
-  reportDate: z
-    .string()
-    .nullable()
-    .describe("ISO date YYYY-MM-DD if found, else null"),
-  collectionDate: z
-    .string()
-    .nullable()
-    .describe("ISO date YYYY-MM-DD if found, else null"),
-  summary: z
-    .string()
-    .describe("2-3 sentence plain-language summary for the patient"),
-  attentionNote: z
-    .string()
-    .nullable()
-    .describe(
-      "Soft note if something may need discussion with care team, else null",
-    ),
-});
-
+/**
+ * Host orchestration: fetch blob → package AI extraction → persist.
+ * AI prompts and Gemini calls live in `@icare/document-summary-ai`.
+ */
 export async function processDocumentExtraction(
   documentId: string,
   blobUrl: string,
@@ -58,28 +39,10 @@ export async function processDocumentExtraction(
       await new Response(blobResult.stream).arrayBuffer(),
     );
 
-    const mediaType =
-      mimeType === "application/pdf" ? "application/pdf" : "image/jpeg";
-
-    const { object } = await generateObject({
-      model: google("gemini-2.0-flash"),
-      schema: extractionSchema,
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: `You are helping a patient understand a medical document named "${fileName}". Extract key information in plain, compassionate language. Do not diagnose or prescribe. If unsure, say so briefly in the summary.`,
-            },
-            {
-              type: "file",
-              data: buffer,
-              mediaType,
-            },
-          ],
-        },
-      ],
+    const object = await extractMedicalDocument({
+      buffer,
+      mimeType,
+      fileName,
     });
 
     await upsertDocumentExtraction(documentId, {
@@ -87,7 +50,10 @@ export async function processDocumentExtraction(
       reportDate: object.reportDate,
       collectionDate: object.collectionDate,
       summary: object.summary,
+      plainLanguageReport: object.plainLanguageReport,
+      keyFindings: object.keyFindings,
       attentionNote: object.attentionNote,
+      reviewStatus: "approved",
     });
 
     await updateDocumentStatus(documentId, "ready");

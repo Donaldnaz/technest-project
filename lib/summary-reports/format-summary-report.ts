@@ -9,6 +9,8 @@ export type SummaryReportPayload = {
   reportDate: string | null;
   collectionDate: string | null;
   summary: string;
+  plainLanguageReport?: string | null;
+  keyFindings?: string[] | null;
   attentionNote: string | null;
   extractedAt: Date;
 };
@@ -24,8 +26,11 @@ function safeDownloadBaseName(fileName: string): string {
   return sanitized.length > 0 ? sanitized : "summary-report";
 }
 
-export function getSummaryReportFileName(fileName: string): string {
-  return `${safeDownloadBaseName(fileName)}-summary.txt`;
+export function getSummaryReportFileName(
+  fileName: string,
+  extension: "txt" | "pdf" = "txt",
+): string {
+  return `${safeDownloadBaseName(fileName)}-summary.${extension}`;
 }
 
 export function formatSummaryReportText(payload: SummaryReportPayload): string {
@@ -56,6 +61,18 @@ export function formatSummaryReportText(payload: SummaryReportPayload): string {
     "---------------------",
     payload.summary,
   );
+
+  const reportBody = payload.plainLanguageReport?.trim();
+  if (reportBody) {
+    lines.push("", "Full plain-language report", "-------------------------", reportBody);
+  }
+
+  if (payload.keyFindings && payload.keyFindings.length > 0) {
+    lines.push("", "Key findings", "------------");
+    for (const finding of payload.keyFindings) {
+      lines.push(`• ${finding}`);
+    }
+  }
 
   if (payload.attentionNote) {
     lines.push(

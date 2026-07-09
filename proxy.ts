@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth/server";
+import { agentDebugLog } from "@/lib/debug/agent-log";
 
 const neonAuthProxy = auth.middleware({
   loginUrl: "/auth/sign-in",
@@ -37,22 +38,29 @@ function isServerActionRequest(request: NextRequest): boolean {
 
 /**
  * POST routes that must not run Neon session validation on the original POST
- * body (e.g. Blob upload events, multipart form uploads). Session is checked
- * via a synthetic GET instead.
+ * body (e.g. Blob upload events, multipart form uploads, empty JSON API posts).
+ * Session is checked via a synthetic GET instead.
  */
 function isPostWithSyntheticSessionCheck(request: NextRequest): boolean {
   if (request.method !== "POST") return false;
 
   const { pathname } = request.nextUrl;
-  return pathname === "/api/upload";
+  return (
+    pathname === "/api/upload" ||
+    /^\/api\/documents\/[^/]+\/generate-summary$/.test(pathname)
+  );
 }
 
 function needsSyntheticGetSessionCheck(request: NextRequest): boolean {
   return isServerActionRequest(request) || isPostWithSyntheticSessionCheck(request);
 }
 
-function isMultipartUploadApi(request: NextRequest): boolean {
-  return request.method === "POST" && request.nextUrl.pathname === "/api/upload";
+function isJsonApiUnauthorizedResponse(request: NextRequest): boolean {
+  const { pathname } = request.nextUrl;
+  return (
+    pathname === "/api/upload" ||
+    pathname.startsWith("/api/documents/")
+  );
 }
 
 /**
@@ -67,7 +75,25 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!needsSyntheticGetSessionCheck(request)) {
+  const pathname = request.nextUrl.pathname;
+  const usesSynthetic = needsSyntheticGetSessionCheck(request);
+
+  // #region agent log
+  if (pathname.includes("generate-summary")) {
+    agentDebugLog({
+      hypothesisId: "A",
+      location: "proxy.ts:entry",
+      message: "generate-summary proxy entry",
+      data: {
+        method: request.method,
+        pathname,
+        usesSynthetic,
+      },
+    });
+  }
+  // #endregion
+
+  if (!usesSynthetic) {
     return neonAuthProxy(request);
   }
 
@@ -76,9 +102,26 @@ export default async function proxy(request: NextRequest) {
     headers: request.headers,
   });
   const authResponse = await neonAuthProxy(sessionCheckRequest);
+  const redirectLocation = authResponse.headers.get("location");
 
-  if (authResponse.headers.get("location")) {
-    if (isMultipartUploadApi(request)) {
+  // #region agent log
+  if (pathname.includes("generate-summary")) {
+    agentDebugLog({
+      hypothesisId: "A",
+      location: "proxy.ts:synthetic-result",
+      message: "generate-summary synthetic session check",
+      data: {
+        pathname,
+        redirected: Boolean(redirectLocation),
+        redirectLocation,
+        status: authResponse.status,
+      },
+    });
+  }
+  // #endregion
+
+  if (redirectLocation) {
+    if (isJsonApiUnauthorizedResponse(request)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     return authResponse;

@@ -13,7 +13,7 @@ const steps = [
     icon: FileCheck2,
     title: "Read plain English summaries",
     description:
-      "Your care team prepares summaries in everyday language — reviewed by a practitioner before they are finalized.",
+      "Our AI-enabled system prepares summaries in everyday language — reviewed by a practitioner before they are finalized.",
   },
   {
     step: "03",

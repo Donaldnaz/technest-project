@@ -1,4 +1,11 @@
-export const ALLOWED_MIME_TYPES = ["application/pdf", "image/jpeg"] as const;
+export const ALLOWED_MIME_TYPES = [
+  "application/pdf",
+  "image/jpeg",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+] as const;
+
+export const DOCX_MIME_TYPE =
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document" as const;
 
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 

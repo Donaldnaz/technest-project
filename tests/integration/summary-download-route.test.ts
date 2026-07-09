@@ -25,6 +25,23 @@ vi.mock("@/lib/db/queries/summary-reports", () => ({
   logDocumentAccess: (...args: unknown[]) => logDocumentAccess(...args),
 }));
 
+const approvedReport = {
+  id: "doc-1",
+  fileName: "cbc.pdf",
+  category: "lab_results",
+  extraction: {
+    documentType: "Lab results",
+    reportDate: "2026-01-01",
+    collectionDate: null,
+    summary: "Everything looks normal.",
+    plainLanguageReport: "Full plain-language report.",
+    keyFindings: ["Normal range"],
+    attentionNote: null,
+    extractedAt: new Date("2026-01-02T00:00:00.000Z"),
+    reviewStatus: "approved" as const,
+  },
+};
+
 describe("GET /api/documents/[id]/summary", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -58,19 +75,7 @@ describe("GET /api/documents/[id]/summary", () => {
 
   it("returns summary attachment for authorized user", async () => {
     getOptionalSession.mockResolvedValue({ user: { id: "user-1" } });
-    getPractitionerSummaryReportByDocumentId.mockResolvedValue({
-      id: "doc-1",
-      fileName: "cbc.pdf",
-      category: "lab_results",
-      extraction: {
-        documentType: "Lab results",
-        reportDate: "2026-01-01",
-        collectionDate: null,
-        summary: "Everything looks normal.",
-        attentionNote: null,
-        extractedAt: new Date("2026-01-02T00:00:00.000Z"),
-      },
-    });
+    getPractitionerSummaryReportByDocumentId.mockResolvedValue(approvedReport);
 
     const response = await GET(new Request("http://localhost"), {
       params: Promise.resolve({ id: "doc-1" }),
@@ -83,6 +88,28 @@ describe("GET /api/documents/[id]/summary", () => {
       "doc-1",
       "user-1",
       "summary_download",
+    );
+  });
+
+  it("returns PDF attachment when format=pdf", async () => {
+    getOptionalSession.mockResolvedValue({ user: { id: "user-1" } });
+    getPractitionerSummaryReportByDocumentId.mockResolvedValue(approvedReport);
+
+    const response = await GET(
+      new Request("http://localhost/api/documents/doc-1/summary?format=pdf"),
+      {
+        params: Promise.resolve({ id: "doc-1" }),
+      },
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Type")).toBe("application/pdf");
+    const body = Buffer.from(await response.arrayBuffer());
+    expect(body.subarray(0, 4).toString()).toBe("%PDF");
+    expect(logDocumentAccess).toHaveBeenCalledWith(
+      "doc-1",
+      "user-1",
+      "summary_download_pdf",
     );
   });
 });

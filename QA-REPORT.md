@@ -1,30 +1,43 @@
 # iCare — QA Testing Report
 
 **Date:** July 9, 2026  
+**Last updated:** July 9, 2026 (post QA health improvements on `dev`)  
 **Scope:** End-to-end feature readiness, automated checks, static code-path review, manual QA checklist  
 **Environment:** Local workspace audit (`/Users/apple/Desktop/Technest Project.`)  
-**Branch context:** Recent fixes on `dev` (PR #4) — sidebar toggle, patient workspace tabs, hydration safety
+**Branch context:** `dev` at `5d1e097` — QA improvements (care share, Playwright, integration tests); prior PR #4 sidebar/tab fixes on `main`
 
 ---
 
 ## Executive Summary
 
-**Overall health: ⚠️ YELLOW — not production-ready without fixes and manual E2E validation.**
+**Overall health: 🟡 YELLOW → deploy-ready with automated gates; manual staging validation still required.**
 
-The application has a solid foundation: 30/30 Vitest tests pass, ESLint is clean, auth proxy/middleware is thoughtfully implemented (including synthetic session checks for Blob uploads and Server Actions), and tenant-scoped data access is partially covered by tests. However, **production build and TypeScript check both fail** due to a broken import in the nested `organization-assistant/` package (`../types` should be `./types`). Until that is fixed or the package is excluded from the root `tsconfig.json`, **deployments will fail**.
+The application has a solid foundation: **34/34 Vitest tests pass**, **3 Playwright smoke tests pass**, ESLint is clean, **typecheck and production build pass**, and auth proxy/middleware is thoughtfully implemented (including synthetic session checks for Blob uploads and Server Actions). Tenant-scoped data access is partially covered by tests.
 
-No browser/E2E test suite exists (no Playwright/Cypress). All user-facing flows — Neon Auth (email OTP, Google OAuth), Vercel Blob uploads, Gemini extraction, and care-share — require **manual browser testing** with real credentials and services.
+**Resolved since initial audit:**
 
-**Critical product gap:** The care-share server action and `ShareWithProvider` UI component exist, but the component is **not mounted on any route**. Users cannot submit practitioner share requests through the UI despite copy and backend support.
+- Build/typecheck blocker in `organization-assistant/src/errors.ts` — fixed (`11cb929`)
+- `organization-assistant/` isolated from root compile graph via `tsconfig.json` exclude + `npm run typecheck:assistant`
+- Care share UI wired on patient Overview tab (`ShareWithProvider` in `patient-overview-panel.tsx`)
+- Playwright smoke suite added (`e2e/smoke.spec.ts`) with CI `e2e` job
+- Integration tests for upload auth (401) and preview route (401/404/200)
+- Manual QA process documented in [`QA-CHECKLIST.md`](QA-CHECKLIST.md)
+
+**Still required before production confidence:**
+
+- Manual critical-path session on staging (Neon Auth OTP, Blob upload, optional Gemini)
+- PR #4 regression pass (sidebar toggle, patient tabs) on desktop + mobile
+- Auth flows (Google OAuth, password reset) with real Neon Console configuration
 
 | Area | Status |
 |------|--------|
 | Lint | ✅ Pass |
-| Unit/integration tests | ✅ 30/30 pass |
-| TypeScript | ❌ Fail (`organization-assistant`) |
-| Production build | ❌ Fail (same TS error) |
-| E2E automation | ❌ None |
-| Manual E2E | ⏳ Required for all critical paths |
+| Unit/integration tests | ✅ 34/34 pass (10 files) |
+| TypeScript (root) | ✅ Pass |
+| TypeScript (`organization-assistant`) | ✅ Pass (`npm run typecheck:assistant`) |
+| Production build | ✅ Pass |
+| E2E automation | ✅ 3 smoke tests (Playwright) |
+| Manual E2E (full critical path) | ⏳ Required — see [`QA-CHECKLIST.md`](QA-CHECKLIST.md) |
 
 ---
 
@@ -33,9 +46,11 @@ No browser/E2E test suite exists (no Playwright/Cypress). All user-facing flows 
 | Check | Command | Result | Notes |
 |-------|---------|--------|-------|
 | ESLint | `npm run lint` | **PASS** | No errors or warnings |
-| TypeScript | `npm run typecheck` | **FAIL** | `organization-assistant/src/errors.ts(1,35): Cannot find module '../types'` — file exists at `src/types.ts`; import path is wrong |
-| Vitest | `npm run test` | **PASS** | 8 files, 30 tests, ~1.9s |
-| Production build | `SKIP_ENV_VALIDATION=true npm run build` | **FAIL** | Compiles with Turbopack, fails at TS step with same `organization-assistant` error |
+| TypeScript (root) | `npm run typecheck` | **PASS** | `organization-assistant/` excluded from root graph |
+| TypeScript (assistant) | `npm run typecheck:assistant` | **PASS** | Standalone package typecheck |
+| Vitest | `npm run test` | **PASS** | 10 files, 34 tests, ~2.4s |
+| Production build | `SKIP_ENV_VALIDATION=true npm run build` | **PASS** | CI env placeholders |
+| Playwright smoke | `npm run test:e2e` | **PASS** | 3 tests — landing, auth redirect, upload 401 |
 
 ### Vitest Coverage Summary
 
@@ -49,8 +64,18 @@ No browser/E2E test suite exists (no Playwright/Cypress). All user-facing flows 
 | `tests/unit/mask-phi.test.ts` | PHI masking for Slack notifications |
 | `tests/integration/tenant-isolation.test.ts` | Patient/summary queries scoped by `userId` (mocked DB) |
 | `tests/integration/summary-download-route.test.ts` | `GET /api/documents/[id]/summary` — 401/404/200 (mocked) |
+| `tests/integration/preview-route.test.ts` | `GET /api/documents/[id]/preview` — 401/404/200 (mocked) |
+| `tests/integration/upload-route.test.ts` | `POST /api/upload` — 401 when session missing (mocked Blob handler) |
 
-**Not covered by automated tests:** Auth flows, onboarding server action, upload API, document preview API, assistant chat, UI components, sidebar/tabs, marketing pages, Slack notifications (live).
+### Playwright Smoke Coverage
+
+| Test | What it verifies |
+|------|------------------|
+| Landing page loads | Title, hero heading, primary nav, assistant button |
+| Dashboard redirect | Unauthenticated `/dashboard` → `/auth/sign-in` |
+| Upload API 401 | `POST /api/upload` without session returns JSON 401 (via `proxy.ts`) |
+
+**Not covered by automated tests:** Neon OTP sign-up/sign-in, Google OAuth, onboarding server action (E2E), live Blob upload, Gemini extraction quality, assistant chat replies, UI component regressions (sidebar/tabs), live Slack notifications, real SQL tenant isolation.
 
 ---
 
@@ -98,7 +123,7 @@ No browser/E2E test suite exists (no Playwright/Cypress). All user-facing flows 
 | Protected | `/dashboard/*`, `/onboarding`, `/account/*`, `/api/upload`, `/api/documents/*` |
 | OAuth callback | `/` with `neon_auth_session_verifier` query param is **not** public — correctly protected |
 
-**Synthetic session check:** Server Actions (`next-action` header) and `POST /api/upload` use a GET-based session probe to avoid breaking multipart/Blob bodies. Upload auth failures return JSON 401 instead of HTML redirect.
+**Synthetic session check:** Server Actions (`next-action` header) and `POST /api/upload` use a GET-based session probe to avoid breaking multipart/Blob bodies. Upload auth failures return JSON 401 instead of HTML redirect. **Verified by Playwright smoke test.**
 
 **Layout gates:**
 - `(dashboard)/layout.tsx` — requires session → `/auth/sign-in`; requires onboarding → `/onboarding`
@@ -117,7 +142,7 @@ No browser/E2E test suite exists (no Playwright/Cypress). All user-facing flows 
 | `SLACK_WEBHOOK_URL` | Optional | Care-share/upload Slack alerts only |
 | `SKIP_ENV_VALIDATION` | CI only | Allows build without secrets |
 
-Local note: `.env` present; `.env.local` not present.
+Local note: `.env` present for local development.
 
 ---
 
@@ -128,7 +153,7 @@ Local note: `.env` present; `.env.local` not present.
 | Field | Value |
 |-------|-------|
 | **Routes** | `/` |
-| **Status** | **NEEDS MANUAL** |
+| **Status** | **PARTIAL AUTO** / **NEEDS MANUAL** (CTAs, mobile menu) |
 
 **Test steps:**
 1. Open `/` — verify hero, What We Do, dashboard showcase, About, Contact, CTA sections render.
@@ -138,6 +163,8 @@ Local note: `.env` present; `.env.local` not present.
 5. Open floating assistant widget — welcome message appears.
 
 **Expected:** Public page loads without auth; CTAs route to auth; assistant opens (reply needs `GEMINI_API_KEY`).
+
+**Automated:** Playwright — title, hero heading, primary nav, assistant button visible.
 
 **Dependencies:** None for static content; assistant needs `GEMINI_API_KEY`.
 
@@ -176,7 +203,7 @@ Local note: `.env` present; `.env.local` not present.
 
 **Expected:** Account created, email verified, authenticated session.
 
-**Dependencies:** `NEON_AUTH_BASE_URL`, `NEON_AUTH_COOKIE_SECRET`, `DATABASE_URL`, Neon email/OTP config, trusted domain `http://localhost:3000`.
+**Dependencies:** `NEON_AUTH_BASE_URL`, `NEON_AUTH_COOKIE_SECRET`, `DATABASE_URL`, Neon email/OTP config, trusted domain in Neon Console.
 
 ---
 
@@ -195,6 +222,8 @@ Local note: `.env` present; `.env.local` not present.
 **Expected:** Session cookie set; protected routes accessible.
 
 **Dependencies:** Neon Auth email provider enabled.
+
+**Automated:** Playwright — unauthenticated `/dashboard` redirects to `/auth/sign-in`.
 
 ---
 
@@ -245,7 +274,7 @@ Local note: `.env` present; `.env.local` not present.
 1. Sign out from user menu or `/auth/sign-out`.
 2. Attempt `/dashboard` — redirect to `/auth/sign-in`.
 
-**Expected:** Session cleared.
+**Expected:** Session cleared; no spinner hang (fixed in commit `40df842`).
 
 **Dependencies:** Neon Auth.
 
@@ -336,7 +365,7 @@ Local note: `.env` present; `.env.local` not present.
 
 | Field | Value |
 |-------|-------|
-| **Routes** | `/dashboard/patients/[id]` |
+| **Routes** | `/dashboard/patients/[id]?tab=overview` |
 | **Status** | **NEEDS MANUAL** |
 
 **Test steps:**
@@ -344,8 +373,9 @@ Local note: `.env` present; `.env.local` not present.
 2. Stat chips in hero show total/ready/processing counts.
 3. Recent activity timeline preview (max 3) with “View all” link.
 4. Empty state CTA links to upload tab when no documents.
+5. **Care share form** — “Send records to your provider” section visible below overview grid.
 
-**Expected:** Data matches DB for scoped patient.
+**Expected:** Data matches DB for scoped patient; share form submits successfully.
 
 ---
 
@@ -368,7 +398,7 @@ Local note: `.env` present; `.env.local` not present.
 
 **Dependencies:** `BLOB_READ_WRITE_TOKEN` (required), `DATABASE_URL`, auth session. Proxy synthetic GET check must pass (implemented).
 
-**Automated:** `uploadClientPayloadSchema` unit tests (MIME, UUID).
+**Automated:** `uploadClientPayloadSchema` unit tests (MIME, UUID); route handler 401 test (mocked); Playwright middleware 401 on unauthenticated POST.
 
 ---
 
@@ -399,7 +429,7 @@ Local note: `.env` present; `.env.local` not present.
 | Field | Value |
 |-------|-------|
 | **Routes** | Patient timeline/table → sheet; `GET /api/documents/[id]/preview` |
-| **Status** | **NEEDS MANUAL** |
+| **Status** | **NEEDS MANUAL** (UI) / **PASS** (route auth, mocked) |
 
 **Test steps:**
 1. Click document in timeline/table — preview sheet opens.
@@ -410,23 +440,26 @@ Local note: `.env` present; `.env.local` not present.
 
 **Dependencies:** `BLOB_READ_WRITE_TOKEN`, auth session.
 
+**Automated:** Preview route integration tests — 401/404/200 (mocked).
+
 ---
 
 ### 16. Care Share with Practitioner
 
 | Field | Value |
 |-------|-------|
-| **Routes** | *No route mounts UI* — `components/documents/share-with-provider.tsx` is orphaned |
-| **Status** | **BLOCKED** (UI not wired) |
+| **Routes** | `/dashboard/patients/[id]?tab=overview` — `ShareWithProvider` in `patient-overview-panel.tsx` |
+| **Status** | **NEEDS MANUAL** (E2E submission) |
 
-**Test steps (intended, once wired):**
-1. On patient profile, open share form.
+**Test steps:**
+1. On patient Overview tab, scroll to “Send records to your provider” form.
 2. Enter practitioner email + optional message — submit.
-3. Verify `care_shares` row in DB; optional Slack webhook notification.
+3. Verify success toast and confirmation UI.
+4. Verify `care_shares` row in DB; optional Slack webhook notification.
 
 **Expected per copy/knowledge base:** “Submit practitioner's email on your profile page.”
 
-**Current state:** Server action `sharePatientWithProvider` and validation tests exist; **`ShareWithProvider` is not imported by any page**. Feature is **not end-to-end accessible**.
+**Current state:** Server action `sharePatientWithProvider`, validation tests, and UI component are **wired on the Overview tab** (commit `5d1e097`). End-to-end submission not yet verified on staging.
 
 **Dependencies:** `DATABASE_URL`; `SLACK_WEBHOOK_URL` optional.
 
@@ -451,7 +484,7 @@ Local note: `.env` present; `.env.local` not present.
 
 **Dependencies:** `GEMINI_API_KEY`.
 
-**Note:** `organization-assistant/` is a standalone extract; main app uses `@/components/assistant/organization-assistant.tsx` and `@/lib/ai/*`. The nested package has a **broken import** blocking root build/typecheck but does not affect runtime of main app paths.
+**Note:** `organization-assistant/` is a standalone extract with its own typecheck; main app uses `@/components/assistant/organization-assistant.tsx` and `@/lib/ai/*`. Root build no longer blocked by nested package.
 
 ---
 
@@ -506,20 +539,21 @@ Local note: `.env` present; `.env.local` not present.
 
 ## Critical Path Smoke Test
 
-**Flow:** Sign-up → OTP → Onboarding → Upload → Dashboard
+**Flow:** Sign-up → OTP → Onboarding → Upload → Dashboard → Care share
 
 | Step | Action | Expected | Status |
 |------|--------|----------|--------|
-| 1 | `GET /` | Landing loads | NEEDS MANUAL |
+| 1 | `GET /` | Landing loads | ✅ AUTO (Playwright) |
 | 2 | Sign up at `/auth/sign-up` | Redirect to email OTP | NEEDS MANUAL |
 | 3 | Verify OTP | Authenticated | NEEDS MANUAL |
 | 4 | Complete `/onboarding` | Redirect to `/dashboard/patients/{id}` | NEEDS MANUAL |
-| 5 | Upload tab — upload PDF | Blob + DB record, processing/ready | NEEDS MANUAL / BLOCKED without Blob |
-| 6 | `GET /dashboard` | Metrics reflect new document | NEEDS MANUAL |
-| 7 | Timeline tab | Document listed with status | NEEDS MANUAL |
-| 8 | Download tab (if Gemini configured) | Summary report available | NEEDS MANUAL |
+| 5 | Overview tab — care share form | Submit practitioner email; success UI | NEEDS MANUAL |
+| 6 | Upload tab — upload PDF | Blob + DB record, processing/ready | NEEDS MANUAL / BLOCKED without Blob |
+| 7 | `GET /dashboard` | Metrics reflect new document | NEEDS MANUAL |
+| 8 | Timeline tab | Document listed with status | NEEDS MANUAL |
+| 9 | Download tab (if Gemini configured) | Summary report available | NEEDS MANUAL |
 
-**Cannot be executed in this audit:** No live Neon/Neon Auth/Blob/Gemini credentials were used for browser testing.
+**Automated partial coverage:** Steps 1, unauthenticated dashboard redirect, and upload 401 are covered by Playwright. Full path requires staging credentials — use [`QA-CHECKLIST.md`](QA-CHECKLIST.md).
 
 ---
 
@@ -537,62 +571,77 @@ Local note: `.env` present; `.env.local` not present.
 
 ## Known Gaps & Blockers
 
-### Build / CI Blockers
+### Resolved
 
-1. **`organization-assistant/src/errors.ts`** imports `../types` but types live at `./types` (same `src/` directory). Breaks `npm run typecheck` and `npm run build`.
-2. Root `tsconfig.json` includes `**/*.ts`, pulling the nested package into the main project compile graph.
+1. ~~`organization-assistant/src/errors.ts` broken import~~ — fixed in `11cb929`
+2. ~~Root tsconfig pulling nested package into main compile graph~~ — excluded; `typecheck:assistant` added
+3. ~~Care share UI not wired~~ — mounted on Overview tab in `5d1e097`
+4. ~~No E2E test framework~~ — Playwright smoke suite + CI `e2e` job
+5. ~~No upload/preview route tests~~ — integration tests added
 
-### Product / E2E Blockers
+### Remaining — Manual / Environment
 
-3. **Care share UI not wired** — `ShareWithProvider` component exists but is never rendered; users cannot share records with practitioners despite README/marketing claims.
-4. **No E2E test framework** — all browser flows are manual-only.
-5. **Upload blocked locally** without valid `BLOB_READ_WRITE_TOKEN`.
-6. **AI features blocked** without `GEMINI_API_KEY` (degrades gracefully for uploads).
-7. **Auth flows** require Neon Console configuration (OTP, Google, trusted domains).
+1. **Full critical-path smoke** on staging with Neon Auth + Blob (see `QA-CHECKLIST.md`)
+2. **PR #4 regression** — sidebar toggle and patient tabs (desktop + mobile)
+3. **Upload blocked locally** without valid `BLOB_READ_WRITE_TOKEN`
+4. **AI features blocked** without `GEMINI_API_KEY` (degrades gracefully for uploads)
+5. **Auth flows** require Neon Console configuration (OTP, Google, trusted domains)
+6. **Care share E2E** — UI wired but not yet verified against live DB/Slack on staging
 
 ### Test Coverage Gaps
 
-8. No tests for: upload route, preview route (live), onboarding server action, assistant action, proxy middleware, UI components.
-9. Integration tests use mocked DB — do not validate real SQL tenant isolation.
+7. No tests for: onboarding server action, assistant action, proxy middleware (direct), UI components
+8. Integration tests use mocked DB — do not validate real SQL tenant isolation
+9. Playwright does not cover OTP, OAuth, or authenticated upload flows yet
 
 ---
 
 ## Recommendations
 
-### Immediate (before deploy)
+### Completed ✅
 
-1. **Fix `organization-assistant` import** (`./types`) or add `"exclude": ["organization-assistant"]` to root `tsconfig.json` if the package is intentionally standalone.
-2. **Wire `ShareWithProvider`** into patient workspace (e.g. Overview tab or dedicated share tab) to match product copy and backend.
-3. Re-run `npm run typecheck` and `npm run build` — both must pass in CI.
+1. Fix `organization-assistant` import (`./types`) — `11cb929`
+2. Exclude `organization-assistant` from root tsconfig + `typecheck:assistant` — `5d1e097`
+3. Wire `ShareWithProvider` on patient Overview tab — `5d1e097`
+4. Playwright smoke tests (landing, auth redirect, upload 401) + CI `e2e` job — `5d1e097`
+5. Integration tests for upload auth and preview route — `5d1e097`
+6. `QA-CHECKLIST.md` for manual staging QA — `5d1e097`
 
-### Short term
+### Still recommended (before production)
 
-4. Add **Playwright** (or similar) smoke tests for: landing → sign-in page, protected route redirect, onboarding validation errors.
-5. Add integration test for `POST /api/upload` auth (401 without session) with mocked Blob handler.
-6. Document required Neon Auth settings in a `QA-CHECKLIST.md` or expand README test plan.
-
-### Manual QA session checklist
-
-7. Execute critical path smoke test with real Neon + Blob + optional Gemini.
-8. Regression pass on sidebar toggle and patient tabs (desktop + mobile).
-9. Verify Google OAuth on staging with production trusted domains.
-10. Test upload of max-size PDF and invalid MIME type.
+1. Execute critical path smoke test on Vercel preview with real Neon + Blob + optional Gemini
+2. Regression pass on sidebar toggle and patient tabs (desktop + mobile)
+3. Verify Google OAuth on staging with production trusted domains
+4. Test upload of max-size PDF and invalid MIME type
+5. Verify care share submission creates `care_shares` row and optional Slack notification
+6. Add Playwright test for onboarding validation errors (requires session stub)
+7. Consider component tests (RTL) for sidebar toggle + patient tabs
 
 ---
 
 ## Static vs Manual Verification Matrix
 
-| Can verify statically (this audit) | Requires manual browser + services |
+| Can verify statically / automated | Requires manual browser + services |
 |-----------------------------------|-----------------------------------|
 | Route files exist | Auth sign-up/sign-in/OAuth |
 | Proxy public/protected rules | OTP email delivery |
 | Env schema completeness | Blob upload end-to-end |
-| Unit test pass/fail | Gemini extraction quality |
-| Orphaned `ShareWithProvider` | Care share submission |
-| Lint clean | Sidebar/tab regression UX |
-| TS/build failure root cause | Theme persistence |
+| Unit/integration test pass/fail | Gemini extraction quality |
+| Care share UI mounted on Overview | Care share live DB/Slack submission |
+| Lint, typecheck, build pass | Sidebar/tab regression UX |
+| Playwright landing + auth redirect + upload 401 | Theme persistence |
+| Preview/upload route auth (mocked) | Document preview rendering (live) |
 | Security headers in `next.config.ts` | Mobile bottom nav touch targets |
-| Tenant isolation query structure | Document preview rendering |
+| Tenant isolation query structure (mocked) | Google OAuth on staging |
+
+---
+
+## CI Pipeline (`.github/workflows/ci.yml`)
+
+| Job | Steps |
+|-----|-------|
+| `quality` | lint → typecheck → typecheck:assistant → test → build |
+| `e2e` | install Playwright → build → `npm run test:e2e` |
 
 ---
 
@@ -601,10 +650,14 @@ Local note: `.env` present; `.env.local` not present.
 - `proxy.ts` — auth middleware
 - `lib/env.ts` — environment validation
 - `.env.example` — required variables
-- `organization-assistant/src/errors.ts` — build blocker
-- `components/documents/share-with-provider.tsx` — unwired UI
+- `organization-assistant/src/errors.ts` — import fix (`11cb929`)
+- `components/documents/share-with-provider.tsx` — care share form
+- `components/dashboard/patient-workspace/patient-overview-panel.tsx` — mounts share UI
+- `e2e/smoke.spec.ts` — Playwright smoke tests
+- `playwright.config.ts` — E2E config
+- `QA-CHECKLIST.md` — manual staging checklist
 - `RESEARCH.md` — sidebar/tab regression context
 
 ---
 
-*Report generated by static analysis and automated checks. No application code was modified during this audit.*
+*Initial report: static analysis and automated checks (July 9, 2026). Updated after QA health improvements on `dev` (`11cb929`, `5d1e097`).*

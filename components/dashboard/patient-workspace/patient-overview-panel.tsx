@@ -6,7 +6,6 @@ import {
   CareTimeline,
   RECENT_ACTIVITY_PREVIEW_LIMIT,
 } from "@/components/health/care-timeline";
-import { ShareWithProvider } from "@/components/documents/share-with-provider";
 import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
 import type { DocumentWithExtraction } from "@/lib/db/queries/documents";
 import type { Patient } from "@/lib/db/schema";
@@ -25,7 +24,6 @@ export function PatientOverviewPanel({
 }: PatientOverviewPanelProps) {
   const { setTab } = usePatientWorkspaceTab();
   const hasMoreActivity = documents.length > RECENT_ACTIVITY_PREVIEW_LIMIT;
-  const patientName = `${patient.firstName} ${patient.lastName}`;
 
   return (
     <div className="flex flex-col gap-4">
@@ -99,12 +97,6 @@ export function PatientOverviewPanel({
         </div>
       </aside>
       </div>
-
-      <ShareWithProvider
-        patientId={patient.id}
-        patientName={patientName}
-        patientRelationship={patient.relationship}
-      />
     </div>
   );
 }
