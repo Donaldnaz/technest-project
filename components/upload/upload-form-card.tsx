@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, X } from "lucide-react";
 import { toast } from "sonner";
@@ -65,12 +65,16 @@ export function UploadFormCard({
     )
     .join("|");
 
-  const itemsRef = useRef(items);
-  itemsRef.current = items;
+  const previewSnapshot = useMemo(
+    () => items,
+    // Preview pane only needs updates when queue structure changes, not progress %.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed by previewItemsSignature
+    [previewItemsSignature],
+  );
 
   useEffect(() => {
-    onItemsChange?.(itemsRef.current);
-  }, [previewItemsSignature, onItemsChange]);
+    onItemsChange?.(previewSnapshot);
+  }, [onItemsChange, previewSnapshot]);
 
   const displayName =
     patientRelationship === "self" ? "you" : patientFirstName;
