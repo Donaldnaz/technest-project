@@ -25,14 +25,13 @@ function UploadPreviewPane({ items }: { items: QueueItem[] }) {
     [items],
   );
 
-  const previewItemId = previewItem?.id;
   const previewFile = previewItem?.file;
   const previewMimeType = previewItem?.mimeType;
 
   const pdfUrl = useMemo(() => {
     if (!previewFile || previewMimeType !== "application/pdf") return null;
     return URL.createObjectURL(previewFile);
-  }, [previewItemId, previewFile, previewMimeType]);
+  }, [previewFile, previewMimeType]);
 
   useEffect(() => {
     return () => {
