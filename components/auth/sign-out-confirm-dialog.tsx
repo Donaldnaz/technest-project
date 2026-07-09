@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/client";
+import { clearPendingVerifyEmail } from "@/lib/auth/pending-email-verification";
 import { patientAuthCopy } from "@/lib/copy/patient/auth";
 
 type SignOutConfirmDialogProps = {
@@ -27,7 +27,6 @@ export function SignOutConfirmDialog({
   open,
   onOpenChange,
 }: SignOutConfirmDialogProps) {
-  const router = useRouter();
   const [pending, setPending] = useState(false);
 
   async function handleSignOut() {
@@ -40,9 +39,8 @@ export function SignOutConfirmDialog({
         throw new Error(result.error.message ?? "Could not sign out.");
       }
 
-      onOpenChange(false);
-      router.push("/auth/sign-in");
-      router.refresh();
+      clearPendingVerifyEmail();
+      window.location.assign("/auth/sign-in");
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Could not sign out.",
