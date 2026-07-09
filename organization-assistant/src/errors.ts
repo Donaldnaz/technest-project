@@ -1,4 +1,4 @@
-import type { ActionResult } from "../types";
+import type { ActionResult } from "./types";
 
 export function toActionError(error: unknown): ActionResult<never> {
   if (error && typeof error === "object" && "issues" in error) {
