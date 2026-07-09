@@ -3,8 +3,6 @@ import "server-only";
 import { auth } from "@/lib/auth/server";
 import type { DocumentCategory } from "@/lib/constants/document-categories";
 import { getPatientById } from "@/lib/db/queries/patients";
-import { agentDebugLog } from "@/lib/debug/agent-log";
-import { getSlackBotConfig, getSlackWebhookUrl } from "@/lib/env";
 import {
   buildDocumentIngestedAlertText,
   notifyDashboardDocumentUploaded,
@@ -39,24 +37,6 @@ export async function notifyDocumentUploadSlack(
     const uploaderEmail = input.uploaderEmail ?? session?.user?.email;
     if (!patient || !uploaderEmail) return;
 
-    const slackBotConfigured = Boolean(getSlackBotConfig());
-    const slackWebhookConfigured = Boolean(getSlackWebhookUrl());
-
-    // #region agent log
-    agentDebugLog(
-      "H1",
-      "lib/slack/post-upload-notifications.ts:notifyDocumentUploadSlack",
-      "slack-upload-init",
-      {
-        created: input.created,
-        slackBotConfigured,
-        slackWebhookConfigured,
-        mimeType: input.mimeType,
-        category: input.category,
-      },
-    );
-    // #endregion
-
     const alertPayload = {
       documentId: input.documentId,
       fileName: input.fileName,
@@ -76,19 +56,6 @@ export async function notifyDocumentUploadSlack(
       mimeType: input.mimeType,
       channelMessage: buildDocumentIngestedAlertText(alertPayload),
     });
-
-    // #region agent log
-    agentDebugLog(
-      "H3",
-      "lib/slack/post-upload-notifications.ts:notifyDocumentUploadSlack",
-      "slack-upload-result",
-      {
-        uploadSent: uploadResult.sent,
-        permalinkPresent: Boolean(uploadResult.permalink),
-        fallbackWillRun: !uploadResult.sent,
-      },
-    );
-    // #endregion
 
     if (uploadResult.sent) return;
 
