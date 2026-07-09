@@ -7,9 +7,11 @@
     "build": "next build",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "typecheck:assistant": "npm run typecheck --prefix organization-assistant",
     "postinstall": "patch-package",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
@@ -40,6 +42,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
