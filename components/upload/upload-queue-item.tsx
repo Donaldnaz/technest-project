@@ -29,7 +29,7 @@ export function UploadQueueItem({
   return (
     <article
       className={cn(
-        "w-full rounded-2xl border p-4 shadow-sm transition-colors duration-300",
+        "w-full rounded-2xl border p-4 shadow-sm",
         item.status === "complete"
           ? "border-sage-200/80 bg-sage-50/60 dark:border-sage-800 dark:bg-sage-950/30"
           : "border-border/60 bg-oat-50/40 dark:bg-charcoal-950/20",
@@ -91,32 +91,37 @@ export function UploadQueueItem({
           </div>
         </div>
 
-        {showProgress && (
-          <div className="space-y-1.5">
-            <div className="h-2 overflow-hidden rounded-full bg-muted">
-              <div
-                className={cn(
-                  "h-full rounded-full transition-all duration-300",
-                  item.status === "complete" && "bg-sage-300 dark:bg-sage-700",
-                  item.status === "uploading" && "bg-amber-200 dark:bg-amber-900",
-                  item.status === "error" && "bg-destructive/30",
-                )}
-                style={{ width: `${item.progress}%` }}
-              />
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {item.status === "uploading" && `Uploading… ${item.progress}%`}
-              {item.status === "complete" && "Uploaded — thank you!"}
-              {item.status === "error" && (item.errorMessage ?? "Upload failed")}
-            </p>
-          </div>
-        )}
+        <div className="min-h-[3.25rem] space-y-1.5">
+          {(showProgress || item.status === "staged") && (
+            <>
+              <div className="h-2 overflow-hidden rounded-full bg-muted">
+                <div
+                  className={cn(
+                    "h-full rounded-full",
+                    item.status === "uploading" ? "bg-amber-200 dark:bg-amber-900" : "",
+                    item.status === "complete" && "bg-sage-300 dark:bg-sage-700",
+                    item.status === "error" && "bg-destructive/30",
+                  )}
+                  style={{
+                    width: `${item.status === "staged" ? 0 : item.progress}%`,
+                  }}
+                />
+              </div>
+              <p className="min-h-4 text-xs tabular-nums text-muted-foreground">
+                {item.status === "uploading" && `Uploading… ${item.progress}%`}
+                {item.status === "complete" && "Uploaded — thank you!"}
+                {item.status === "error" && (item.errorMessage ?? "Upload failed")}
+                {item.status === "staged" && "\u00a0"}
+              </p>
+            </>
+          )}
+        </div>
 
-        {item.status === "staged" && (
+        {(item.status === "staged" || item.status === "uploading") && (
           <CategoryPills
             value={item.category}
             onChange={(category) => onCategoryChange(item.id, category)}
-            disabled={disabled}
+            disabled={disabled || item.status === "uploading"}
             compact
           />
         )}

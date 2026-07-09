@@ -125,7 +125,17 @@ export function useUploadQueue({ patientId }: UseUploadQueueOptions) {
 
   const updateItem = useCallback((id: string, patch: Partial<QueueItem>) => {
     setItems((current) =>
-      current.map((item) => (item.id === id ? { ...item, ...patch } : item)),
+      current.map((item) => {
+        if (item.id !== id) return item;
+        if (
+          patch.progress !== undefined &&
+          item.progress === patch.progress &&
+          Object.keys(patch).length === 1
+        ) {
+          return item;
+        }
+        return { ...item, ...patch };
+      }),
     );
   }, []);
 
@@ -171,7 +181,12 @@ export function useUploadQueue({ patientId }: UseUploadQueueOptions) {
             category: item.category,
           }),
           onUploadProgress: ({ percentage }) => {
-            updateItem(item.id, { progress: Math.round(percentage) });
+            const rounded = Math.round(percentage);
+            const throttled = Math.floor(rounded / 5) * 5;
+            const itemSnapshot = itemsRef.current.find((entry) => entry.id === item.id);
+            const lastProgress = itemSnapshot?.progress ?? 0;
+            if (throttled <= lastProgress && rounded < 100) return;
+            updateItem(item.id, { progress: rounded >= 100 ? 100 : throttled });
           },
         });
 
