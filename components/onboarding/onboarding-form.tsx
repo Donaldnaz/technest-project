@@ -522,7 +522,10 @@ export function OnboardingForm({
                   id="medicalRecordNumber"
                   name="medicalRecordNumber"
                   autoComplete="off"
-                  inputMode="text"
+                  inputMode="numeric"
+                  pattern="[0-9]{5}"
+                  minLength={5}
+                  maxLength={5}
                   required
                   className={inputClassName}
                   aria-describedby="mrn-hint"
@@ -532,6 +535,11 @@ export function OnboardingForm({
                       ? "medicalRecordNumber-error"
                       : undefined
                   }
+                  onInput={(event) => {
+                    event.currentTarget.value = event.currentTarget.value
+                      .replace(/\D/g, "")
+                      .slice(0, 5);
+                  }}
                 />
               </FieldGroup>
             </div>
