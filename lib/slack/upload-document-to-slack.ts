@@ -2,7 +2,6 @@ import "server-only";
 
 import { fetchPrivateBlob } from "@/lib/blob/fetch-private-blob";
 import { ALLOWED_MIME_TYPES } from "@/lib/constants/upload";
-import { agentDebugLog } from "@/lib/debug/agent-log";
 import { getSlackBotConfig } from "@/lib/env";
 import {
   callSlackApi,
@@ -55,20 +54,6 @@ export async function uploadDocumentToSlackChannel(
   const config = getSlackBotConfig();
   const uploadMimeType = resolveUploadMimeType(payload.mimeType);
 
-  // #region agent log
-  agentDebugLog(
-    "H1",
-    "lib/slack/upload-document-to-slack.ts:uploadDocumentToSlackChannel",
-    "slack-upload-metadata-resolved",
-    {
-      mimeTypeIn: payload.mimeType,
-      mimeTypeResolved: uploadMimeType,
-      tokenConfigured: Boolean(config?.token),
-      channelConfigured: Boolean(config?.channelId),
-    },
-  );
-  // #endregion
-
   if (!uploadMimeType) {
     console.warn(
       `[slack] Unsupported mime type for Slack upload: ${payload.mimeType}`,
@@ -85,18 +70,6 @@ export async function uploadDocumentToSlackChannel(
 
   try {
     const blob = await fetchPrivateBlob(payload.blobUrl);
-
-    // #region agent log
-    agentDebugLog(
-      "H2",
-      "lib/slack/upload-document-to-slack.ts:uploadDocumentToSlackChannel",
-      "blob-download-result",
-      {
-        blobFetched: Boolean(blob),
-        bufferBytes: blob?.buffer?.length ?? 0,
-      },
-    );
-    // #endregion
 
     if (!blob) {
       console.error("[slack] Could not download document from blob storage.");
@@ -115,20 +88,6 @@ export async function uploadDocumentToSlackChannel(
         length: buffer.length,
       },
     );
-
-    // #region agent log
-    agentDebugLog(
-      "H3",
-      "lib/slack/upload-document-to-slack.ts:uploadDocumentToSlackChannel",
-      "slack-get-upload-url",
-      {
-        ok: uploadUrlResult.ok,
-        error: uploadUrlResult.error,
-        hasUploadUrl: Boolean(uploadUrlResult.upload_url),
-        hasFileId: Boolean(uploadUrlResult.file_id),
-      },
-    );
-    // #endregion
 
     if (
       !uploadUrlResult.ok ||
@@ -166,20 +125,6 @@ export async function uploadDocumentToSlackChannel(
       },
     );
 
-    // #region agent log
-    agentDebugLog(
-      "H3",
-      "lib/slack/upload-document-to-slack.ts:uploadDocumentToSlackChannel",
-      "slack-complete-upload",
-      {
-        ok: completeResult.ok,
-        error: completeResult.error,
-        hasFiles: Boolean(completeResult.files?.length),
-        permalinkInFiles: Boolean(completeResult.files?.[0]?.permalink),
-      },
-    );
-    // #endregion
-
     if (!completeResult.ok) {
       console.error(
         `[slack] files.completeUploadExternal failed: ${completeResult.error ?? "unknown error"}`,
@@ -195,18 +140,6 @@ export async function uploadDocumentToSlackChannel(
 
     return { sent: true, permalink };
   } catch (error) {
-    // #region agent log
-    agentDebugLog(
-      "H5",
-      "lib/slack/upload-document-to-slack.ts:uploadDocumentToSlackChannel",
-      "slack-upload-exception",
-      {
-        errorName: error instanceof Error ? error.name : "UnknownError",
-        errorMessage: error instanceof Error ? error.message : String(error),
-      },
-    );
-    // #endregion
-
     console.error("[slack] Failed to upload document to channel:", error);
     return { sent: false };
   }

@@ -16,10 +16,6 @@ export const slackCopy = {
     documentAttachedInChannel: "Attached in channel (no link)",
     documentUnavailable: "Link unavailable",
   },
-  pdfFileUpload: {
-    comment: (maskedPatient: string, categoryLabel: string, documentId: string) =>
-      `PDF uploaded for ${maskedPatient} · Category: ${categoryLabel} · Document ID: \`${documentId}\``,
-  },
   careShare: {
     header: "System Alert: Provider share request received",
     fallback: (shareId: string) =>
