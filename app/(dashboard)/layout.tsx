@@ -10,6 +10,8 @@ import { isOnboardingComplete } from "@/lib/auth/onboarding";
 import { getOptionalSession } from "@/lib/auth/session";
 import { listRecentPatients } from "@/lib/db/queries/patients";
 
+export const dynamic = "force-dynamic";
+
 function NavFallback() {
   return <div className="h-32" aria-hidden />;
 }
@@ -37,12 +39,12 @@ export default async function DashboardGroupLayout({
       <SkipLink />
       <AppSidebar profileId={profileId} />
 
-      <div className="relative flex min-w-0 flex-1 flex-col">
+      <div className="dashboard-shell relative flex min-w-0 flex-1 flex-col">
         <DashboardSiteHeader />
 
         <main
           id="main-content"
-          className="flex-1 px-4 py-6 pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] md:px-8 md:py-8 lg:pb-10 xl:px-8 2xl:px-10"
+          className="flex-1 px-4 py-6 max-lg:pb-[var(--mobile-bottom-nav-offset)] md:px-8 md:py-8 lg:pb-10 xl:px-8 2xl:px-10"
         >
           {children}
         </main>

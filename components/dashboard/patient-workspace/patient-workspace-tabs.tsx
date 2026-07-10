@@ -129,7 +129,7 @@ export function PatientWorkspaceTabs({
             <TabsList
               variant="line"
               aria-label="Profile sections"
-              className="h-auto min-h-11 w-full min-w-max justify-start gap-1 bg-transparent p-0"
+              className="h-auto min-h-11 w-full min-w-0 justify-around gap-0 bg-transparent p-0 max-sm:justify-around sm:min-w-max sm:justify-start sm:gap-1"
             >
               {tabs.map((tab) => {
                 const triggerId = `${tabsId}-trigger-${tab.value}`;
@@ -142,9 +142,9 @@ export function PatientWorkspaceTabs({
                     value={tab.value}
                     aria-controls={panelId}
                     aria-label={tab.ariaLabel}
-                    className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-none px-2.5 py-2 text-sm data-active:bg-transparent max-sm:gap-1 max-sm:px-2 sm:gap-2 sm:px-4"
+                    className="inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-none px-2 py-2 text-sm data-active:bg-transparent max-sm:flex-1 max-sm:px-1 sm:shrink-0 sm:justify-start sm:gap-2 sm:px-4"
                   >
-                    <span className="inline-flex items-center gap-1.5 max-sm:[&_svg]:size-3.5 sm:gap-2">
+                    <span className="inline-flex items-center justify-center gap-1.5 max-sm:[&_svg]:size-4 sm:gap-2">
                       {tab.label}
                       {tab.badge !== undefined && tab.badge > 0 ? (
                         <span

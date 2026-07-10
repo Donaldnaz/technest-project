@@ -23,12 +23,12 @@ export function DashboardSiteHeader() {
             <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
               <HeartPulse className="size-4" aria-hidden />
             </div>
-            <span className="truncate font-heading text-[0.9375rem] font-semibold leading-none sm:text-base">
+            <span className="hidden truncate font-heading text-[0.9375rem] font-semibold leading-none sm:inline sm:text-base">
               i<span className="text-primary">Care</span>
             </span>
           </Link>
           <span
-            className="hidden h-4 w-px shrink-0 bg-border/60 sm:block"
+            className="hidden h-4 w-px shrink-0 bg-border/60 md:block"
             aria-hidden
           />
           <HeaderContext />

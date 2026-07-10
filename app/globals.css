@@ -240,7 +240,13 @@
   }
 
   .health-page {
-    @apply mx-auto flex w-full max-w-7xl flex-col gap-6 pb-24 md:gap-8 lg:pb-8;
+    @apply mx-auto flex w-full max-w-7xl flex-col gap-6 pb-0 md:gap-8 lg:pb-8;
+  }
+
+  .dashboard-shell {
+    --mobile-bottom-nav-offset: calc(
+      5.5rem + env(safe-area-inset-bottom, 0px)
+    );
   }
 
   .health-panel {

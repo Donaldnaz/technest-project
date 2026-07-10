@@ -89,7 +89,9 @@ export function OrganizationAssistant({
         onClick={() => setOpen((value) => !value)}
         className={cn(
           "fixed right-4 z-50 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-2 ring-background transition-transform hover:scale-105 hover:bg-primary/90",
-          clearBottomNav ? "bottom-24 lg:bottom-6" : "bottom-6",
+          clearBottomNav
+            ? "max-lg:bottom-[var(--mobile-bottom-nav-offset,6rem)] lg:bottom-6"
+            : "bottom-6",
           open && "scale-95 max-lg:pointer-events-none max-lg:opacity-0",
         )}
         aria-expanded={open}
