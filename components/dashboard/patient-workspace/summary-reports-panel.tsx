@@ -49,7 +49,7 @@ function DownloadLinks({
   return (
     <div
       className={cn(
-        "inline-flex flex-nowrap items-center gap-2 whitespace-nowrap",
+        "inline-flex flex-nowrap items-center gap-2 whitespace-nowrap max-xs:w-full max-xs:flex-col max-xs:items-stretch",
         className,
       )}
       role="group"
@@ -60,7 +60,7 @@ function DownloadLinks({
         download
         className={cn(
           buttonVariants({ variant: "outline", size: "touch" }),
-          "shrink-0 gap-1.5 px-3 text-primary hover:border-primary/40 hover:bg-primary/5 hover:text-primary sm:h-8 sm:min-h-0 sm:px-2.5 sm:text-[0.8rem]",
+          "shrink-0 gap-1.5 px-3 text-primary hover:border-primary/40 hover:bg-primary/5 hover:text-primary max-xs:w-full max-xs:justify-center sm:h-8 sm:min-h-0 sm:w-auto sm:px-2.5 sm:text-[0.8rem]",
         )}
         aria-label={patientDownloadsCopy.table.downloadTxtAria(fileName)}
       >
@@ -72,7 +72,7 @@ function DownloadLinks({
         download
         className={cn(
           buttonVariants({ variant: "outline", size: "touch" }),
-          "shrink-0 gap-1.5 px-3 text-primary hover:border-primary/40 hover:bg-primary/5 hover:text-primary sm:h-8 sm:min-h-0 sm:px-2.5 sm:text-[0.8rem]",
+          "shrink-0 gap-1.5 px-3 text-primary hover:border-primary/40 hover:bg-primary/5 hover:text-primary max-xs:w-full max-xs:justify-center sm:h-8 sm:min-h-0 sm:w-auto sm:px-2.5 sm:text-[0.8rem]",
         )}
         aria-label={patientDownloadsCopy.table.downloadPdfAria(fileName)}
       >

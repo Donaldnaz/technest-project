@@ -37,7 +37,7 @@ export default async function DashboardGroupLayout({
       <SkipLink />
       <AppSidebar profileId={profileId} />
 
-      <div className="relative flex min-w-0 flex-1 flex-col">
+      <div className="dashboard-shell relative flex min-w-0 flex-1 flex-col">
         <DashboardSiteHeader />
 
         <main

@@ -75,12 +75,9 @@ function PatientWorkspaceContent({
             ariaLabel: patientDashboardCopy.patient.tabs.overview,
             label: (
               <>
-                <LayoutGrid className="size-4" aria-hidden />
-                <span className="max-sm:sr-only">
+                <LayoutGrid className="size-4 shrink-0" aria-hidden />
+                <span className="hidden sm:inline">
                   {patientDashboardCopy.patient.tabs.overview}
-                </span>
-                <span className="sm:hidden" aria-hidden>
-                  Home
                 </span>
               </>
             ),
@@ -96,12 +93,9 @@ function PatientWorkspaceContent({
             ariaLabel: patientDashboardCopy.patient.tabs.upload,
             label: (
               <>
-                <FileUp className="size-4" aria-hidden />
-                <span className="max-sm:sr-only">
+                <FileUp className="size-4 shrink-0" aria-hidden />
+                <span className="hidden sm:inline">
                   {patientDashboardCopy.patient.tabs.upload}
-                </span>
-                <span className="sm:hidden" aria-hidden>
-                  Upload
                 </span>
               </>
             ),
@@ -123,12 +117,9 @@ function PatientWorkspaceContent({
             badge: documentCount > 0 ? documentCount : undefined,
             label: (
               <>
-                <Activity className="size-4" aria-hidden />
-                <span className="max-sm:sr-only">
+                <Activity className="size-4 shrink-0" aria-hidden />
+                <span className="hidden sm:inline">
                   {patientDashboardCopy.patient.tabs.timeline}
-                </span>
-                <span className="sm:hidden" aria-hidden>
-                  Activity
                 </span>
               </>
             ),
@@ -162,12 +153,9 @@ function PatientWorkspaceContent({
               summaryReports.length > 0 ? summaryReports.length : undefined,
             label: (
               <>
-                <Download className="size-4" aria-hidden />
-                <span className="max-sm:sr-only">
+                <Download className="size-4 shrink-0" aria-hidden />
+                <span className="hidden sm:inline">
                   {patientDashboardCopy.patient.tabs.download}
-                </span>
-                <span className="sm:hidden" aria-hidden>
-                  Files
                 </span>
               </>
             ),
