@@ -125,7 +125,7 @@ export function PatientWorkspaceTabs({
         aria-label={patientDashboardCopy.patient.workspaceTitle}
       >
         <div className="sticky top-app-header z-20 border-b border-border/60 bg-background/95 backdrop-blur-md">
-          <div className="overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="tabs-scroll-fade pb-1">
             <TabsList
               variant="line"
               aria-label="Profile sections"
@@ -142,9 +142,9 @@ export function PatientWorkspaceTabs({
                     value={tab.value}
                     aria-controls={panelId}
                     aria-label={tab.ariaLabel}
-                    className="inline-flex h-11 shrink-0 items-center gap-2 rounded-none px-3 py-2 data-active:bg-transparent sm:px-4"
+                    className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-none px-2.5 py-2 text-sm data-active:bg-transparent max-sm:gap-1 max-sm:px-2 sm:gap-2 sm:px-4"
                   >
-                    <span className="inline-flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 max-sm:[&_svg]:size-3.5 sm:gap-2">
                       {tab.label}
                       {tab.badge !== undefined && tab.badge > 0 ? (
                         <span

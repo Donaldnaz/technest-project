@@ -5,6 +5,12 @@
  *   md      — 768px+
  *   lg      — 1024px+ (sidebar / desktop nav)
  *   xl      — 1280px+
+ *   2xl     — 1536px+ (ultrawide padding polish)
+ *
+ * Content width scale:
+ *   Reading / forms — max-w-3xl–4xl (auth, onboarding, account, legal body)
+ *   Marketing       — SiteContainer default max-w-6xl (wide: max-w-7xl)
+ *   App pages       — .health-page / SiteContainer wide → max-w-7xl
  */
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -222,7 +228,7 @@
   }
 
   .page-shell {
-    @apply px-4 md:px-6 lg:px-8;
+    @apply px-4 md:px-6 lg:px-8 xl:px-8 2xl:px-10;
   }
 
   .section-stack {
@@ -319,6 +325,30 @@
     width: 2rem;
     pointer-events: none;
     background: linear-gradient(to left, var(--background), transparent);
+  }
+
+  /* Horizontal tab / chip scroller with edge fade hint */
+  .tabs-scroll-fade {
+    @apply relative overflow-x-auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .tabs-scroll-fade::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 1.75rem;
+    pointer-events: none;
+    background: linear-gradient(to left, var(--background), transparent);
+  }
+
+  @media (min-width: 640px) {
+    .tabs-scroll-fade::after {
+      display: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -429,22 +459,22 @@
 
 .icare-auth-page form .relative > input[type="password"],
 .icare-auth-page form .relative > input[data-icare-password-field="true"] {
-  padding-right: 2.75rem;
+  padding-right: 3rem;
 }
 
 .icare-auth-page form .relative > button[type="button"],
 .icare-auth-page form .relative > button[data-icare-password-toggle] {
   position: absolute !important;
   top: 0 !important;
-  right: 0.25rem !important;
+  right: 0.125rem !important;
   bottom: 0 !important;
   left: auto !important;
   z-index: 10;
   display: inline-flex !important;
   height: auto !important;
-  width: 2.25rem !important;
+  width: 2.75rem !important;
   min-height: 0 !important;
-  min-width: 2.25rem !important;
+  min-width: 2.75rem !important;
   margin: 0 !important;
   transform: none !important;
   align-items: center;

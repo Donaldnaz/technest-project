@@ -48,21 +48,21 @@ function syncToggleButton(button: HTMLButtonElement, visible: boolean) {
 }
 
 const TOGGLE_CLASS_NAME =
-  "icare-password-toggle absolute inset-y-0 right-1 z-10 inline-flex w-9 shrink-0 items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-transparent hover:text-foreground";
+  "icare-password-toggle absolute inset-y-0 right-0.5 z-10 inline-flex w-11 shrink-0 items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-transparent hover:text-foreground";
 
 const TOGGLE_INLINE_STYLE: Partial<CSSStyleDeclaration> = {
   position: "absolute",
   top: "0",
-  right: "0.25rem",
+  right: "0.125rem",
   bottom: "0",
   left: "auto",
   zIndex: "10",
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  width: "2.25rem",
+  width: "2.75rem",
   height: "auto",
-  minWidth: "2.25rem",
+  minWidth: "2.75rem",
   minHeight: "0",
   margin: "0",
   padding: "0",

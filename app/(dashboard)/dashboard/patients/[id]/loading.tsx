@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PatientDetailLoading() {
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 pb-6">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 pb-6">
       <Skeleton className="h-5 w-48" />
       <Skeleton className="h-52 w-full rounded-2xl" />
       <Skeleton className="h-11 w-full max-w-xl" />

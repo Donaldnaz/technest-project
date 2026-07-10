@@ -47,14 +47,14 @@ export default async function AuthPage({
       <div className="grid min-h-dvh-screen min-h-[calc(100vh-var(--site-header-height,3.5rem))] lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,28rem)]">
         <AuthHeroPanel />
 
-        <section className="relative flex flex-col justify-center px-4 py-8 sm:px-6 lg:px-10 lg:py-10 xl:px-14">
+        <section className="relative flex flex-col justify-center px-4 py-8 sm:px-6 lg:px-10 lg:py-10 xl:px-14 2xl:px-16">
           <div
             className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-oat-50/80 to-transparent lg:hidden dark:from-charcoal-950/80"
             aria-hidden
           />
 
           <div className="relative mx-auto w-full max-w-md">
-            <div className="health-card rounded-3xl p-5 sm:p-6 md:p-8">
+            <div className="health-card rounded-3xl p-4 max-xs:p-3.5 sm:p-6 md:p-8">
               <ICareAuthView path={path} />
               {path === "sign-in" && (
                 <p className="mt-6 text-center text-xs leading-relaxed text-muted-foreground">

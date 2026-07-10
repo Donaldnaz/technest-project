@@ -16,7 +16,7 @@ export function LegalSubnav({ className }: { className?: string }) {
       aria-label={legalCopy.nav.label}
       className={cn("legal-subnav-scroll border-b border-border/50", className)}
     >
-      <ul className="-mb-px flex gap-6 px-1">
+      <ul className="-mb-px flex gap-4 px-1 sm:gap-6">
         {legalNavLinks.map((link) => {
           const isActive = pathname === link.href;
 
@@ -26,7 +26,7 @@ export function LegalSubnav({ className }: { className?: string }) {
                 href={link.href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "inline-block border-b-2 pb-3 text-sm font-medium transition-colors",
+                  "inline-flex min-h-11 items-center border-b-2 pb-3 text-sm font-medium transition-colors",
                   focusRingClassName,
                   isActive
                     ? "border-primary text-foreground"

@@ -33,18 +33,20 @@ export function DataTableShell({
         className,
       )}
     >
-      <Table>
-        <TableHeader
-          className={cn(stickyHeader && "sticky top-0 z-10 bg-card")}
-        >
-          <TableRow className="clinical-table-row hover:bg-transparent">
-            {columns.map((column) => (
-              <TableHead key={column}>{column}</TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>{children}</TableBody>
-      </Table>
+      <div className="responsive-table-wrap">
+        <Table>
+          <TableHeader
+            className={cn(stickyHeader && "sticky top-0 z-10 bg-card")}
+          >
+            <TableRow className="clinical-table-row hover:bg-transparent">
+              {columns.map((column) => (
+                <TableHead key={column}>{column}</TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>{children}</TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
