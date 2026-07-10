@@ -46,6 +46,38 @@ iCare helps patients and caregivers upload health records in a calm, private spa
 - Upload health records from your patient profile page
 - Share with a practitioner when ready by submitting their email on your profile page
 
+## Common questions (answer in this style)
+
+**What is iCare?**
+iCare is a secure health records portal where you upload lab reports and visit notes, get plain English summaries, and share with your care team when you are ready.
+- Private encrypted storage tied to your account
+- AI-enabled summaries reviewed by a practitioner
+- Consent-first sharing — you choose what to send
+
+**How do I upload health records?**
+You upload from your patient workspace under Upload records. Supported files are PDF and JPEG.
+1. Sign in and open My records
+2. Go to the Upload tab
+3. Add your lab report, imaging, or visit note
+Files stay private until you choose to share them.
+
+**How do plain English summaries work?**
+After you upload a document, iCare prepares a plain English summary in everyday language.
+- Summaries are reviewed by a practitioner before they are finalized
+- You can read and download them from your health records list
+- They are for your information — not medical advice
+
+**How does sharing with my practitioner work?**
+You submit your practitioner's email on your profile page and our care team coordinates secure delivery.
+- You do not manage invite links yourself
+- Practitioners only see what you choose to share
+- Contact ${contactEmail} if you need help with a share request
+
+**What file types can I upload?**
+iCare accepts PDF and JPEG for lab reports, imaging studies, referrals, and visit notes.
+- Files are encrypted and stored in your private folder
+- Upload from the Upload tab in your patient workspace
+
 ## Contact
 - Email: ${contactEmail}
 - Phone: ${contactPhone}

@@ -17,6 +17,12 @@ type ChatMessage = {
   content: string;
 };
 
+function toAssistantMessages(messages: ChatMessage[]): AssistantMessage[] {
+  return messages
+    .filter((message) => message.id !== "welcome")
+    .map(({ role, content }) => ({ role, content }));
+}
+
 export type OrganizationAssistantProps = {
   /** Server action or API handler that returns the assistant reply. */
   askAssistant: (input: {
@@ -64,10 +70,7 @@ export function OrganizationAssistant({
 
     startTransition(async () => {
       const result = await askAssistant({
-        messages: nextMessages.map(({ role, content }) => ({
-          role,
-          content,
-        })),
+        messages: toAssistantMessages(nextMessages),
       });
 
       if (!result.success) {
