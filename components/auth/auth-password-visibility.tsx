@@ -47,9 +47,46 @@ function syncToggleButton(button: HTMLButtonElement, visible: boolean) {
   button.innerHTML = visible ? EYE_OFF_SVG : EYE_SVG;
 }
 
+const TOGGLE_CLASS_NAME =
+  "icare-password-toggle absolute top-1/2 right-1 z-10 inline-flex size-9 shrink-0 -translate-y-1/2 items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-transparent hover:text-foreground";
+
+const TOGGLE_INLINE_STYLE: Partial<CSSStyleDeclaration> = {
+  position: "absolute",
+  top: "50%",
+  right: "0.25rem",
+  bottom: "auto",
+  left: "auto",
+  zIndex: "10",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "2.25rem",
+  height: "2.25rem",
+  minWidth: "2.25rem",
+  minHeight: "2.25rem",
+  margin: "0",
+  padding: "0",
+  border: "0",
+  borderRadius: "0.5rem",
+  background: "transparent",
+  boxShadow: "none",
+  transform: "translateY(-50%)",
+  cursor: "pointer",
+};
+
+function applyToggleLayout(button: HTMLButtonElement) {
+  button.className = TOGGLE_CLASS_NAME;
+  Object.assign(button.style, TOGGLE_INLINE_STYLE);
+}
+
 function enhancePasswordInput(input: HTMLInputElement) {
   const wrapper = input.closest(".relative");
   if (!wrapper) return;
+
+  if (wrapper instanceof HTMLElement) {
+    wrapper.style.position = "relative";
+    wrapper.style.width = "100%";
+  }
 
   const existingToggle = wrapper.querySelector<HTMLButtonElement>(
     `button[${TOGGLE_ATTR}]`,
@@ -60,8 +97,7 @@ function enhancePasswordInput(input: HTMLInputElement) {
     syncToggleButton(existingToggle, visible);
     input.classList.add("hide-password-toggle", "pr-11");
     input.classList.remove("pr-10");
-    existingToggle.className =
-      "icare-password-toggle absolute top-1/2 right-1 z-10 inline-flex size-9 shrink-0 -translate-y-1/2 items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-transparent hover:text-foreground";
+    applyToggleLayout(existingToggle);
     return;
   }
 
@@ -78,8 +114,7 @@ function enhancePasswordInput(input: HTMLInputElement) {
   const button = document.createElement("button");
   button.type = "button";
   button.setAttribute(TOGGLE_ATTR, "true");
-  button.className =
-    "icare-password-toggle absolute top-1/2 right-1 z-10 inline-flex size-9 shrink-0 -translate-y-1/2 items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-transparent hover:text-foreground";
+  applyToggleLayout(button);
   syncToggleButton(button, visible);
 
   button.addEventListener("click", (event) => {
