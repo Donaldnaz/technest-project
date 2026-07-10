@@ -1,5 +1,7 @@
 import { ArrowRight, FileCheck2, Share2, Upload } from "lucide-react";
 
+import { SiteContainer } from "@/components/layout/site-container";
+
 const steps = [
   {
     step: "01",
@@ -26,8 +28,8 @@ const steps = [
 
 export function LandingWorkflow() {
   return (
-    <section id="how-it-works" className="px-4 py-20 md:px-6 md:py-28">
-      <div className="mx-auto max-w-6xl">
+    <section id="how-it-works" className="py-20 md:py-28">
+      <SiteContainer>
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
           <div>
             <p className="text-sm font-medium uppercase tracking-wider text-primary">
@@ -109,7 +111,7 @@ export function LandingWorkflow() {
             </div>
           </div>
         </div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }

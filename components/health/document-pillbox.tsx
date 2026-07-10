@@ -78,20 +78,20 @@ export function DocumentPillbox({
         <p className="text-sm text-muted-foreground">{pillbox.description}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 max-xs:gap-2 sm:grid-cols-4 sm:gap-4">
         {pills.map((pill) => {
           const copy = pillbox[pill.id];
 
           return (
             <div
               key={pill.id}
-              className="flex flex-col items-center gap-2 rounded-2xl border border-border/40 bg-oat-50/30 p-4 text-center dark:bg-charcoal-950/20"
+              className="flex flex-col items-center gap-2 rounded-2xl border border-border/40 bg-oat-50/30 p-3 text-center max-xs:p-2.5 dark:bg-charcoal-950/20 sm:p-4"
             >
               <span
-                className={`flex size-16 items-center justify-center shadow-sm ${
+                className={`flex items-center justify-center shadow-sm ${
                   pill.shape === "round"
-                    ? "rounded-full"
-                    : "h-14 w-full max-w-24 rounded-full"
+                    ? "size-12 rounded-full sm:size-16"
+                    : "h-11 w-full max-w-20 rounded-full sm:h-14 sm:max-w-24"
                 } ${pill.colorClass}`}
               >
                 <pill.icon className="size-6 opacity-90" aria-hidden />

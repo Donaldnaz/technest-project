@@ -63,7 +63,7 @@ function PatientWorkspaceContent({
   ];
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 pb-6">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 pb-6">
       <AppBreadcrumbs items={breadcrumbItems} showBackIcon />
 
       <PatientWorkspaceTabs
@@ -76,7 +76,12 @@ function PatientWorkspaceContent({
             label: (
               <>
                 <LayoutGrid className="size-4" aria-hidden />
-                {patientDashboardCopy.patient.tabs.overview}
+                <span className="max-sm:sr-only">
+                  {patientDashboardCopy.patient.tabs.overview}
+                </span>
+                <span className="sm:hidden" aria-hidden>
+                  Home
+                </span>
               </>
             ),
             content: (
@@ -92,7 +97,12 @@ function PatientWorkspaceContent({
             label: (
               <>
                 <FileUp className="size-4" aria-hidden />
-                {patientDashboardCopy.patient.tabs.upload}
+                <span className="max-sm:sr-only">
+                  {patientDashboardCopy.patient.tabs.upload}
+                </span>
+                <span className="sm:hidden" aria-hidden>
+                  Upload
+                </span>
               </>
             ),
             content: (
@@ -114,7 +124,12 @@ function PatientWorkspaceContent({
             label: (
               <>
                 <Activity className="size-4" aria-hidden />
-                {patientDashboardCopy.patient.tabs.timeline}
+                <span className="max-sm:sr-only">
+                  {patientDashboardCopy.patient.tabs.timeline}
+                </span>
+                <span className="sm:hidden" aria-hidden>
+                  Activity
+                </span>
               </>
             ),
             content: (
@@ -148,7 +163,12 @@ function PatientWorkspaceContent({
             label: (
               <>
                 <Download className="size-4" aria-hidden />
-                {patientDashboardCopy.patient.tabs.download}
+                <span className="max-sm:sr-only">
+                  {patientDashboardCopy.patient.tabs.download}
+                </span>
+                <span className="sm:hidden" aria-hidden>
+                  Files
+                </span>
               </>
             ),
             content: (
@@ -176,7 +196,7 @@ export function PatientWorkspace(props: PatientWorkspaceProps) {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-muted-foreground">
+        <div className="mx-auto max-w-7xl px-4 py-8 text-sm text-muted-foreground">
           {patientDashboardCopy.patient.loading}
         </div>
       }

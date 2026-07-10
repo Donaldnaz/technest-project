@@ -6,6 +6,8 @@ import {
   UserCheck,
 } from "lucide-react";
 
+import { SiteContainer } from "@/components/layout/site-container";
+
 const points = [
   "Your health records stay private until you choose to share them",
   "Lab results and imaging stored securely in your personal health folder",
@@ -17,11 +19,11 @@ export function LandingSecurity() {
   return (
     <section
       id="trust"
-      className="border-t border-border/50 bg-gradient-to-b from-muted/20 to-background px-4 py-20 md:px-6 md:py-28"
+      className="border-t border-border/50 bg-gradient-to-b from-muted/20 to-background py-20 md:py-28"
     >
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <SiteContainer className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div className="health-card rounded-3xl p-8 md:p-10">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid max-xs:grid-cols-1 grid-cols-2 gap-4">
             {[
               { icon: Shield, label: "Privacy", value: "Protected" },
               { icon: Heart, label: "Records", value: "Organized" },
@@ -64,7 +66,7 @@ export function LandingSecurity() {
             ))}
           </ul>
         </div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }

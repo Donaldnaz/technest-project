@@ -1,5 +1,7 @@
 import { Heart, Leaf, ShieldCheck, Sparkles } from "lucide-react";
 
+import { SiteContainer } from "@/components/layout/site-container";
+
 const principles = [
   {
     icon: Leaf,
@@ -29,8 +31,8 @@ const principles = [
 
 export function LandingPrinciples() {
   return (
-    <section className="border-t border-border/50 bg-muted/20 px-4 py-16 md:px-6 md:py-20">
-      <div className="mx-auto grid max-w-6xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="border-t border-border/50 bg-muted/20 py-16 md:py-20">
+      <SiteContainer className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {principles.map((item) => (
           <article key={item.title} className="text-center">
             <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-2xl bg-primary/15 text-primary">
@@ -42,7 +44,7 @@ export function LandingPrinciples() {
             </p>
           </article>
         ))}
-      </div>
+      </SiteContainer>
     </section>
   );
 }

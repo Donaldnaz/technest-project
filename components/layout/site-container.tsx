@@ -16,7 +16,7 @@ export function SiteContainer({
   return (
     <Tag
       className={cn(
-        "mx-auto w-full px-4 md:px-6",
+        "mx-auto w-full px-4 md:px-6 xl:px-8 2xl:px-10",
         size === "wide" ? "max-w-7xl" : "max-w-6xl",
         className,
       )}

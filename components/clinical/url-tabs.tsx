@@ -67,7 +67,7 @@ export function UrlTabs({
       className={cn("w-full", className)}
     >
       <div className="sticky top-app-header z-20 border-b border-border/60 bg-background/95 backdrop-blur-md">
-        <div className="overflow-x-auto pb-1">
+        <div className="tabs-scroll-fade pb-1">
           <TabsList
             variant="line"
             className={cn(
@@ -79,7 +79,7 @@ export function UrlTabs({
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
-                className="inline-flex h-10 shrink-0 items-center gap-2 rounded-none px-3 py-2 data-active:bg-transparent sm:px-4"
+                className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-none px-2.5 py-2 text-sm data-active:bg-transparent max-sm:gap-1 max-sm:px-2 sm:gap-2 sm:px-4"
               >
                 <span className="inline-flex items-center gap-2">
                   {tab.label}

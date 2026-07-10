@@ -7,6 +7,8 @@ import {
   Upload,
 } from "lucide-react";
 
+import { SiteContainer } from "@/components/layout/site-container";
+
 const features = [
   {
     icon: Upload,
@@ -56,9 +58,9 @@ export function LandingFeatures() {
   return (
     <section
       id="features"
-      className="border-t border-border/50 bg-muted/20 px-4 py-20 md:px-6 md:py-28"
+      className="border-t border-border/50 bg-muted/20 py-20 md:py-28"
     >
-      <div className="mx-auto max-w-6xl">
+      <SiteContainer>
         <div className="mx-auto mb-14 max-w-2xl text-center">
           <p className="text-sm font-medium uppercase tracking-wider text-primary">
             Features
@@ -93,7 +95,7 @@ export function LandingFeatures() {
             </article>
           ))}
         </div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }

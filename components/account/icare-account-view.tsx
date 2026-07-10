@@ -33,7 +33,7 @@ export function ICareAccountView({ path }: ICareAccountViewProps) {
               key={item.path}
               href={`/account/${item.path}`}
               className={cn(
-                "rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
+                "inline-flex min-h-11 items-center rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
                 isActive
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",

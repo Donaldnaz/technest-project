@@ -52,7 +52,7 @@ export function CategoryPills({
             disabled={disabled}
             onClick={() => onChange(category.value)}
             className={cn(
-              "upload-interactive inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full border px-3 py-2 text-xs font-medium transition-all duration-200 max-xs:w-full sm:w-auto sm:flex-none sm:justify-start",
+              "upload-interactive inline-flex min-h-11 w-[calc(50%-0.25rem)] items-center justify-center gap-1.5 rounded-full border px-3 py-2 text-xs font-medium transition-all duration-200 sm:w-auto sm:flex-none sm:justify-start",
               compact && "min-h-11 px-2.5 py-2 text-xs max-sm:min-h-11",
               selected
                 ? "border-sage-400 bg-sage-100 text-sage-900 shadow-sm dark:border-sage-700 dark:bg-sage-950/50 dark:text-sage-100"

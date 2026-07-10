@@ -271,7 +271,7 @@ export function OnboardingForm({
   return (
     <form
       action={formAction}
-      className="section-stack pb-32 md:pb-12"
+      className="section-stack pb-36 md:pb-12"
       noValidate
     >
       <p className="text-sm text-muted-foreground">{copy.form.requiredLegend}</p>

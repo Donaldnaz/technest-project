@@ -14,11 +14,11 @@ export function DashboardSiteHeader() {
       containerClassName="max-w-full"
       actionsVisibility="all"
       brand={
-        <div className="flex min-w-0 items-center gap-2.5 sm:gap-3 lg:hidden">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3 lg:hidden">
           <Link
             href="/"
             aria-label="Back to iCare home"
-            className="flex shrink-0 items-center gap-2"
+            className="flex min-w-0 shrink items-center gap-2"
           >
             <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
               <HeartPulse className="size-4" aria-hidden />

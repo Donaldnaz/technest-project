@@ -42,7 +42,7 @@ export default async function DashboardGroupLayout({
 
         <main
           id="main-content"
-          className="flex-1 px-4 py-6 pb-24 md:px-8 md:py-8 lg:pb-10"
+          className="flex-1 px-4 py-6 pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] md:px-8 md:py-8 lg:pb-10 xl:px-8 2xl:px-10"
         >
           {children}
         </main>

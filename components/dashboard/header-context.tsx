@@ -16,7 +16,7 @@ export function HeaderContext() {
   }
 
   return (
-    <p className="max-w-[40vw] truncate text-sm font-medium leading-none text-muted-foreground sm:max-w-none lg:hidden">
+    <p className="hidden max-w-[28vw] truncate text-sm font-medium leading-none text-muted-foreground sm:block sm:max-w-[40vw] md:max-w-none lg:hidden">
       {label}
     </p>
   );
