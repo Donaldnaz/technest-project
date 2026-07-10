@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { getDashboardNavLinks } from "@/lib/navigation/dashboard-nav";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 import { cn } from "@/lib/utils";
 
 type MobileBottomNavProps = {
@@ -15,11 +15,7 @@ type MobileBottomNavProps = {
 export function MobileBottomNav({ profileId }: MobileBottomNavProps) {
   const pathname = usePathname();
   const links = getDashboardNavLinks(profileId);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
 
   const nav = (
     <nav

@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { createPortal } from "react-dom";
 import { MessageCircle, Send, Sparkles, X } from "lucide-react";
+
+import { useIsClient } from "./use-is-client";
 
 import { assistantCopy } from "../copy";
 import { ASSISTANT_SUGGESTED_QUESTIONS } from "../knowledge";
@@ -44,11 +46,7 @@ export function OrganizationAssistant({
     },
   ]);
   const [pending, startTransition] = useTransition();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
 
   function sendMessage(text: string) {
     const trimmed = text.trim();
