@@ -415,7 +415,10 @@
 }
 
 /* Unlayered: must beat Tailwind utility classes on the auth password row wrapper */
-.icare-auth-page form [data-slot="form-item"]:has(input[type="password"]) {
+.icare-auth-page form [data-slot="form-item"]:has(input[type="password"]),
+.icare-auth-page
+  form
+  [data-slot="form-item"]:has(input[data-icare-password-field="true"]) {
   display: grid;
   grid-template-rows: auto auto auto;
   row-gap: 0.5rem;
@@ -424,6 +427,10 @@
 .icare-auth-page
   form
   [data-slot="form-item"]:has(input[type="password"])
+  > div:has(a[href*="/auth/forgot-password"]),
+.icare-auth-page
+  form
+  [data-slot="form-item"]:has(input[data-icare-password-field="true"])
   > div:has(a[href*="/auth/forgot-password"]) {
   display: contents !important;
 }
@@ -431,6 +438,10 @@
 .icare-auth-page
   form
   [data-slot="form-item"]:has(input[type="password"])
+  label[data-slot="form-label"],
+.icare-auth-page
+  form
+  [data-slot="form-item"]:has(input[data-icare-password-field="true"])
   label[data-slot="form-label"] {
   grid-row: 1;
 }
@@ -438,6 +449,10 @@
 .icare-auth-page
   form
   [data-slot="form-item"]:has(input[type="password"])
+  > .relative,
+.icare-auth-page
+  form
+  [data-slot="form-item"]:has(input[data-icare-password-field="true"])
   > .relative {
   grid-row: 2;
 }
@@ -445,7 +460,50 @@
 .icare-auth-page
   form
   [data-slot="form-item"]:has(input[type="password"])
+  a[href*="/auth/forgot-password"],
+.icare-auth-page
+  form
+  [data-slot="form-item"]:has(input[data-icare-password-field="true"])
   a[href*="/auth/forgot-password"] {
   grid-row: 3;
   justify-self: end;
+}
+
+/* Center password show/hide toggles inside h-11 auth inputs */
+.icare-auth-page form .relative:has(input[type="password"]),
+.icare-auth-page form .relative:has(input[data-icare-password-field="true"]) {
+  display: block;
+}
+
+.icare-auth-page form .relative > input[type="password"],
+.icare-auth-page form .relative > input[data-icare-password-field="true"] {
+  padding-right: 2.75rem;
+}
+
+.icare-auth-page form .relative > button[type="button"] {
+  top: 50% !important;
+  right: 0.25rem !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 10;
+  display: inline-flex !important;
+  height: 2.25rem !important;
+  width: 2.25rem !important;
+  transform: translateY(-50%);
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--muted-foreground);
+}
+
+.icare-auth-page form .relative > button[type="button"]:hover {
+  background: transparent !important;
+  color: var(--foreground);
+}
+
+.icare-auth-page form .relative > button[type="button"] svg {
+  width: 1rem;
+  height: 1rem;
 }

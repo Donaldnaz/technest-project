@@ -15,11 +15,11 @@ function PasswordInput({
   const [visible, setVisible] = React.useState(false)
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Input
         type={visible ? "text" : "password"}
         disabled={disabled}
-        className={cn("hide-password-toggle pr-10", className)}
+        className={cn("hide-password-toggle pr-11", className)}
         {...props}
       />
       <Button
@@ -29,10 +29,14 @@ function PasswordInput({
         disabled={disabled}
         aria-label={visible ? "Hide password" : "Show password"}
         aria-pressed={visible}
-        className="absolute top-0 right-0 !bg-transparent"
+        className="absolute top-1/2 right-1 z-10 size-9 -translate-y-1/2 rounded-lg !bg-transparent text-muted-foreground shadow-none hover:!bg-transparent hover:text-foreground"
         onClick={() => setVisible((current) => !current)}
       >
-        {visible ? <EyeOffIcon /> : <EyeIcon />}
+        {visible ? (
+          <EyeOffIcon className="size-4" />
+        ) : (
+          <EyeIcon className="size-4" />
+        )}
       </Button>
       <style>{`
         .hide-password-toggle::-ms-reveal,

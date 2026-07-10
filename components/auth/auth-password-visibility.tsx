@@ -58,6 +58,10 @@ function enhancePasswordInput(input: HTMLInputElement) {
     const visible = isMarkedVisible(input);
     applyVisibility(input, visible);
     syncToggleButton(existingToggle, visible);
+    input.classList.add("hide-password-toggle", "pr-11");
+    input.classList.remove("pr-10");
+    existingToggle.className =
+      "icare-password-toggle absolute top-1/2 right-1 z-10 inline-flex size-9 shrink-0 -translate-y-1/2 items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-transparent hover:text-foreground";
     return;
   }
 
@@ -65,7 +69,8 @@ function enhancePasswordInput(input: HTMLInputElement) {
   if (wrapper.querySelector('button[type="button"]')) return;
 
   input.setAttribute(FIELD_ATTR, "true");
-  input.classList.add("hide-password-toggle", "pr-10");
+  input.classList.add("hide-password-toggle", "pr-11");
+  input.classList.remove("pr-10");
 
   const visible = isMarkedVisible(input);
   applyVisibility(input, visible);
@@ -74,7 +79,7 @@ function enhancePasswordInput(input: HTMLInputElement) {
   button.type = "button";
   button.setAttribute(TOGGLE_ATTR, "true");
   button.className =
-    "inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-transparent bg-transparent text-muted-foreground transition-colors hover:bg-muted hover:text-foreground absolute top-0 right-0";
+    "icare-password-toggle absolute top-1/2 right-1 z-10 inline-flex size-9 shrink-0 -translate-y-1/2 items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-transparent hover:text-foreground";
   syncToggleButton(button, visible);
 
   button.addEventListener("click", (event) => {
