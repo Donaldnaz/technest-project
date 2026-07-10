@@ -47,7 +47,7 @@ export default async function AuthPage({
       <div className="grid min-h-dvh-screen min-h-[calc(100vh-var(--site-header-height,3.5rem))] lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,28rem)]">
         <AuthHeroPanel />
 
-        <section className="relative flex flex-col justify-center px-4 py-8 sm:px-6 lg:px-10 lg:py-10 xl:px-14 2xl:px-16">
+        <section className="relative flex flex-col justify-center px-4 pt-8 pb-28 sm:px-6 lg:px-10 lg:pt-10 lg:pb-10 xl:px-14 2xl:px-16">
           <div
             className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-oat-50/80 to-transparent lg:hidden dark:from-charcoal-950/80"
             aria-hidden
@@ -86,7 +86,7 @@ export default async function AuthPage({
             <div className="mt-6 flex items-center justify-center">
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 <ArrowLeft className="size-4" aria-hidden />
                 {patientAuthCopy.backToHome}

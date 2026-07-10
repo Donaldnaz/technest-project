@@ -51,7 +51,7 @@ export default async function DashboardGroupLayout({
       <Suspense fallback={<NavFallback />}>
         <MobileBottomNav profileId={profileId} />
       </Suspense>
-      <OrganizationAssistant />
+      <OrganizationAssistant clearBottomNav />
     </div>
   );
 }

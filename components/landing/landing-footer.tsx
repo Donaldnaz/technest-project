@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 const contactTelHref = `tel:${contactPhone.replace(/[^\d+]/g, "")}`;
 
 const footerLinkClassName = cn(
-  "inline-block py-1 text-sm text-muted-foreground transition-colors hover:text-foreground",
+  "inline-flex min-h-11 items-center py-2 text-sm text-muted-foreground transition-colors hover:text-foreground",
   focusRingClassName,
 );
 

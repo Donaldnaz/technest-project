@@ -13,10 +13,13 @@ export function SiteBrandLink({
   return (
     <Link
       href="/"
-      className={cn("flex min-w-0 items-center gap-2.5", className)}
+      className={cn(
+        "flex min-h-11 min-w-0 items-center gap-2.5",
+        className,
+      )}
       aria-label="Back to iCare home"
     >
-      <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-primary/15 text-primary">
+      <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary/15 text-primary">
         <HeartPulse className="size-5" aria-hidden />
       </div>
       <span
