@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { getDashboardNavLinks } from "@/lib/navigation/dashboard-nav";
 import { cn } from "@/lib/utils";
@@ -13,13 +15,18 @@ type MobileBottomNavProps = {
 export function MobileBottomNav({ profileId }: MobileBottomNavProps) {
   const pathname = usePathname();
   const links = getDashboardNavLinks(profileId);
+  const [mounted, setMounted] = useState(false);
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const nav = (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 px-4 py-2 pb-safe shadow-lg backdrop-blur-md lg:hidden"
+      className="fixed bottom-0 left-0 right-0 z-50 w-full border-t border-border/60 bg-card/95 px-4 py-2 pb-safe shadow-[0_-4px_24px_oklch(0_0_0/0.08)] backdrop-blur-md lg:hidden"
       aria-label="Main navigation"
     >
-      <ul className="mx-auto flex max-w-md items-center justify-around gap-1">
+      <ul className="mx-auto flex w-full max-w-md items-center justify-around gap-1">
         {links.map((link) => {
           const isActive = link.isActive(pathname, profileId);
 
@@ -44,4 +51,10 @@ export function MobileBottomNav({ profileId }: MobileBottomNavProps) {
       </ul>
     </nav>
   );
+
+  if (!mounted) {
+    return null;
+  }
+
+  return createPortal(nav, document.body);
 }
