@@ -12,8 +12,6 @@ import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
 import type { Patient } from "@/lib/db/schema";
 import { cn } from "@/lib/utils";
 
-import { usePatientWorkspaceTab } from "./patient-workspace-tabs";
-
 type PatientHeroProps = {
   patient: Patient;
   documentCount: number;
@@ -74,7 +72,6 @@ export function PatientHero({
   readyCount,
   processingCount,
 }: PatientHeroProps) {
-  const { setTab } = usePatientWorkspaceTab();
   const patientName = `${patient.firstName} ${patient.lastName}`;
   const relationshipLabel =
     patient.relationship === "self"
