@@ -10,6 +10,8 @@ import { isOnboardingComplete } from "@/lib/auth/onboarding";
 import { getOptionalSession } from "@/lib/auth/session";
 import { listRecentPatients } from "@/lib/db/queries/patients";
 
+export const dynamic = "force-dynamic";
+
 function NavFallback() {
   return <div className="h-32" aria-hidden />;
 }

@@ -6,6 +6,7 @@ import { ICareAccountView } from "@/components/account/icare-account-view";
 import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-header";
 
 export const dynamicParams = false;
+export const dynamic = "force-dynamic";
 
 const allowedPaths = ["settings", "security"] as const;
 
