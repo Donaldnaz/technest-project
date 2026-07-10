@@ -21,11 +21,17 @@ export type OrganizationAssistantProps = {
   }) => Promise<ActionResult<{ reply: string }>>;
   /** Optional error handler (e.g. toast). Defaults to console.error. */
   onError?: (message: string) => void;
+  /**
+   * Raise the FAB above a fixed mobile bottom nav (dashboard only).
+   * Marketing/auth should leave this false so the FAB sits at bottom-6.
+   */
+  clearBottomNav?: boolean;
 };
 
 export function OrganizationAssistant({
   askAssistant,
   onError = (message) => console.error(message),
+  clearBottomNav = false,
 }: OrganizationAssistantProps) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -82,7 +88,8 @@ export function OrganizationAssistant({
         type="button"
         onClick={() => setOpen((value) => !value)}
         className={cn(
-          "fixed bottom-24 right-4 z-50 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-2 ring-background transition-transform hover:scale-105 hover:bg-primary/90 lg:bottom-6",
+          "fixed right-4 z-50 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-2 ring-background transition-transform hover:scale-105 hover:bg-primary/90",
+          clearBottomNav ? "bottom-24 lg:bottom-6" : "bottom-6",
           open && "scale-95 max-lg:pointer-events-none max-lg:opacity-0",
         )}
         aria-expanded={open}

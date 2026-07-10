@@ -30,7 +30,7 @@ function AuthViewFooterLink({
     <div className="icare-auth-custom-footer flex w-full justify-center px-0 pt-1">
       <Link
         href={href}
-        className="text-sm font-medium text-primary transition-colors hover:text-primary/80 hover:underline"
+        className="inline-flex min-h-11 items-center text-sm font-medium text-primary transition-colors hover:text-primary/80 hover:underline"
       >
         {children}
       </Link>

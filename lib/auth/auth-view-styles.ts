@@ -15,7 +15,7 @@ export const authViewClassNames: AuthViewClassNames = {
   separator: "bg-border/60",
   footer: "justify-center gap-1 border-0 px-0 pt-6 text-sm text-muted-foreground",
   footerLink:
-    "h-auto px-0 font-medium text-primary no-underline hover:text-primary/80 hover:no-underline",
+    "inline-flex min-h-11 items-center px-0 font-medium text-primary no-underline hover:text-primary/80 hover:no-underline",
   form: {
     base: "gap-5",
     label: "text-sm font-medium text-foreground",
@@ -26,7 +26,7 @@ export const authViewClassNames: AuthViewClassNames = {
     button: `${buttonClassName} w-full`,
     error: "text-sm text-destructive",
     forgotPasswordLink:
-      "text-sm font-medium text-primary hover:text-primary/80 hover:underline",
+      "inline-flex min-h-11 items-center text-sm font-medium text-primary hover:text-primary/80 hover:underline",
     icon: "size-5 shrink-0",
   },
 };

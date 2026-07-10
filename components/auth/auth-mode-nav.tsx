@@ -29,7 +29,7 @@ export function AuthModeNav({ activePath }: AuthModeNavProps) {
               href={`/auth/${mode.path}`}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex-1 rounded-md px-3 py-2 text-center text-sm font-medium transition-all",
+                "flex min-h-11 flex-1 items-center justify-center rounded-md px-3 py-2.5 text-center text-sm font-medium transition-all",
                 isActive
                   ? "bg-background text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground",

@@ -62,7 +62,7 @@ export function VitalSignWaveform({
       {active ? (
         <div
           className={cn(
-            "absolute inset-y-0 left-0 flex h-full w-[200%] motion-reduce:animate-none",
+            "pointer-events-none absolute inset-y-0 left-0 flex h-full w-[200%] motion-reduce:animate-none",
             pace === "brisk"
               ? "animate-vital-sign-scroll-fast"
               : "animate-vital-sign-scroll",

@@ -87,7 +87,7 @@ export function LandingHeroPreview() {
             </div>
 
             <div
-              className="grid grid-cols-1 gap-2 max-xs:grid-cols-2 sm:grid-cols-3 sm:gap-3"
+              className="grid grid-cols-1 gap-2 sm:grid-cols-3"
               aria-hidden
             >
               <VitalSignWaveform
@@ -100,21 +100,21 @@ export function LandingHeroPreview() {
                 active
                 variant="sage"
                 pace="steady"
-                className="h-9 md:h-10"
+                className="h-9 md:h-10 max-xs:hidden sm:block"
               />
               <VitalSignWaveform
                 active
                 variant="amber"
                 pace="brisk"
-                className="h-9 md:h-10"
+                className="h-9 md:h-10 max-xs:hidden sm:block"
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-2 max-xs:grid-cols-3 sm:grid-cols-3">
               {statTiles.map((tile) => (
                 <div
                   key={tile.label}
-                  className="rounded-2xl bg-card/90 p-3 dark:bg-card/70"
+                  className="min-w-0 rounded-2xl bg-card/90 p-3 dark:bg-card/70"
                 >
                   <div
                     className={cn(
@@ -127,7 +127,7 @@ export function LandingHeroPreview() {
                   <p className="mt-2 font-heading text-xl font-semibold leading-none">
                     {tile.value}
                   </p>
-                  <p className="mt-1 truncate text-xs leading-tight text-muted-foreground">
+                  <p className="mt-1 line-clamp-2 text-xs leading-tight text-muted-foreground">
                     {tile.label}
                   </p>
                 </div>

@@ -18,9 +18,9 @@ export function DashboardSiteHeader() {
           <Link
             href="/"
             aria-label="Back to iCare home"
-            className="flex min-w-0 shrink items-center gap-2"
+            className="flex min-h-11 min-w-0 shrink items-center gap-2"
           >
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
               <HeartPulse className="size-4" aria-hidden />
             </div>
             <span className="truncate font-heading text-[0.9375rem] font-semibold leading-none sm:text-base">

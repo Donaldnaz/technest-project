@@ -65,7 +65,7 @@ export function LandingContactDetails({
   className,
 }: LandingContactDetailsProps) {
   const linkClassName = cn(
-    "font-medium text-foreground transition-colors hover:text-primary",
+    "inline-flex min-h-11 items-center font-medium text-foreground transition-colors hover:text-primary",
     focusRingClassName,
     "rounded-sm",
   );

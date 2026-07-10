@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
 const footerLinkClassName = cn(
-  "inline-block py-1 text-sm text-muted-foreground transition-colors hover:text-foreground",
+  "inline-flex min-h-11 items-center py-2 text-sm text-muted-foreground transition-colors hover:text-foreground",
   focusRingClassName,
 );
 
