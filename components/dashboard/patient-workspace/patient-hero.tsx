@@ -144,14 +144,7 @@ export function PatientHero({
 
       {documentCount === 0 && (
         <p className="relative mt-4 rounded-xl border border-dashed border-sage-300/80 bg-background/60 px-4 py-3 text-sm leading-relaxed text-muted-foreground dark:border-sage-700">
-          {patientDashboardCopy.patient.documents.withoutCount}{" "}
-          <button
-            type="button"
-            className="font-medium text-primary hover:underline"
-            onClick={() => setTab("upload")}
-          >
-            {patientDashboardCopy.overview.quickActions.upload.label}
-          </button>
+          {patientDashboardCopy.patient.documents.withoutCount}
         </p>
       )}
     </section>
