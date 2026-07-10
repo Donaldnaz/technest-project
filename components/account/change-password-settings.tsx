@@ -6,8 +6,8 @@ import { toast } from "sonner";
 import { authClient } from "@/lib/auth/client";
 import { PASSWORD_MIN_LENGTH, validatePassword } from "@/lib/auth/password-policy";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export function ChangePasswordSettings() {
   const { data: session, isPending: sessionPending } = authClient.useSession();
@@ -77,9 +77,8 @@ export function ChangePasswordSettings() {
 
       <div className="grid gap-2">
         <Label htmlFor="currentPassword">Current password</Label>
-        <Input
+        <PasswordInput
           id="currentPassword"
-          type="password"
           autoComplete="current-password"
           value={currentPassword}
           onChange={(event) => setCurrentPassword(event.target.value)}
@@ -91,9 +90,8 @@ export function ChangePasswordSettings() {
 
       <div className="grid gap-2">
         <Label htmlFor="newPassword">New password</Label>
-        <Input
+        <PasswordInput
           id="newPassword"
-          type="password"
           autoComplete="new-password"
           value={newPassword}
           onChange={(event) => setNewPassword(event.target.value)}
@@ -106,9 +104,8 @@ export function ChangePasswordSettings() {
 
       <div className="grid gap-2">
         <Label htmlFor="confirmPassword">Confirm new password</Label>
-        <Input
+        <PasswordInput
           id="confirmPassword"
-          type="password"
           autoComplete="new-password"
           value={confirmPassword}
           onChange={(event) => setConfirmPassword(event.target.value)}

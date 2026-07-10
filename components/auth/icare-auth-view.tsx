@@ -5,6 +5,7 @@ import { Suspense, useRef, type ReactNode } from "react";
 import { AuthView } from "@neondatabase/auth-ui";
 
 import { AuthModeNav } from "@/components/auth/auth-mode-nav";
+import { AuthPasswordVisibility } from "@/components/auth/auth-password-visibility";
 import { EmailVerificationOtpView } from "@/components/auth/email-verification-otp-view";
 import { PostSignupVerifyRedirect } from "@/components/auth/post-signup-verify-redirect";
 import { SignUpFetchRedirect } from "@/components/auth/sign-up-fetch-redirect";
@@ -96,6 +97,7 @@ export function ICareAuthView({ path }: ICareAuthViewProps) {
         </>
       ) : null}
       {path === "sign-in" ? <PostSignupVerifyRedirect /> : null}
+      <AuthPasswordVisibility containerRef={containerRef} />
       <AuthView
         path={path}
         redirectTo={POST_AUTH_REDIRECT}
