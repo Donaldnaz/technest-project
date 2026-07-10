@@ -18,9 +18,9 @@ export const headquartersAddressLines = [
 
 export const assistantCopy = {
   welcome:
-    "Hi! I can help with questions about uploading health records, sharing with your care team, and how iCare handles privacy.",
+    "Hi! Ask me for short answers about upload, sharing, and privacy on iCare.",
   title: "Ask iCare",
-  subtitle: "Help with uploads, sharing, and privacy",
+  subtitle: "Short answers about upload, sharing, and privacy",
   placeholder: "Ask about upload, sharing, or privacy…",
   thinking: "One moment…",
   disclaimer:

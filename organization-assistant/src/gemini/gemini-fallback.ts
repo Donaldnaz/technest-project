@@ -38,6 +38,8 @@ export function isRetryableGeminiError(error: unknown): boolean {
 type GeminiTextOptions = {
   system: string;
   messages: Array<{ role: "user" | "assistant"; content: string }>;
+  maxOutputTokens?: number;
+  temperature?: number;
 };
 
 export async function generateTextWithGeminiFallback(options: GeminiTextOptions) {
@@ -49,6 +51,8 @@ export async function generateTextWithGeminiFallback(options: GeminiTextOptions)
       return await generateText({
         ...options,
         model: getGoogleModel(modelId),
+        maxOutputTokens: options.maxOutputTokens ?? 350,
+        temperature: options.temperature ?? 0.4,
       });
     } catch (error) {
       lastError = error;
