@@ -360,7 +360,7 @@
   }
 
   .icare-auth-page form .relative > button[type="button"] {
-    @apply !min-h-0 !h-9 !w-9 !rounded-lg !p-0 !text-sm !font-normal;
+    @apply !top-0 !right-1 !bottom-0 !min-h-0 !h-auto !w-9 !rounded-lg !p-0 !text-sm !font-normal !shadow-none;
   }
 
   .icare-auth-credential-switch
@@ -418,64 +418,8 @@
   }
 }
 
-/* Unlayered: must beat Tailwind utility classes on the auth password row wrapper */
-.icare-auth-page form [data-slot="form-item"]:has(input[type="password"]),
-.icare-auth-page
-  form
-  [data-slot="form-item"]:has(input[data-icare-password-field="true"]) {
-  display: grid;
-  grid-template-rows: auto auto auto;
-  row-gap: 0.5rem;
-}
-
-.icare-auth-page
-  form
-  [data-slot="form-item"]:has(input[type="password"])
-  > div:has(a[href*="/auth/forgot-password"]),
-.icare-auth-page
-  form
-  [data-slot="form-item"]:has(input[data-icare-password-field="true"])
-  > div:has(a[href*="/auth/forgot-password"]) {
-  display: contents !important;
-}
-
-.icare-auth-page
-  form
-  [data-slot="form-item"]:has(input[type="password"])
-  label[data-slot="form-label"],
-.icare-auth-page
-  form
-  [data-slot="form-item"]:has(input[data-icare-password-field="true"])
-  label[data-slot="form-label"] {
-  grid-row: 1;
-}
-
-.icare-auth-page
-  form
-  [data-slot="form-item"]:has(input[type="password"])
-  > .relative,
-.icare-auth-page
-  form
-  [data-slot="form-item"]:has(input[data-icare-password-field="true"])
-  > .relative {
-  position: relative;
-  grid-row: 2;
-  width: 100%;
-}
-
-.icare-auth-page
-  form
-  [data-slot="form-item"]:has(input[type="password"])
-  a[href*="/auth/forgot-password"],
-.icare-auth-page
-  form
-  [data-slot="form-item"]:has(input[data-icare-password-field="true"])
-  a[href*="/auth/forgot-password"] {
-  grid-row: 3;
-  justify-self: end;
-}
-
-/* Keep the show/hide control inside the password field (sign-in injects this in JS) */
+/* Keep the show/hide control vertically centered inside the password field.
+   Sign-in injects the toggle in JS; sign-up uses Neon’s native button. */
 .icare-auth-page form .relative:has(> input[type="password"]),
 .icare-auth-page form .relative:has(> input[data-icare-password-field="true"]) {
   position: relative;
@@ -491,18 +435,18 @@
 .icare-auth-page form .relative > button[type="button"],
 .icare-auth-page form .relative > button[data-icare-password-toggle] {
   position: absolute !important;
-  top: 50% !important;
+  top: 0 !important;
   right: 0.25rem !important;
-  bottom: auto !important;
+  bottom: 0 !important;
   left: auto !important;
   z-index: 10;
   display: inline-flex !important;
-  height: 2.25rem !important;
+  height: auto !important;
   width: 2.25rem !important;
-  min-height: 2.25rem !important;
+  min-height: 0 !important;
   min-width: 2.25rem !important;
   margin: 0 !important;
-  transform: translateY(-50%);
+  transform: none !important;
   align-items: center;
   justify-content: center;
   border: 0 !important;
@@ -511,6 +455,7 @@
   box-shadow: none !important;
   color: var(--muted-foreground);
   padding: 0 !important;
+  line-height: 0 !important;
 }
 
 .icare-auth-page form .relative > button[type="button"]:hover,
