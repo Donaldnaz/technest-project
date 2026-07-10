@@ -6,6 +6,7 @@ import { useCallback } from "react";
 import { NeonAuthUIProvider } from "@neondatabase/auth-ui";
 
 import { authClient } from "@/lib/auth/client";
+import { useAppBaseUrl } from "@/lib/auth/app-base-url";
 import {
   icareAuthLocalization,
   passwordValidation,
@@ -19,6 +20,7 @@ function buildEmailOtpHref(email: string): string {
 
 export function AuthUIProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const baseURL = useAppBaseUrl();
 
   const navigate = useCallback(
     (href: string) => {
@@ -47,6 +49,7 @@ export function AuthUIProvider({ children }: { children: React.ReactNode }) {
   return (
     <NeonAuthUIProvider
       authClient={authClient}
+      baseURL={baseURL}
       account={{ basePath: "/account", fields: [] }}
       avatar={false}
       changeEmail={false}
