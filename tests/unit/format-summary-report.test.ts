@@ -14,6 +14,9 @@ describe("formatSummaryReportText", () => {
       reportDate: "2026-01-15",
       collectionDate: null,
       summary: "Your results are within normal range.",
+      plainLanguageReport:
+        "What this document is\nThis is a complete blood count report.",
+      keyFindings: ["Hemoglobin is in the normal range."],
       attentionNote: null,
       extractedAt: new Date("2026-01-16T10:00:00.000Z"),
     });
@@ -21,6 +24,8 @@ describe("formatSummaryReportText", () => {
     expect(text).toContain("iCare — Practitioner Summary Report");
     expect(text).toContain("cbc-results.pdf");
     expect(text).toContain("Your results are within normal range.");
+    expect(text).toContain("Full plain-language report");
+    expect(text).toContain("Hemoglobin is in the normal range.");
     expect(text).toContain("does not replace medical advice");
   });
 

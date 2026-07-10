@@ -1,10 +1,10 @@
 export const landingCopy = {
   hero: {
-    eyebrow: "Health records portal",
-    headline: "Upload health records safely.",
-    headlineAccent: "Share only when you choose.",
-    body: "Upload lab results, imaging, and clinical notes to a private folder. Practitioners review plain English summaries before you share anything with your care team.",
-    tags: "Encrypted upload · Private storage · Practitioner-reviewed summaries",
+    eyebrow: "Healthcare management system",
+    headline: "Convert medical documents.",
+    headlineAccent: "Read them in plain English.",
+    body: "iCare is a healthcare management system that helps patients convert medical documents to plain English with system-enabled AI. Your records stay safely stored and private.",
+    tags: "Medical documents · Plain English · Private records",
     primaryCta: "Create free account",
     secondaryCta: "See the portal",
     preview: {
@@ -25,39 +25,39 @@ export const landingCopy = {
   },
   whatWeDo: {
     eyebrow: "What we do",
-    title: "A place for your health records",
+    title: "Healthcare management, in plain English",
     description:
-      "Upload, organize, and share health documents — with plain English summaries reviewed by practitioners.",
+      "iCare is a healthcare management system that helps patients convert medical documents to plain English with system-enabled AI. Records are safely stored and private.",
     offerings: [
       {
-        title: "Secure document upload",
+        title: "Healthcare management system",
         description:
-          "Add PDFs and photos of lab reports, imaging, referrals, and visit notes. Files are encrypted in transit and stored in your private health folder.",
+          "One place for patients to upload, manage, and understand their medical documents.",
+      },
+      {
+        title: "Convert medical documents",
+        description:
+          "Turn lab reports, imaging, referrals, and visit notes into clear plain English.",
+      },
+      {
+        title: "System-enabled AI",
+        description:
+          "Our system-enabled AI explains medical documents in everyday language.",
+      },
+      {
+        title: "Safely stored and private",
+        description:
+          "Your records stay encrypted in your account and private until you choose to share.",
       },
       {
         title: "Organized records library",
         description:
-          "See your uploads in one place, with status labels for what is ready, under review, or still being processed.",
+          "See your uploads in one place, with status labels for what is ready or still processing.",
       },
       {
-        title: "Plain English summaries",
+        title: "Share when you choose",
         description:
-          "Read summaries of your documents in everyday language, reviewed by a practitioner on your care team before they are finalized.",
-      },
-      {
-        title: "Share with your care team",
-        description:
-          "Send selected health records to your practitioner or clinic when you choose, so appointments have the documents you need.",
-      },
-      {
-        title: "You choose what to share",
-        description:
-          "Practitioners only see what you explicitly share. Upload privately, review summaries first, and decide when to share.",
-      },
-      {
-        title: "Kept straightforward",
-        description:
-          "Clear layouts, plain language, and focused steps for managing health records.",
+          "Review the plain English first, then send selected records to your care team.",
       },
     ],
   },
@@ -65,14 +65,14 @@ export const landingCopy = {
     eyebrow: "Portal",
     title: "Your upload workspace",
     description:
-      "Upload health records, track their status, and share them with practitioners from one portal.",
+      "Upload medical documents, get plain English summaries, and manage them in one AI-enabled portal.",
     welcomeStrip: {
       badge: "Your health records",
       body: (documentCount: number, readyCount: number) =>
-        `${documentCount} health record${documentCount === 1 ? "" : "s"} in your folder — ${readyCount} plain English summar${readyCount === 1 ? "y" : "ies"} ready for your care team to review.`,
+        `${documentCount} health record${documentCount === 1 ? "" : "s"} in your folder — ${readyCount} plain English summar${readyCount === 1 ? "y" : "ies"} ready.`,
     },
     upload: {
-      title: "Upload health records",
+      title: "Upload medical documents",
       description: "Drag and drop lab reports, imaging, or visit notes here",
       hint: "PDF and JPEG files · Encrypted before storage",
     },
@@ -86,7 +86,7 @@ export const landingCopy = {
         },
         {
           title: "Chest X-ray report uploaded",
-          subtitle: "Practitioner review complete · Yesterday",
+          subtitle: "AI summary ready · Yesterday",
         },
         {
           title: "Shared with your care team",
@@ -97,24 +97,24 @@ export const landingCopy = {
   },
   about: {
     eyebrow: "About us",
-    title: "Health records, handled carefully",
+    title: "A simple way to understand medical documents",
     description:
-      "iCare is for people who need a clear way to upload and manage health records, with control over who can see their information.",
+      "iCare is a healthcare management system that helps patients convert medical documents to plain English with system-enabled AI. Records are safely stored and private.",
     highlights: [
       {
-        title: "For patients and caregivers",
+        title: "Built for patients",
         description:
-          "Upload for yourself or someone you care for. Keep health records organized in one folder until you are ready to share them.",
+          "Upload medical documents for yourself or someone you care for, then read them in plain English.",
       },
       {
-        title: "Made for clinical review",
+        title: "System-enabled AI",
         description:
-          "Practitioners receive the documents you choose in a review-ready format, with plain English summaries to support conversations about your care.",
+          "Our AI converts medical language into clear, everyday wording you can follow.",
       },
       {
-        title: "Private until you share",
+        title: "Safely stored and private",
         description:
-          "Your files stay in your account until you share them. Encryption, access controls, and clear privacy practices apply throughout.",
+          "Your records stay in your account, encrypted and private, until you choose to share them.",
       },
     ],
   },
@@ -122,7 +122,7 @@ export const landingCopy = {
     eyebrow: "Contact us",
     title: "Get in touch",
     description:
-      "Questions about uploads, sharing with your care team, or getting started? Reach out — we support patients, caregivers, and clinic partners.",
+      "Questions about uploads, plain English summaries, or getting started? Reach out — we support patients, caregivers, and clinic partners.",
     phoneLabel: "Phone",
     emailLabel: "Email",
     addressLabel: "Headquarters",
@@ -131,15 +131,15 @@ export const landingCopy = {
     responseNote: "We typically respond within 1–2 business days.",
   },
   cta: {
-    title: "Ready to upload a health record?",
+    title: "Ready to upload a medical document?",
     description:
-      "Create a free account, add your documents to a protected folder, and share with your practitioner when you are ready.",
+      "Create a free account, upload your documents, and read them in plain English in our AI-enabled healthcare portal.",
     createAccount: "Create account",
     signIn: "Sign in",
     signedIn: {
       title: "Your health folder is ready",
       description:
-        "Continue uploading health records or share files with your care team from your dashboard.",
+        "Continue uploading medical documents or open your dashboard.",
       dashboard: "Go to dashboard",
     },
   },
@@ -151,11 +151,11 @@ export const landingCopy = {
   },
   footer: {
     tagline:
-      "A health records portal for encrypted upload, private storage, practitioner-reviewed summaries, and sharing on your terms.",
+      "A healthcare management system that helps patients convert medical documents to plain English. Records are safely stored and private.",
   },
   assistant: {
     welcome:
-      "Hi! I can help with questions about uploading health records, sharing with your care team, and how iCare handles privacy.",
+      "Hi! I can help with questions about uploading medical documents, plain English summaries, and how iCare works.",
     title: "Ask iCare",
     subtitle: "Help with uploads, sharing, and privacy",
     placeholder: "Ask about upload, sharing, or privacy…",

@@ -3,10 +3,13 @@ import {
   FileUp,
 } from "lucide-react";
 
+import { GenerateSummaryButton } from "@/components/documents/generate-summary-button";
 import type { DocumentCategory } from "@/lib/constants/document-categories";
 import { patientDashboardCopy } from "@/lib/copy/patient/dashboard";
 import { getPatientCategoryLabel } from "@/lib/copy/patient/library";
 import type { DocumentWithExtraction } from "@/lib/db/queries/documents";
+import { canRequestSummaryGeneration } from "@/lib/documents/can-request-summary";
+import { getDocumentAiStatusLabel } from "@/lib/documents/ai-status";
 import { formatCareTimelineDateTime, toDate, toIsoDateTime } from "@/lib/dates";
 
 type TimelineItem = {
@@ -14,6 +17,7 @@ type TimelineItem = {
   title: string;
   subtitle: string;
   time: Date;
+  document: DocumentWithExtraction;
 };
 
 type CareTimelineProps = {
@@ -42,6 +46,7 @@ function buildTimelineItems(
       title: document.fileName,
       subtitle: `${getPatientCategoryLabel(document.category as DocumentCategory)} · ${uploadedLabel}`,
       time: toDate(document.createdAt) ?? new Date(0),
+      document,
     }))
     .sort((a, b) => b.time.getTime() - a.time.getTime());
 
@@ -108,6 +113,14 @@ export function CareTimeline({
                 <p className="truncate text-sm text-muted-foreground">
                   {item.subtitle}
                 </p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  {getDocumentAiStatusLabel(item.document)}
+                </p>
+                {canRequestSummaryGeneration(item.document) ? (
+                  <div className="mt-2">
+                    <GenerateSummaryButton documentId={item.document.id} />
+                  </div>
+                ) : null}
                 <time
                   dateTime={toIsoDateTime(item.time)}
                   className="mt-1 block text-xs text-muted-foreground"

@@ -6,7 +6,9 @@ test.describe("public routes", () => {
 
     await expect(page).toHaveTitle(/iCare/i);
     await expect(
-      page.getByRole("heading", { name: /upload health records safely/i }),
+      page.getByRole("heading", {
+        name: /convert medical documents\.?\s*read them in plain english/i,
+      }),
     ).toBeVisible();
     await expect(
       page.getByRole("navigation", { name: "Primary" }),

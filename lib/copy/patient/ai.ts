@@ -1,10 +1,10 @@
 export const patientAiCopy = {
   processing:
-    "Your care team is organizing this file and preparing a plain English summary for practitioner review.",
+    "We are preparing a plain English summary of this file. It will appear in Downloads when ready.",
   summaryReady:
-    "A plain English summary of this document is ready for you to read. A practitioner on your care team has reviewed it before it was finalized.",
+    "A plain English summary of this document is ready for you to download.",
   needsReview:
-    "This document needs a quick review. Your care team has been notified.",
+    "We could not prepare a summary for this document. You can try generating it again.",
   assistant: {
     welcome:
       "Hi! I can answer questions about how iCare works — uploading health records, plain English summaries, sharing with your care team, and keeping your information private.",
@@ -22,7 +22,7 @@ export const patientAiCopy = {
     "What file types can I upload?",
     "How is my information kept private?",
     "How do I share health records with my practitioner?",
-    "What does 'Under review' mean?",
+    "How do plain English summaries work?",
   ],
 } as const;
 

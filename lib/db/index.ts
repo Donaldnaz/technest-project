@@ -8,8 +8,22 @@ import { withDbRetry } from "@/lib/db/retry";
 import * as schema from "@/lib/db/schema";
 import { env } from "@/lib/env";
 
+/** Strip accidental console tip text that can prepend DATABASE_URL in some shells. */
+function sanitizeDatabaseUrl(raw: string | undefined): string | undefined {
+  if (!raw) {
+    return undefined;
+  }
+
+  const trimmed = raw.trim();
+  const match = trimmed.match(/postgres(?:ql)?:\/\/\S+/i);
+  return match?.[0]?.replace(/[\r\n]+/g, "") ?? undefined;
+}
+
 function getDatabaseUrl(): string {
-  const url = env.DATABASE_URL?.trim();
+  const url =
+    sanitizeDatabaseUrl(env.DATABASE_URL) ??
+    sanitizeDatabaseUrl(process.env.DATABASE_URL);
+
   if (url) {
     return url;
   }

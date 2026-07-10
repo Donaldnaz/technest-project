@@ -109,7 +109,13 @@ export async function upsertDocumentExtraction(
     reportDate?: string | null;
     collectionDate?: string | null;
     summary?: string | null;
+    plainLanguageReport?: string | null;
+    keyFindings?: string[] | null;
     attentionNote?: string | null;
+    reviewStatus?: DocumentExtraction["reviewStatus"];
+    reviewedAt?: Date | null;
+    reviewedBy?: string | null;
+    reviewerNotes?: string | null;
   },
 ): Promise<void> {
   await db
@@ -120,7 +126,13 @@ export async function upsertDocumentExtraction(
       reportDate: data.reportDate ?? null,
       collectionDate: data.collectionDate ?? null,
       summary: data.summary ?? null,
+      plainLanguageReport: data.plainLanguageReport ?? null,
+      keyFindings: data.keyFindings ?? null,
       attentionNote: data.attentionNote ?? null,
+      reviewStatus: data.reviewStatus ?? "approved",
+      reviewedAt: data.reviewedAt ?? null,
+      reviewedBy: data.reviewedBy ?? null,
+      reviewerNotes: data.reviewerNotes ?? null,
     })
     .onConflictDoUpdate({
       target: documentExtractions.documentId,
@@ -129,10 +141,52 @@ export async function upsertDocumentExtraction(
         reportDate: data.reportDate ?? null,
         collectionDate: data.collectionDate ?? null,
         summary: data.summary ?? null,
+        plainLanguageReport: data.plainLanguageReport ?? null,
+        keyFindings: data.keyFindings ?? null,
         attentionNote: data.attentionNote ?? null,
+        reviewStatus: data.reviewStatus ?? "approved",
+        reviewedAt: data.reviewedAt ?? null,
+        reviewedBy: data.reviewedBy ?? null,
+        reviewerNotes: data.reviewerNotes ?? null,
         extractedAt: new Date(),
       },
     });
+}
+
+export async function markSummaryGenerationRequested(
+  documentId: string,
+): Promise<void> {
+  await db
+    .update(documents)
+    .set({ summaryGenerationRequestedAt: new Date() })
+    .where(eq(documents.id, documentId));
+}
+
+export async function getDocumentWithExtraction(
+  userId: string,
+  documentId: string,
+): Promise<DocumentWithExtraction | null> {
+  const [row] = await db
+    .select({
+      document: documents,
+      extraction: documentExtractions,
+    })
+    .from(documents)
+    .leftJoin(
+      documentExtractions,
+      eq(documentExtractions.documentId, documents.id),
+    )
+    .where(and(eq(documents.id, documentId), eq(documents.userId, userId)))
+    .limit(1);
+
+  if (!row) {
+    return null;
+  }
+
+  return {
+    ...row.document,
+    extraction: row.extraction,
+  };
 }
 
 export async function listRecentDocuments(

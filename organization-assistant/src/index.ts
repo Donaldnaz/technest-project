@@ -1,8 +1,11 @@
+/**
+ * Public client + shared exports for @icare/organization-assistant.
+ *
+ * Server action / reply generation: import from
+ * `@icare/organization-assistant/server` (do not pull into client bundles).
+ */
 export { OrganizationAssistant } from "./client/OrganizationAssistant";
 export type { OrganizationAssistantProps } from "./client/OrganizationAssistant";
-
-export { askOrganizationAssistant } from "./server/action";
-export { generateOrganizationAssistantReply } from "./server/generate-reply";
 
 export {
   ORGANIZATION_KNOWLEDGE,

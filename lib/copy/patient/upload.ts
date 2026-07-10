@@ -13,7 +13,7 @@ export const patientUploadCopy = {
     securing: (percent: number) => `Securing your document… ${percent}%`,
     securingShort: "Securing your document…",
     saved: "Document securely saved to your health folder.",
-    analyzing: "Organizing your document for practitioner review…",
+    analyzing: "Preparing your plain English summary…",
     failed: "This file could not be uploaded. Remove it and try again.",
     removeAria: (fileName: string) => `Remove ${fileName}`,
     completeAria: "Upload complete",
@@ -50,7 +50,7 @@ export const patientUploadCopy = {
     pluralTitle: (count: number) =>
       `${count} health record${count === 1 ? "" : "s"} securely saved`,
     pluralBody:
-      "Your files are encrypted and stored in your health folder. Your care team will prepare plain English summaries for practitioner review.",
+      "Your files are encrypted and stored in your health folder. AI will prepare plain English summaries for you to download.",
     firstMilestone: "Your health folder is ready — add more records anytime.",
     uploadMore: "Upload another document",
     done: "Done for now",

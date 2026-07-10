@@ -7,8 +7,8 @@ import {
   documentAccessLogs,
   documentExtractions,
   documents,
-  type DocumentExtraction,
   type Document,
+  type DocumentExtraction,
 } from "@/lib/db/schema";
 
 export type PractitionerSummaryReport = Document & {
@@ -34,6 +34,7 @@ export async function listPractitionerSummaryReportsForPatient(
         eq(documents.patientId, patientId),
         eq(documents.userId, userId),
         eq(documents.status, "ready"),
+        eq(documentExtractions.reviewStatus, "approved"),
         isNotNull(documentExtractions.summary),
       ),
     )
@@ -72,6 +73,7 @@ export async function getPractitionerSummaryReportByDocumentId(
         eq(documents.id, documentId),
         eq(documents.userId, userId),
         eq(documents.status, "ready"),
+        eq(documentExtractions.reviewStatus, "approved"),
         isNotNull(documentExtractions.summary),
       ),
     )

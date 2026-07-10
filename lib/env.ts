@@ -1,6 +1,15 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+function sanitizeDatabaseUrl(raw: string | undefined): string | undefined {
+  if (!raw) {
+    return undefined;
+  }
+
+  const match = raw.trim().match(/postgres(?:ql)?:\/\/\S+/i);
+  return match?.[0]?.replace(/[\r\n]+/g, "") ?? undefined;
+}
+
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().min(1),
@@ -16,7 +25,7 @@ export const env = createEnv({
   },
   client: {},
   runtimeEnv: {
-    DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_URL: sanitizeDatabaseUrl(process.env.DATABASE_URL),
     NEON_AUTH_BASE_URL: process.env.NEON_AUTH_BASE_URL,
     NEON_AUTH_COOKIE_SECRET: process.env.NEON_AUTH_COOKIE_SECRET,
     BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,

@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  transpilePackages: [
+    "@icare/organization-assistant",
+    "@icare/document-summary-ai",
+  ],
   async headers() {
     return [
       {

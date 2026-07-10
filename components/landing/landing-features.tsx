@@ -67,7 +67,7 @@ export function LandingFeatures() {
             Everything you need to manage health records
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Secure upload, practitioner-reviewed plain English summaries, and
+            Secure upload, AI-reviewed plain English summaries, and
             sharing with your care team — in a calm portal designed for real
             people, not hospital IT departments.
           </p>

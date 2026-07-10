@@ -1,51 +1,53 @@
 # @icare/organization-assistant
 
-Standalone extract of the **iCare organization assistant** — the floating chat widget and Gemini-backed server logic used on the marketing site and patient dashboard.
+Standalone **iCare organization assistant** — floating chat widget and Gemini-backed server logic. The main Technest app consumes this package as a local dependency (`file:organization-assistant`); it is not duplicated under `lib/ai/`.
 
-This folder is a **separate git repository** nested inside the main Technest project. The parent app (`components/assistant/`, `app/actions/assistant.ts`, `lib/ai/organization-*.ts`) is **unchanged** and continues to run as before.
+## Package layout
 
-## What's included
-
-| Area | Path |
-|------|------|
-| Chat UI | `src/client/OrganizationAssistant.tsx` |
-| Next.js server action | `src/server/action.ts` |
-| Reply generation | `src/server/generate-reply.ts` |
-| Knowledge base | `src/knowledge.ts` |
-| Gemini integration | `src/gemini/` |
-| Copy & contact constants | `src/copy.ts` |
+| Area | Path | Import |
+|------|------|--------|
+| Chat UI | `src/client/OrganizationAssistant.tsx` | `@icare/organization-assistant/client` |
+| Server action + reply gen | `src/server/` | `@icare/organization-assistant/server` |
+| Knowledge / copy / types | `src/knowledge.ts`, `src/copy.ts`, `src/types.ts` | `@icare/organization-assistant` |
+| Gemini helpers | `src/gemini/`, `src/env.ts` | (internal) |
 
 ## Requirements
 
 - Node 20+
-- `GEMINI_API_KEY` (see `.env.example`)
-- Peer deps: `react`, `react-dom`, `next`, `lucide-react`, `zod`
+- Host app env: `GEMINI_API_KEY` (optional `GEMINI_MODEL`) — see `.env.example`
+- Peer deps: `react`, `react-dom`, `next`, `lucide-react`, `zod`, `ai`, `@ai-sdk/google`
 
-## Install (standalone)
+Gemini keys stay in the **host app** environment. The package reads `process.env.GEMINI_API_KEY` / `GEMINI_MODEL` at runtime.
 
-```bash
-cd organization-assistant
-npm install
+## Use from the Technest app
+
+Already wired:
+
+```json
+// package.json
+"@icare/organization-assistant": "file:organization-assistant"
 ```
 
-## Use in a Next.js app
-
-1. Wire the server action (re-export or copy):
+```ts
+// next.config.ts
+transpilePackages: ["@icare/organization-assistant"]
+```
 
 ```ts
 // app/actions/assistant.ts
-export { askOrganizationAssistant } from "../../organization-assistant/src/server/action";
+export { askOrganizationAssistant } from "@icare/organization-assistant/server";
 ```
 
-2. Mount the widget with an injected handler:
-
 ```tsx
-import { OrganizationAssistant } from "../../organization-assistant/src/client/OrganizationAssistant";
+// components/assistant/organization-assistant.tsx
+"use client";
+import { OrganizationAssistant as PackageAssistant } from "@icare/organization-assistant/client";
+import { toast } from "sonner";
 import { askOrganizationAssistant } from "@/app/actions/assistant";
 
-export function AssistantShell() {
+export function OrganizationAssistant() {
   return (
-    <OrganizationAssistant
+    <PackageAssistant
       askAssistant={askOrganizationAssistant}
       onError={(message) => toast.error(message)}
     />
@@ -53,28 +55,37 @@ export function AssistantShell() {
 }
 ```
 
-The main iCare app does **not** use this wiring yet — it keeps the original `@/` imports.
+Layouts mount `@/components/assistant/organization-assistant` (thin host wrapper).
 
-## Publish as its own remote
+### Import rules
+
+- **Client components:** `@icare/organization-assistant/client` (or root `.` for UI + shared constants)
+- **Server actions / Node:** `@icare/organization-assistant/server` — do not import `/server` from client modules
+
+## Install (package alone)
 
 ```bash
 cd organization-assistant
-git init
-git add .
-git commit -m "Initial standalone organization assistant package"
-git remote add origin <your-repo-url>
-git push -u origin main
+npm install
+npm run typecheck
 ```
 
-## Sync with parent app
+From the monorepo root:
 
-When assistant behavior changes in the main repo, update the mirrored files here:
+```bash
+npm install
+npm run typecheck
+npm run typecheck:assistant
+```
 
-- `components/assistant/organization-assistant.tsx`
-- `app/actions/assistant.ts`
-- `lib/ai/organization-assistant.ts`
-- `lib/ai/organization-knowledge.ts`
-- Related Gemini helpers under `lib/ai/`
+## Publish as its own GitHub repo (later)
+
+This directory is already a self-contained package (and may already have its own `.git`). To publish:
+
+1. Ensure `private` is removed or set appropriately in `package.json`
+2. Push this folder’s git history to a new remote (or copy the tree into a new repo)
+3. In the main app, replace `file:organization-assistant` with the published version, e.g. `"@icare/organization-assistant": "^0.1.0"` or a git URL
+4. Keep peer deps and `GEMINI_*` env docs in sync
 
 ## License
 
