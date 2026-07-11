@@ -16,6 +16,7 @@ import {
   ALLOWED_MIME_TYPES,
   MAX_UPLOAD_BYTES,
   normalizeMimeType,
+  UPLOAD_FORMATS_LABEL,
 } from "@/lib/constants/upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,7 +59,7 @@ export function DocumentUpload({
 
     const mimeType = normalizeMimeType(file.type);
     if (!mimeType) {
-      toast.error("Please use a lab report (PDF) or medical image (JPEG).");
+      toast.error(`Please use a supported file type (${UPLOAD_FORMATS_LABEL}).`);
       return;
     }
 
@@ -157,7 +158,7 @@ export function DocumentUpload({
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="file">Choose a file (PDF or JPEG, max 10 MB)</Label>
+          <Label htmlFor="file">Choose a file ({UPLOAD_FORMATS_LABEL}, max 10 MB)</Label>
           <Input
             id="file"
             name="file"

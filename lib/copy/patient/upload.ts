@@ -2,7 +2,7 @@ export const patientUploadCopy = {
   dropzone: {
     ariaLabel: "Upload health records by drag and drop or file browse",
     title: "Drop your health records here",
-    formats: "PDF or JPEG · up to 10 MB each",
+    formats: "PDF, JPEG, or PNG · up to 10 MB each",
     encryption: "Secure, encrypted upload",
     browse: "Choose files",
     camera: "Take a photo of a document",
@@ -21,7 +21,7 @@ export const patientUploadCopy = {
   form: {
     title: "Upload health records",
     description:
-      "Add PDF or JPEG files, pick a category for each one, then save them to your health folder.",
+      "Add PDF, JPEG, or PNG files, pick a category for each one, then save them to your health folder.",
     status: {
       uploading: "Securing your documents…",
       ready: (count: number) =>

@@ -74,7 +74,7 @@ export const landingCopy = {
     upload: {
       title: "Upload medical documents",
       description: "Drag and drop lab reports, imaging, or visit notes here",
-      hint: "PDF and JPEG files · Encrypted before storage",
+      hint: "PDF, JPEG, and PNG files · Encrypted before storage",
     },
     activity: {
       title: "Recent activity",

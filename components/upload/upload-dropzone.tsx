@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import { Camera, CloudUpload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { patientUploadCopy } from "@/lib/copy/patient/upload";
 import { cn } from "@/lib/utils";
 
 type UploadDropzoneProps = {
@@ -79,7 +80,7 @@ export function UploadDropzone({
           Drag your medical files here
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
-          PDF and JPEG up to 10 MB each
+          {patientUploadCopy.dropzone.formats}
         </p>
       </div>
 
@@ -99,7 +100,7 @@ export function UploadDropzone({
       <input
         ref={cameraInputRef}
         type="file"
-        accept="image/jpeg"
+        accept="image/jpeg,image/png"
         capture="environment"
         className="sr-only"
         disabled={disabled}

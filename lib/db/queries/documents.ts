@@ -243,7 +243,7 @@ export async function getDocumentDashboardStats(
             Number,
           ),
         jpegCount:
-          sql<number>`count(*) filter (where ${documents.mimeType} like 'image/jpeg%')`.mapWith(
+          sql<number>`count(*) filter (where ${documents.mimeType} like 'image/jpeg%' or ${documents.mimeType} like 'image/png%')`.mapWith(
             Number,
           ),
       })

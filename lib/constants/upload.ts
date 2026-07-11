@@ -1,8 +1,11 @@
 export const ALLOWED_MIME_TYPES = [
   "application/pdf",
   "image/jpeg",
+  "image/png",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ] as const;
+
+export const UPLOAD_FORMATS_LABEL = "PDF, JPEG, or PNG";
 
 export const DOCX_MIME_TYPE =
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document" as const;

@@ -1,3 +1,5 @@
+import { UPLOAD_FORMATS_LABEL } from "@/lib/constants/upload";
+
 const BLOB_NOT_CONFIGURED =
   "Upload storage is not configured. Add BLOB_READ_WRITE_TOKEN to .env.local and restart the dev server.";
 
@@ -5,7 +7,7 @@ const SESSION_EXPIRED = "Your session expired. Sign in again and retry.";
 
 const FILE_TOO_LARGE = "File is too large — maximum size is 10 MB.";
 
-const UNSUPPORTED_TYPE = "Only PDF and JPEG files are supported.";
+const UNSUPPORTED_TYPE = `Only ${UPLOAD_FORMATS_LABEL} files are supported.`;
 
 const GENERIC =
   "Upload failed. Try again or remove this file.";

@@ -16,7 +16,7 @@ export const patientValidationCopy = {
   },
   upload: {
     unsupportedType:
-      "This file type is not supported. Please upload a PDF or JPEG photo.",
+      "This file type is not supported. Please upload a PDF, JPEG, or PNG file.",
     fileTooLarge:
       "This document exceeds our maximum size limit. Please compress the file or upload separate pages.",
     metadataFailed:

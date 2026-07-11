@@ -2,7 +2,7 @@ export const ingestionCopy = {
   dropzone: {
     ariaLabel: "Upload clinical documents by drag and drop or file browse",
     title: "Drop patient documents here",
-    formats: "Accepted: PDF or JPEG · Maximum 10 MB per file",
+    formats: "Accepted: PDF, JPEG, or PNG · Maximum 10 MB per file",
     encryption:
       "Files are encrypted in transit and at rest under standard healthcare data protection practices.",
     browse: "Browse files",
@@ -20,7 +20,7 @@ export const ingestionCopy = {
   form: {
     clinicalTitle: "Document ingestion",
     clinicalDescription:
-      "Attach PDF or JPEG files, assign a record category, then submit for encrypted processing.",
+      "Attach PDF, JPEG, or PNG files, assign a record category, then submit for encrypted processing.",
     status: {
       uploading: "Transmitting files to secure storage…",
       ready: (count: number) =>
@@ -39,7 +39,7 @@ export const ingestionCopy = {
   preview: {
     emptyTitle: "No document selected",
     emptyDescription:
-      "Select or drop a PDF or JPEG to preview before submission.",
+      "Select or drop a PDF or image (JPEG/PNG) to preview before submission.",
     pending: "Preview loads after the file is staged.",
   },
   success: {

@@ -19,7 +19,7 @@ export async function buildDocumentContent(
   }
 
   const mediaType =
-    mimeType === "application/pdf" ? "application/pdf" : "image/jpeg";
+    mimeType === "application/pdf" ? "application/pdf" : mimeType;
 
   return { type: "file", data: buffer, mediaType };
 }

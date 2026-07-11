@@ -22,7 +22,7 @@ export const validationCopy = {
     emailRequired: "Provider email is required to process a share request",
   },
   upload: {
-    unsupportedType: "Only PDF and JPEG files are accepted for ingestion",
+    unsupportedType: "Only PDF, JPEG, or PNG files are accepted for ingestion",
     fileTooLarge: "File exceeds the 10 MB limit — compress or split the document",
     metadataFailed: "Document saved to storage but metadata registration failed — retry",
   },

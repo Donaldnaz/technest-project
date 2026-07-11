@@ -10,6 +10,7 @@ import {
   ALLOWED_MIME_TYPES,
   MAX_UPLOAD_BYTES,
   normalizeMimeType,
+  UPLOAD_FORMATS_LABEL,
 } from "@/lib/constants/upload";
 import { getUploadErrorMessage } from "@/lib/upload/errors";
 
@@ -41,7 +42,7 @@ function validateFile(file: File): { mimeType: string } | { error: string } {
   const mimeType = normalizeMimeType(file.type);
   if (!mimeType) {
     return {
-      error: "Only PDF and JPEG files are supported.",
+      error: `Only ${UPLOAD_FORMATS_LABEL} files are supported.`,
     };
   }
   if (file.size > MAX_UPLOAD_BYTES) {

@@ -20,7 +20,7 @@ export const dashboardCopy = {
     metrics: {
       total: {
         label: "Documents on file",
-        hint: "PDF and JPEG records submitted to the ingestion pipeline",
+        hint: "PDF, JPEG, and PNG records submitted to the ingestion pipeline",
       },
       ready: {
         label: "Verified summaries",

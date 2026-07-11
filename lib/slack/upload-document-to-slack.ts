@@ -1,7 +1,7 @@
 import "server-only";
 
 import { fetchPrivateBlob } from "@/lib/blob/fetch-private-blob";
-import { ALLOWED_MIME_TYPES } from "@/lib/constants/upload";
+import { ALLOWED_MIME_TYPES, DOCX_MIME_TYPE } from "@/lib/constants/upload";
 import { getSlackBotConfig } from "@/lib/env";
 import {
   callSlackApi,
@@ -34,6 +34,15 @@ function uploadFileMeta(mimeType: SlackUploadMimeType): {
 } {
   if (mimeType === "image/jpeg") {
     return { extension: "jpg", contentType: "image/jpeg" };
+  }
+  if (mimeType === "image/png") {
+    return { extension: "png", contentType: "image/png" };
+  }
+  if (mimeType === DOCX_MIME_TYPE) {
+    return {
+      extension: "docx",
+      contentType: DOCX_MIME_TYPE,
+    };
   }
   return { extension: "pdf", contentType: "application/pdf" };
 }

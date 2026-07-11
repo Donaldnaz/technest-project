@@ -17,6 +17,16 @@ describe("uploadClientPayloadSchema", () => {
     expect(uploadClientPayloadSchema.safeParse(validUpload).success).toBe(true);
   });
 
+  it("accepts PNG uploads", () => {
+    expect(
+      uploadClientPayloadSchema.safeParse({
+        ...validUpload,
+        fileName: "scan.png",
+        mimeType: "image/png",
+      }).success,
+    ).toBe(true);
+  });
+
   it("rejects invalid mime types", () => {
     const result = uploadClientPayloadSchema.safeParse({
       ...validUpload,
